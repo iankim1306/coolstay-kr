@@ -5,8 +5,8 @@ import "./globals.css";
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "쿨스테이 - 국내 숙박 최저가 비교",
-  description: "전국 펜션, 호텔, 풀빌라, 글램핑 숙소를 한눈에 비교하세요. 최저가 보장.",
+  title: "쿨스테이 - 해외 호텔 최저가 비교 | 아고다 특가",
+  description: "일본, 태국, 베트남, 발리, 필리핀, 대만 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-white text-gray-900">
         {/* 상단 띠 */}
         <div className="bg-orange-500 text-white text-center text-xs py-1.5 font-medium">
-          지금 예약하면 최대 40% 할인 — Booking.com 특가 진행중
+          지금 예약하면 최대 7% 추가 할인 — 아고다 실시간 특가 진행중
         </div>
 
         <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
@@ -27,20 +27,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="text-orange-500">COOL</span><span className="text-gray-800">STAY</span>
             </a>
             <nav className="hidden sm:flex gap-5 text-sm text-gray-500">
-              <a href="/stay/강원" className="hover:text-orange-500 transition-colors">강원</a>
-              <a href="/stay/제주" className="hover:text-orange-500 transition-colors">제주</a>
-              <a href="/stay/경기" className="hover:text-orange-500 transition-colors">경기</a>
-              <a href="/stay/부산" className="hover:text-orange-500 transition-colors">부산</a>
-              <a href="/stay/경남" className="hover:text-orange-500 transition-colors">경남</a>
-              <a href="/stay/전남" className="hover:text-orange-500 transition-colors">전남</a>
+              <a href="/japan" className="hover:text-orange-500 transition-colors">일본</a>
+              <a href="/thailand" className="hover:text-orange-500 transition-colors">태국</a>
+              <a href="/vietnam" className="hover:text-orange-500 transition-colors">베트남</a>
+              <a href="/philippines" className="hover:text-orange-500 transition-colors">필리핀</a>
+              <a href="/indonesia" className="hover:text-orange-500 transition-colors">인도네시아</a>
+              <a href="/taiwan" className="hover:text-orange-500 transition-colors">대만</a>
             </nav>
             <a
-              href="https://www.booking.com/?lang=ko"
+              href="https://www.agoda.com/?cid=1891024"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
             >
-              최저가 확인
+              아고다 특가
             </a>
           </div>
         </header>
@@ -51,37 +51,37 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-4 py-12">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm">
               <div>
-                <h4 className="text-white font-semibold mb-3">인기 지역</h4>
+                <h4 className="text-white font-semibold mb-3">인기 여행지</h4>
                 <ul className="space-y-2">
-                  <li><a href="/stay/강원" className="hover:text-white">강원 숙소</a></li>
-                  <li><a href="/stay/제주" className="hover:text-white">제주 숙소</a></li>
-                  <li><a href="/stay/부산" className="hover:text-white">부산 숙소</a></li>
-                  <li><a href="/stay/경기" className="hover:text-white">경기 숙소</a></li>
+                  <li><a href="/japan" className="hover:text-white">일본 호텔</a></li>
+                  <li><a href="/thailand" className="hover:text-white">태국 호텔</a></li>
+                  <li><a href="/vietnam" className="hover:text-white">베트남 호텔</a></li>
+                  <li><a href="/indonesia" className="hover:text-white">인도네시아 호텔</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-3">숙소 유형</h4>
+                <h4 className="text-white font-semibold mb-3">인기 도시</h4>
                 <ul className="space-y-2">
-                  <li><a href="#" className="hover:text-white">펜션</a></li>
-                  <li><a href="#" className="hover:text-white">호텔</a></li>
-                  <li><a href="#" className="hover:text-white">풀빌라</a></li>
-                  <li><a href="#" className="hover:text-white">글램핑</a></li>
+                  <li><a href="/japan/osaka" className="hover:text-white">오사카 호텔</a></li>
+                  <li><a href="/thailand/bangkok" className="hover:text-white">방콕 호텔</a></li>
+                  <li><a href="/vietnam/danang" className="hover:text-white">다낭 호텔</a></li>
+                  <li><a href="/indonesia/bali" className="hover:text-white">발리 호텔</a></li>
                 </ul>
               </div>
               <div>
-                <h4 className="text-white font-semibold mb-3">상황별</h4>
+                <h4 className="text-white font-semibold mb-3">테마별</h4>
                 <ul className="space-y-2">
-                  <li><a href="#" className="hover:text-white">커플 여행</a></li>
-                  <li><a href="#" className="hover:text-white">가족 여행</a></li>
-                  <li><a href="#" className="hover:text-white">반려동물 동반</a></li>
-                  <li><a href="#" className="hover:text-white">오션뷰</a></li>
+                  <li><a href="/japan/kyoto" className="hover:text-white">커플 여행</a></li>
+                  <li><a href="/indonesia/bali" className="hover:text-white">신혼여행 풀빌라</a></li>
+                  <li><a href="/japan/osaka" className="hover:text-white">가성비 호텔</a></li>
+                  <li><a href="/thailand/phuket" className="hover:text-white">비치 리조트</a></li>
                 </ul>
               </div>
               <div>
                 <h4 className="text-white font-semibold mb-3">쿨스테이</h4>
                 <p className="text-xs leading-relaxed">
-                  전국 숙박시설 가격을 비교하고 최저가로 예약하세요.
-                  한국관광공사 데이터 기반 신뢰할 수 있는 정보를 제공합니다.
+                  일본·동남아 해외 호텔을 아고다 최저가로 비교하세요.
+                  무료 취소·즉시 예약 확정으로 편하게 여행하세요.
                 </p>
               </div>
             </div>
