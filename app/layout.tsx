@@ -7,6 +7,11 @@ const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "쿨스테이 - 해외 호텔 최저가 비교 | 아고다 특가",
   description: "일본, 태국, 베트남, 발리, 필리핀, 대만 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.",
+  verification: {
+    other: {
+      "agd-partner-manual-verification": "",
+    },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={geist.variable}>
       <head>
         <meta name="google-site-verification" content="1UVK4e-DptUMt3rLxv8LUvndSIwJouKhNK4fvsGeNCQ" />
-        <meta name="agd-partner-manual-verification" content="" />
+
         <script dangerouslySetInnerHTML={{__html: `(function(){var script=document.createElement("script");script.async=1;script.src='https://emrldtp.com/NTE2NzQ4.js?t=516748';document.head.appendChild(script);})();`}} />
       </head>
       <body className="min-h-screen bg-white text-gray-900">
