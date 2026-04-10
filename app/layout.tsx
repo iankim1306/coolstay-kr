@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko" className={geist.variable}>
       <head>
         <meta name="google-site-verification" content="1UVK4e-DptUMt3rLxv8LUvndSIwJouKhNK4fvsGeNCQ" />
-        <meta name="agd-partner-manual-verification" />
+        <meta name="agd-partner-manual-verification" content="" />
         <script dangerouslySetInnerHTML={{__html: `(function(){var script=document.createElement("script");script.async=1;script.src='https://emrldtp.com/NTE2NzQ4.js?t=516748';document.head.appendChild(script);})();`}} />
       </head>
       <body className="min-h-screen bg-white text-gray-900">
