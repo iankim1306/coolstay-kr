@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCountryData, COUNTRIES } from "@/lib/destinations";
+import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
 
 export async function generateStaticParams() {
   return COUNTRIES.map(c => ({ country: c.slug }));
@@ -21,8 +22,14 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
   const country = getCountryData(slug);
   if (!country) notFound();
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: country.name, url: `https://coolstay.kr/${slug}` },
+  ]);
+
   return (
     <div>
+      <script {...ldJson(breadcrumb)} />
       {/* 헤더 */}
       <section className="relative bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-25"

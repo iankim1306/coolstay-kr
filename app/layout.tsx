@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import { organizationJsonLd, websiteJsonLd, ldJson } from "@/lib/jsonld";
 
 const GA_ID = "G-CVRE4H4QDX";
 
@@ -23,6 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="google-site-verification" content="1UVK4e-DptUMt3rLxv8LUvndSIwJouKhNK4fvsGeNCQ" />
         <meta name="naver-site-verification" content="e6e8ffb8591a2e8765957e38334cdb8dd9d9ca00" />
+
+        <script {...ldJson(organizationJsonLd())} />
+        <script {...ldJson(websiteJsonLd())} />
 
         <script dangerouslySetInnerHTML={{__html: `(function(){var script=document.createElement("script");script.async=1;script.src='https://emrldtp.com/NTE2NzQ4.js?t=516748';document.head.appendChild(script);})();`}} />
       </head>

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { getAvailableThemes } from "@/lib/themes";
+import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -42,8 +43,15 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
   const topHotels = getHotelsByCity(countrySlug, citySlug).slice(0, 10);
   const availableThemes = getAvailableThemes(countrySlug, citySlug);
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: country.name, url: `https://coolstay.kr/${countrySlug}` },
+    { name: city.name, url: `https://coolstay.kr/${countrySlug}/${citySlug}` },
+  ]);
+
   return (
     <div>
+      <script {...ldJson(breadcrumb)} />
       {/* 헤더 */}
       <section className="relative bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-30"

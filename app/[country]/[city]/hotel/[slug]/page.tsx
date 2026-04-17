@@ -9,6 +9,12 @@ import {
   agodaHotelLink,
   hotelPhotoUrl,
 } from "@/lib/hotels";
+import {
+  breadcrumbJsonLd,
+  hotelJsonLd,
+  faqJsonLd,
+  ldJson,
+} from "@/lib/jsonld";
 
 export async function generateStaticParams() {
   return getAllHotels().map(({ countrySlug, citySlug, hotel }) => ({
@@ -55,8 +61,38 @@ export default async function HotelPage({
     .filter((h) => h.hotel_id !== hotel.hotel_id)
     .slice(0, 4);
 
+  // 구조화 데이터
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: countryData.name, url: `https://coolstay.kr/${country}` },
+    { name: cityData.name, url: `https://coolstay.kr/${country}/${city}` },
+    { name: hotel.name, url: `https://coolstay.kr/${country}/${city}/hotel/${hotelSlug(hotel)}` },
+  ]);
+  const hotelLd = hotelJsonLd(hotel, country, city, cityData.name, countryData.name);
+  const faq = faqJsonLd([
+    {
+      q: `${hotel.name} 최저가는 어디서 확인하나요?`,
+      a: `아고다에서 ${hotel.name}의 실시간 최저가와 무료 취소 가능 요금을 비교해 볼 수 있습니다. 쿨스테이 예약 링크를 통해 이동하시면 최대 7% 추가 할인이 적용됩니다.`,
+    },
+    {
+      q: `${hotel.name} 체크인·체크아웃 시간은 어떻게 되나요?`,
+      a: `${hotel.name}의 체크인 시간은 ${hotel.checkin || "15:00 이후"}, 체크아웃 시간은 ${hotel.checkout || "11:00 이전"}입니다. 일정에 따라 얼리 체크인·레이트 체크아웃 가능 여부는 호텔에 직접 문의해 주세요.`,
+    },
+    {
+      q: `${hotel.name} 위치는 어디인가요?`,
+      a: `${hotel.name}은 ${hotel.address}${hotel.zipcode ? `, ${hotel.zipcode}` : ""} (${cityData.name})에 위치한 ${stars ? `${stars}성급 ` : ""}${hotel.accommodation_type}입니다.`,
+    },
+    {
+      q: `무료 취소가 가능한가요?`,
+      a: `예약 시점과 요금제에 따라 다르지만 아고다에서 '무료 취소 가능' 필터를 적용하면 특정 기간까지 무료로 취소할 수 있는 요금을 선택할 수 있습니다.`,
+    },
+  ]);
+
   return (
     <div className="bg-white">
+      <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(hotelLd)} />
+      <script {...ldJson(faq)} />
       {/* 히어로: 대표 사진 */}
       <section className="relative">
         <div className="grid grid-cols-4 gap-1 max-w-6xl mx-auto h-80 sm:h-[440px]">
@@ -193,6 +229,39 @@ export default async function HotelPage({
                     <span className="text-xl">{item.icon}</span>
                     <p className="text-sm text-gray-600">{item.tip}</p>
                   </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FAQ */}
+            <div className="mb-8">
+              <h2 className="text-xl font-bold mb-3">{hotel.name} 자주 묻는 질문</h2>
+              <div className="space-y-3">
+                {[
+                  {
+                    q: `${hotel.name} 최저가는 어디서 확인하나요?`,
+                    a: `아고다에서 ${hotel.name}의 실시간 최저가와 무료 취소 가능 요금을 비교해 볼 수 있습니다. 쿨스테이 예약 링크를 통해 이동하시면 최대 7% 추가 할인이 적용됩니다.`,
+                  },
+                  {
+                    q: `${hotel.name} 체크인·체크아웃 시간은 어떻게 되나요?`,
+                    a: `${hotel.name}의 체크인 시간은 ${hotel.checkin || "15:00 이후"}, 체크아웃 시간은 ${hotel.checkout || "11:00 이전"}입니다. 일정에 따라 얼리 체크인·레이트 체크아웃 가능 여부는 호텔에 직접 문의해 주세요.`,
+                  },
+                  {
+                    q: `${hotel.name} 위치는 어디인가요?`,
+                    a: `${hotel.name}은 ${hotel.address}${hotel.zipcode ? `, ${hotel.zipcode}` : ""} (${cityData.name})에 위치한 ${stars ? `${stars}성급 ` : ""}${hotel.accommodation_type}입니다.`,
+                  },
+                  {
+                    q: `무료 취소가 가능한가요?`,
+                    a: `예약 시점과 요금제에 따라 다르지만 아고다에서 '무료 취소 가능' 필터를 적용하면 특정 기간까지 무료로 취소할 수 있는 요금을 선택할 수 있습니다.`,
+                  },
+                ].map((item, i) => (
+                  <details key={i} className="bg-gray-50 rounded-xl p-4 group">
+                    <summary className="font-semibold text-gray-800 cursor-pointer list-none flex justify-between items-center">
+                      <span>Q. {item.q}</span>
+                      <span className="text-orange-500 group-open:rotate-180 transition-transform">▾</span>
+                    </summary>
+                    <p className="text-sm text-gray-600 mt-3 leading-relaxed">{item.a}</p>
+                  </details>
                 ))}
               </div>
             </div>

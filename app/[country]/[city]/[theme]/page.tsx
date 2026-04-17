@@ -9,6 +9,7 @@ import {
   getAvailableThemes,
   THEMES,
 } from "@/lib/themes";
+import { breadcrumbJsonLd, itemListJsonLd, ldJson } from "@/lib/jsonld";
 
 export async function generateStaticParams() {
   return getAllThemeCombos().map(({ countrySlug, citySlug, theme }) => ({
@@ -54,8 +55,25 @@ export default async function ThemePage({
 
   const otherThemes = getAvailableThemes(country, city).filter((t) => t.slug !== theme.slug);
 
+  const pageUrl = `https://coolstay.kr/${country}/${city}/${themeSlug}`;
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: countryData.name, url: `https://coolstay.kr/${country}` },
+    { name: cityData.name, url: `https://coolstay.kr/${country}/${city}` },
+    { name: `${cityData.name} ${theme.label}`, url: pageUrl },
+  ]);
+  const itemList = itemListJsonLd(
+    hotels,
+    country,
+    city,
+    pageUrl,
+    `${cityData.name} ${theme.keyword} TOP ${hotels.length}`
+  );
+
   return (
     <div className="bg-white">
+      <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(itemList)} />
       {/* 헤더 */}
       <section className="bg-gradient-to-br from-orange-500 to-orange-600 text-white">
         <div className="max-w-6xl mx-auto px-4 py-12 sm:py-16">
