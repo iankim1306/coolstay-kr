@@ -74,7 +74,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
               아고다 최저가 확인
             </a>
             <a
-              href={`https://www.agoda.com/search?city=${city.agodaCityId}&cid=1891024`}
+              href={`https://www.agoda.com/search?city=${city.agodaCityId}&cid=1962399`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-white/10 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-colors border border-white/20"

@@ -1,9 +1,8 @@
-// Travelpayouts 파트너 ID: 716748, Agoda 프로그램 ID: 4886
-const TP_MARKER = '716748'
+// Agoda 파트너 CID: 1962399
+const AGODA_CID = '1962399'
 
 function agodaLink(cityId: number) {
-  const agodaUrl = encodeURIComponent(`https://www.agoda.com/search?city=${cityId}&cid=1891024`)
-  return `https://tp.media/r?marker=${TP_MARKER}&p=4886&u=${agodaUrl}`
+  return `https://www.agoda.com/search?city=${cityId}&cid=${AGODA_CID}`
 }
 
 export type City = {

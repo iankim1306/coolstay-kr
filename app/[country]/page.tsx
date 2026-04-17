@@ -44,7 +44,7 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
             아고다에서 {country.name} 숙소를 최저가로 비교하고 즉시 예약하세요
           </p>
           <a
-            href={`https://www.agoda.com/search?country=${country.nameEn}&cid=1891024`}
+            href={`https://www.agoda.com/search?country=${country.nameEn}&cid=1962399`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-orange-500 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-xl shadow-orange-500/30"
@@ -98,7 +98,7 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">{country.name} 아고다 특가 지금 확인</h2>
           <p className="text-white/80 mb-6">최대 7% 추가 할인 · 무료 취소 · 즉시 예약 확정</p>
           <a
-            href={`https://www.agoda.com/search?country=${country.nameEn}&cid=1891024`}
+            href={`https://www.agoda.com/search?country=${country.nameEn}&cid=1962399`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-white text-orange-600 font-bold text-lg px-10 py-4 rounded-xl hover:bg-gray-100 transition-colors shadow-lg"

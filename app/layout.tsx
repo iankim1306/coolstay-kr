@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/taiwan" className="hover:text-orange-500 transition-colors">대만</a>
             </nav>
             <a
-              href="https://www.agoda.com/?cid=1891024"
+              href="https://www.agoda.com/?cid=1962399"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
