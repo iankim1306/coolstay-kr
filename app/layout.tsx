@@ -9,8 +9,19 @@ const GA_ID = "G-CVRE4H4QDX";
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://coolstay.kr"),
   title: "쿨스테이 - 해외 호텔 최저가 비교 | 아고다 특가",
   description: "일본, 태국, 베트남, 발리, 필리핀, 대만 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.",
+  openGraph: {
+    siteName: "쿨스테이",
+    locale: "ko_KR",
+    type: "website",
+    url: "https://coolstay.kr",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@coolstay_kr",
+  },
   verification: {
     other: {
       "agd-partner-manual-verification": "",
