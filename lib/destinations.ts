@@ -60,7 +60,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '후쿠오카', nameEn: 'fukuoka', country: '일본', countryEn: 'japan',
-        img: 'https://images.unsplash.com/photo-1619264516897-c3c6e5e8e8e8?w=800&h=600&fit=crop',
+        img: 'https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&h=600&fit=crop',
         desc: '나카스, 텐진, 라멘 맛집 근처',
         tags: ['가성비', '맛집', '단기여행'],
         agodaLink: agodaLink(951),
