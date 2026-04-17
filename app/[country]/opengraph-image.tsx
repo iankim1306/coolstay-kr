@@ -21,7 +21,7 @@ export default async function Image({
 
   const title = `${country.name} 호텔 최저가`
   const subtitle = country.desc
-  const text = title + subtitle + "쿨스테이아고다COOLSTAY최대추가할인무료취소"
+  const text = title + subtitle + "쿨스테이아고다COOLSTAY최대추가할인무료취소즉시예약확정"
   const fonts = await loadKoreanFonts(text, [400, 700])
 
   return new ImageResponse(
@@ -31,77 +31,98 @@ export default async function Image({
           width: "100%",
           height: "100%",
           display: "flex",
+          flexDirection: "column",
           position: "relative",
+          padding: 80,
           fontFamily: "Noto Sans KR",
           color: "white",
+          background:
+            "linear-gradient(135deg, #0F172A 0%, #1E293B 45%, #0F172A 100%)",
         }}
       >
-        {/* 배경 이미지 */}
-        <img
-          src={country.img}
-          alt=""
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-        />
-        {/* 어두운 오버레이 */}
+        {/* 오렌지 글로우 */}
         <div
           style={{
             position: "absolute",
-            inset: 0,
-            background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.75) 100%)",
+            top: -200,
+            right: -200,
+            width: 600,
+            height: 600,
+            borderRadius: "100%",
+            background: "radial-gradient(circle, rgba(249,115,22,0.55) 0%, rgba(249,115,22,0) 70%)",
+            display: "flex",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: -150,
+            left: -150,
+            width: 450,
+            height: 450,
+            borderRadius: "100%",
+            background: "radial-gradient(circle, rgba(234,88,12,0.35) 0%, rgba(234,88,12,0) 70%)",
             display: "flex",
           }}
         />
 
-        {/* 컨텐츠 */}
+        {/* 로고 */}
         <div
           style={{
-            position: "relative",
             display: "flex",
-            flexDirection: "column",
-            padding: 80,
-            width: "100%",
-            height: "100%",
+            fontSize: 40,
+            fontWeight: 700,
+            letterSpacing: -1,
+            position: "relative",
           }}
         >
-          <div style={{ display: "flex", fontSize: 40, fontWeight: 700, letterSpacing: -1 }}>
-            <span style={{ color: "#F97316" }}>COOL</span>
-            <span style={{ color: "white" }}>STAY</span>
-          </div>
+          <span style={{ color: "#F97316" }}>COOL</span>
+          <span style={{ color: "white" }}>STAY</span>
+        </div>
 
-          <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
-            <div
-              style={{
-                display: "flex",
-                fontSize: 28,
-                color: "#FDBA74",
-                fontWeight: 700,
-                marginBottom: 16,
-                letterSpacing: 2,
-              }}
-            >
-              {subtitle}
-            </div>
-            <div
-              style={{
-                fontSize: 100,
-                fontWeight: 700,
-                lineHeight: 1.05,
-                letterSpacing: -3,
-              }}
-            >
-              {title}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                marginTop: 28,
-                fontSize: 28,
-                fontWeight: 400,
-                opacity: 0.9,
-              }}
-            >
-              아고다 최저가 · 무료 취소 · 즉시 예약 확정
-            </div>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontSize: 30,
+              color: "#FDBA74",
+              fontWeight: 700,
+              marginBottom: 18,
+              letterSpacing: 3,
+            }}
+          >
+            {subtitle}
+          </div>
+          <div
+            style={{
+              fontSize: 120,
+              fontWeight: 700,
+              lineHeight: 1,
+              letterSpacing: -4,
+              display: "flex",
+              flexWrap: "wrap",
+            }}
+          >
+            {title}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginTop: 32,
+              fontSize: 28,
+              fontWeight: 400,
+              opacity: 0.9,
+            }}
+          >
+            아고다 최저가 · 무료 취소 · 즉시 예약 확정
           </div>
         </div>
       </div>
