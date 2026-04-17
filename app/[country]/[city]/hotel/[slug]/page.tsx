@@ -95,8 +95,41 @@ export default async function HotelPage({
       <script {...ldJson(faq)} />
       {/* 히어로: 대표 사진 */}
       <section className="relative">
-        <div className="grid grid-cols-4 gap-1 max-w-6xl mx-auto h-80 sm:h-[440px]">
-          <div className="col-span-4 sm:col-span-2 relative overflow-hidden">
+        {/* 모바일: 가로 스와이프 갤러리 */}
+        <div className="sm:hidden relative">
+          <div
+            className="flex overflow-x-auto snap-x snap-mandatory h-72 scrollbar-hide"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {hotel.photos.slice(0, 10).map((photo, i) => (
+              <div
+                key={i}
+                className="relative flex-shrink-0 w-full h-full snap-center"
+              >
+                <img
+                  src={hotelPhotoUrl(photo, 1024)}
+                  alt={`${hotel.name} ${i + 1}`}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full font-medium">
+                  {i + 1} / {Math.min(hotel.photos.length, 10)}
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* 힌트 */}
+          {hotel.photos.length > 1 && (
+            <div className="absolute top-3 right-3 bg-black/60 text-white text-[10px] px-2 py-1 rounded-full flex items-center gap-1 pointer-events-none">
+              <span>←</span>
+              <span>밀어서 보기</span>
+              <span>→</span>
+            </div>
+          )}
+        </div>
+
+        {/* 데스크탑: 그리드 (1 big + 4 small) */}
+        <div className="hidden sm:grid grid-cols-4 gap-1 max-w-6xl mx-auto h-[440px]">
+          <div className="col-span-2 relative overflow-hidden">
             {hotel.photos[0] && (
               <img
                 src={hotelPhotoUrl(hotel.photos[0], 1280)}
@@ -105,7 +138,7 @@ export default async function HotelPage({
               />
             )}
           </div>
-          <div className="hidden sm:grid col-span-2 grid-cols-2 gap-1">
+          <div className="col-span-2 grid grid-cols-2 gap-1">
             {hotel.photos.slice(1, 5).map((photo, i) => (
               <div key={i} className="relative overflow-hidden">
                 <img
