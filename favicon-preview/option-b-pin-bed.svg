@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 옵션 B: 위치 핀 + 침대 (해외 호텔 예약 느낌) -->
+  <rect width="64" height="64" rx="14" fill="#F97316"/>
+  <!-- 위치 핀 모양 배경 -->
+  <path d="M32 10 C22 10 15 17 15 27 C15 38 32 54 32 54 C32 54 49 38 49 27 C49 17 42 10 32 10 Z"
+        fill="white"/>
+  <!-- 침대 아이콘 (핀 중앙) -->
+  <g fill="#F97316">
+    <!-- 침대 프레임 -->
+    <rect x="21" y="27" width="22" height="5" rx="1"/>
+    <!-- 베개 -->
+    <rect x="22.5" y="22" width="7" height="4.5" rx="1.5"/>
+    <!-- 침대 다리 -->
+    <rect x="21" y="32" width="2" height="3"/>
+    <rect x="41" y="32" width="2" height="3"/>
+  </g>
+</svg>

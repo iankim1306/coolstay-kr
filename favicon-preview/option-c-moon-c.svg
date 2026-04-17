@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 옵션 C: 쿨스테이 'C' + 달/별 (편안한 숙박 느낌) -->
+  <rect width="64" height="64" rx="14" fill="#F97316"/>
+  <!-- 두꺼운 C 링 -->
+  <path d="M32 14 a18 18 0 1 0 12.7 30.7 l-5.6 -5.6 a10 10 0 1 1 0 -14.1 l5.6 -5.6 A17.9 17.9 0 0 0 32 14 Z"
+        fill="white"/>
+  <!-- 별 포인트 (우상단) -->
+  <circle cx="48" cy="18" r="3.2" fill="white"/>
+</svg>

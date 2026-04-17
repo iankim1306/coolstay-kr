@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 옵션 A: CS 모노그램 (가장 심플, 브랜드 중심) -->
+  <rect width="64" height="64" rx="14" fill="#F97316"/>
+  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle"
+        font-family="Arial Black, sans-serif" font-weight="900" font-size="34" fill="white" letter-spacing="-2">CS</text>
+</svg>
