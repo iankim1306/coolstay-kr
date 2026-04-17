@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agoda hotel data (too large for git)
+/data/
+/scripts/__pycache__/
+
