@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { COUNTRIES } from '@/lib/destinations'
 import { getAllHotels, hotelSlug } from '@/lib/hotels'
+import { getAllThemeCombos } from '@/lib/themes'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://coolstay.kr'
@@ -28,6 +29,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }))
 
+  const themePages = getAllThemeCombos().map(({ countrySlug, citySlug, theme }) => ({
+    url: `${base}/${countrySlug}/${citySlug}/${theme.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.85,
+  }))
+
   return [
     {
       url: base,
@@ -37,6 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...countryPages,
     ...cityPages,
+    ...themePages,
     ...hotelPages,
   ]
 }

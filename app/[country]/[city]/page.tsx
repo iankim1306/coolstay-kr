@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
+import { getAvailableThemes } from "@/lib/themes";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -39,6 +40,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
 
   const matchedThemes = THEMES.filter(t => city.tags.includes(t.tag));
   const topHotels = getHotelsByCity(countrySlug, citySlug).slice(0, 10);
+  const availableThemes = getAvailableThemes(countrySlug, citySlug);
 
   return (
     <div>
@@ -112,6 +114,32 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
             <img src={city.img} alt={`${city.name} 호텔`}
               className="w-full rounded-2xl mb-8 h-72 object-cover"
             />
+
+            {/* 테마별 호텔 리스트 (SEO 랜딩) */}
+            {availableThemes.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-xl font-bold mb-4">{city.name} 테마별 호텔 TOP 10</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {availableThemes.map(t => (
+                    <Link
+                      key={t.slug}
+                      href={`/${countrySlug}/${citySlug}/${t.slug}`}
+                      className="group flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-4 hover:border-orange-200 hover:shadow transition-all"
+                    >
+                      <span className="text-2xl">{t.emoji}</span>
+                      <div className="min-w-0">
+                        <div className="font-semibold text-sm text-gray-800 line-clamp-1">
+                          {city.name} {t.label}
+                        </div>
+                        <div className="text-xs text-orange-500 group-hover:translate-x-1 transition-transform">
+                          TOP 10 보기 →
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 인기 호텔 TOP 10 */}
             {topHotels.length > 0 && (
