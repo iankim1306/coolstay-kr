@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
+
+const GA_ID = "G-CVRE4H4QDX";
 
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
@@ -24,6 +27,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{__html: `(function(){var script=document.createElement("script");script.async=1;script.src='https://emrldtp.com/NTE2NzQ4.js?t=516748';document.head.appendChild(script);})();`}} />
       </head>
       <body className="min-h-screen bg-white text-gray-900">
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga4-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}', { send_page_view: true });
+          `}
+        </Script>
+        <Script id="agoda-click-tracker" strategy="afterInteractive">
+          {`
+            document.addEventListener('click', function(e) {
+              var target = e.target;
+              while (target && target !== document) {
+                if (target.tagName === 'A' && target.href && target.href.indexOf('agoda.com') !== -1) {
+                  if (window.gtag) {
+                    var hidMatch = target.href.match(/hid=(\\d+)/);
+                    var cityMatch = target.href.match(/city=(\\d+)/);
+                    window.gtag('event', 'agoda_click', {
+                      link_url: target.href,
+                      page_path: window.location.pathname,
+                      hotel_id: hidMatch ? hidMatch[1] : null,
+                      city_id: cityMatch ? cityMatch[1] : null,
+                      link_type: hidMatch ? 'hotel' : (cityMatch ? 'city_search' : 'other'),
+                    });
+                  }
+                  return;
+                }
+                target = target.parentNode;
+              }
+            }, true);
+          `}
+        </Script>
         {/* 상단 띠 */}
         <div className="bg-orange-500 text-white text-center text-xs py-1.5 font-medium">
           지금 예약하면 최대 7% 추가 할인 — 아고다 실시간 특가 진행중
