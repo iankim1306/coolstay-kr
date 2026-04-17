@@ -71,6 +71,18 @@ export function agodaHotelLink(hotelId: string): string {
 }
 
 /**
+ * 아고다 사진 URL을 고해상도 버전으로 변환
+ * - http → https
+ * - ?s=312x → ?s=1024x (원본에 가까운 사이즈)
+ */
+export function hotelPhotoUrl(url: string, width: number = 1024): string {
+  if (!url) return url
+  return url
+    .replace(/^http:\/\//, 'https://')
+    .replace(/([?&])s=\d+x/, `$1s=${width}x`)
+}
+
+/**
  * 도시별 호텔 목록
  */
 export function getHotelsByCity(countrySlug: string, citySlug: string): Hotel[] {

@@ -7,6 +7,7 @@ import {
   getAllHotels,
   hotelSlug,
   agodaHotelLink,
+  hotelPhotoUrl,
 } from "@/lib/hotels";
 
 export async function generateStaticParams() {
@@ -62,7 +63,7 @@ export default async function HotelPage({
           <div className="col-span-4 sm:col-span-2 relative overflow-hidden">
             {hotel.photos[0] && (
               <img
-                src={hotel.photos[0]}
+                src={hotelPhotoUrl(hotel.photos[0], 1280)}
                 alt={hotel.name}
                 className="w-full h-full object-cover"
               />
@@ -72,7 +73,7 @@ export default async function HotelPage({
             {hotel.photos.slice(1, 5).map((photo, i) => (
               <div key={i} className="relative overflow-hidden">
                 <img
-                  src={photo}
+                  src={hotelPhotoUrl(photo, 800)}
                   alt={`${hotel.name} ${i + 2}`}
                   className="w-full h-full object-cover"
                 />
@@ -210,7 +211,7 @@ export default async function HotelPage({
                       {h.photos[0] && (
                         <div className="h-36 overflow-hidden">
                           <img
-                            src={h.photos[0]}
+                            src={hotelPhotoUrl(h.photos[0], 600)}
                             alt={h.name}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />

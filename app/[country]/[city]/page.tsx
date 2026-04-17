@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
-import { getHotelsByCity, hotelSlug, agodaHotelLink } from "@/lib/hotels";
+import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -134,7 +134,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                         <div className="relative w-32 sm:w-48 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
                           {hotel.photos[0] && (
                             <img
-                              src={hotel.photos[0]}
+                              src={hotelPhotoUrl(hotel.photos[0], 600)}
                               alt={hotel.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
