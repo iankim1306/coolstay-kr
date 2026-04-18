@@ -23,19 +23,26 @@ TARGETS = [
     ("japan", "tokyo",      "Japan",       ["Tokyo"]),
     ("japan", "kyoto",      "Japan",       ["Kyoto"]),
     ("japan", "fukuoka",    "Japan",       ["Fukuoka"]),
+    ("japan", "nagoya",     "Japan",       ["Nagoya"]),
+    ("japan", "sapporo",    "Japan",       ["Sapporo"]),
+    ("japan", "okinawa",    "Japan",       ["Okinawa", "Naha"]),  # city=Naha or state=Okinawa
     ("thailand", "bangkok",   "Thailand",  ["Bangkok"]),
     ("thailand", "phuket",    "Thailand",  ["Phuket"]),
     ("thailand", "chiangmai", "Thailand",  ["Chiang Mai", "Chiangmai"]),
+    ("thailand", "pattaya",   "Thailand",  ["Pattaya"]),
+    ("thailand", "huahin",    "Thailand",  ["Hua Hin", "Huahin", "Hua-Hin"]),
     ("vietnam", "danang",     "Vietnam",   ["Da Nang", "Danang"]),
     ("vietnam", "hanoi",      "Vietnam",   ["Hanoi", "Ha Noi"]),
     ("vietnam", "hochiminh",  "Vietnam",   ["Ho Chi Minh", "Ho Chi Minh City", "Hochiminh"]),
+    ("vietnam", "hoian",      "Vietnam",   ["Hoi An", "Hoian"]),
+    ("vietnam", "nhatrang",   "Vietnam",   ["Nha Trang", "Nhatrang"]),
     ("philippines", "cebu",    "Philippines", ["Cebu", "Cebu City"]),
     ("philippines", "boracay", "Philippines", ["Boracay", "Malay (Boracay)"]),
     ("indonesia", "bali",     "Indonesia", ["Bali"]),  # 발리는 city 필드가 "Bali"거나 지역명일 수 있음
     ("taiwan", "taipei",      "Taiwan",    ["Taipei"]),
 ]
 
-TOP_N = 50  # 도시당 상위 N개 호텔
+TOP_N = 150  # 도시당 상위 N개 호텔
 
 
 def match_target(row, country_match, city_keywords):

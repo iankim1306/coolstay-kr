@@ -32,7 +32,7 @@ export const COUNTRIES: Country[] = [
     nameEn: 'Japan',
     slug: 'japan',
     img: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&h=600&fit=crop',
-    desc: '오사카 · 도쿄 · 교토 · 후쿠오카',
+    desc: '오사카 · 도쿄 · 교토 · 후쿠오카 · 나고야 · 삿포로 · 오키나와',
     cities: [
       {
         name: '오사카', nameEn: 'osaka', country: '일본', countryEn: 'japan',
@@ -66,6 +66,30 @@ export const COUNTRIES: Country[] = [
         agodaLink: agodaLink(951),
         agodaCityId: 951,
       },
+      {
+        name: '나고야', nameEn: 'nagoya', country: '일본', countryEn: 'japan',
+        img: 'https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&h=600&fit=crop',
+        desc: '사카에, 나고야성, 오아시스21',
+        tags: ['가족', '단기여행', '맛집', '쇼핑'],
+        agodaLink: agodaLink(13740),
+        agodaCityId: 13740,
+      },
+      {
+        name: '삿포로', nameEn: 'sapporo', country: '일본', countryEn: 'japan',
+        img: 'https://images.unsplash.com/photo-1578946956088-940c3b502864?w=800&h=600&fit=crop',
+        desc: '스스키노, 오도리공원, 눈축제',
+        tags: ['겨울', '가족', '온천', '맛집'],
+        agodaLink: agodaLink(3435),
+        agodaCityId: 3435,
+      },
+      {
+        name: '오키나와', nameEn: 'okinawa', country: '일본', countryEn: 'japan',
+        img: 'https://images.unsplash.com/photo-1493815793585-d94ccbc86df8?w=800&h=600&fit=crop',
+        desc: '나하, 국제거리, 코발트 블루 비치',
+        tags: ['커플', '신혼', '비치', '리조트'],
+        agodaLink: agodaLink(717899),
+        agodaCityId: 717899,
+      },
     ],
   },
   {
@@ -73,7 +97,7 @@ export const COUNTRIES: Country[] = [
     nameEn: 'Thailand',
     slug: 'thailand',
     img: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-    desc: '방콕 · 푸켓 · 치앙마이 · 파타야',
+    desc: '방콕 · 푸켓 · 치앙마이 · 파타야 · 후아힌',
     cities: [
       {
         name: '방콕', nameEn: 'bangkok', country: '태국', countryEn: 'thailand',
@@ -99,6 +123,22 @@ export const COUNTRIES: Country[] = [
         agodaLink: agodaLink(11795),
         agodaCityId: 11795,
       },
+      {
+        name: '파타야', nameEn: 'pattaya', country: '태국', countryEn: 'thailand',
+        img: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&h=600&fit=crop',
+        desc: '워킹스트리트, 조미티엔, 해변 리조트',
+        tags: ['커플', '가족', '비치', '리조트'],
+        agodaLink: agodaLink(8584),
+        agodaCityId: 8584,
+      },
+      {
+        name: '후아힌', nameEn: 'huahin', country: '태국', countryEn: 'thailand',
+        img: 'https://images.unsplash.com/photo-1544550285-f813152fb2fd?w=800&h=600&fit=crop',
+        desc: '한적한 해변, 왕실 휴양지, 비치 리조트',
+        tags: ['커플', '신혼', '힐링', '리조트'],
+        agodaLink: agodaLink(17019),
+        agodaCityId: 17019,
+      },
     ],
   },
   {
@@ -106,7 +146,7 @@ export const COUNTRIES: Country[] = [
     nameEn: 'Vietnam',
     slug: 'vietnam',
     img: 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=800&h=600&fit=crop',
-    desc: '다낭 · 하노이 · 호치민 · 호이안',
+    desc: '다낭 · 하노이 · 호치민 · 호이안 · 나트랑',
     cities: [
       {
         name: '다낭', nameEn: 'danang', country: '베트남', countryEn: 'vietnam',
@@ -131,6 +171,22 @@ export const COUNTRIES: Country[] = [
         tags: ['커플', '도심', '루프탑', '쇼핑'],
         agodaLink: agodaLink(10782),
         agodaCityId: 10782,
+      },
+      {
+        name: '호이안', nameEn: 'hoian', country: '베트남', countryEn: 'vietnam',
+        img: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop',
+        desc: '올드타운, 등불 거리, 감성 부티크',
+        tags: ['커플', '감성', '부티크', '문화'],
+        agodaLink: agodaLink(16552),
+        agodaCityId: 16552,
+      },
+      {
+        name: '나트랑', nameEn: 'nhatrang', country: '베트남', countryEn: 'vietnam',
+        img: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&h=600&fit=crop',
+        desc: '해변 산책로, 빈펄 랜드, 오션뷰 리조트',
+        tags: ['커플', '가족', '비치', '리조트'],
+        agodaLink: agodaLink(2679),
+        agodaCityId: 2679,
       },
     ],
   },

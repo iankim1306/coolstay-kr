@@ -1,7 +1,17 @@
 import type { Hotel } from './hotels'
 import { getHotelsByCity, getAllCityKeys } from './hotels'
 
-export type ThemeSlug = '5-star' | '4-star' | 'luxury' | 'family' | 'budget'
+export type ThemeSlug =
+  | '5-star'
+  | '4-star'
+  | 'luxury'
+  | 'family'
+  | 'budget'
+  | 'resort'
+  | 'boutique'
+  | 'onsen'
+  | 'ocean-view'
+  | 'rooftop'
 
 export type ThemeDef = {
   slug: ThemeSlug
@@ -28,6 +38,15 @@ const priceNum = (h: Hotel) => {
   const p = parseFloat(h.rates_from)
   return isNaN(p) || p <= 0 ? 0 : p
 }
+
+// 키워드 매칭용: 이름 + 영문 overview + 한글 설명 전체에서 검색
+const kwBlob = (h: Hotel) =>
+  [h.name, h.overview_en, h.description_ko].filter(Boolean).join(' ')
+
+const RE_ONSEN = /onsen|ryokan|hot spring|温泉|료칸|온천/i
+const RE_OCEAN_VIEW = /ocean view|sea view|beachfront|oceanfront|바다 ?전망|오션뷰|sea.?facing/i
+const RE_ROOFTOP = /rooftop|sky bar|루프탑|스카이.?바/i
+const RE_BOUTIQUE = /boutique|부티크/i
 
 export const THEMES: ThemeDef[] = [
   {
@@ -95,10 +114,63 @@ export const THEMES: ThemeDef[] = [
       const rating = parseFloat(h.rating_average) || 0
       const reviews = parseInt(h.number_of_reviews) || 0
       const price = priceNum(h)
-      // 낮은 가격 + 높은 평점 + 많은 리뷰가 유리
       const priceFactor = price > 0 ? 1 / Math.log(price + 10) : 0.1
       return rating * Math.log(reviews + 1) * (0.5 + priceFactor)
     },
+  },
+  {
+    slug: 'resort',
+    name: '리조트',
+    label: '리조트 호텔',
+    emoji: '🌴',
+    keyword: '리조트',
+    intro: (c) => `${c}의 리조트형 숙소를 모았습니다. 바다·풀·정원이 있는 휴양에 최적화된 곳들이에요.`,
+    filter: (h) => (h.accommodation_type || '').toLowerCase() === 'resort',
+    score: starScore,
+  },
+  {
+    slug: 'boutique',
+    name: '부티크',
+    label: '부티크 호텔',
+    emoji: '🎨',
+    keyword: '부티크 호텔',
+    intro: (c) => `${c} 감성 부티크 호텔. 디자인이 개성있고 객실 수가 작아 프라이빗한 분위기를 선호하는 여행자에게 추천합니다.`,
+    filter: (h) => RE_BOUTIQUE.test(kwBlob(h)),
+    score: (h) => {
+      const rating = parseFloat(h.rating_average) || 0
+      const reviews = parseInt(h.number_of_reviews) || 0
+      return rating * Math.log(reviews + 1)
+    },
+  },
+  {
+    slug: 'onsen',
+    name: '온천',
+    label: '온천 호텔',
+    emoji: '♨️',
+    keyword: '온천 호텔',
+    intro: (c) => `${c}의 온천·료칸 숙소 리스트. 노천탕이나 전통 료칸 체험을 원하는 여행자에게 어울리는 곳들을 골랐습니다.`,
+    filter: (h) => RE_ONSEN.test(kwBlob(h)),
+    score: starScore,
+  },
+  {
+    slug: 'ocean-view',
+    name: '오션뷰',
+    label: '오션뷰 호텔',
+    emoji: '🌊',
+    keyword: '오션뷰 호텔',
+    intro: (c) => `${c} 바다 전망 호텔. 객실이나 로비에서 바다가 보이는 곳을 우선적으로 엄선했어요.`,
+    filter: (h) => RE_OCEAN_VIEW.test(kwBlob(h)),
+    score: starScore,
+  },
+  {
+    slug: 'rooftop',
+    name: '루프탑',
+    label: '루프탑 호텔',
+    emoji: '🌇',
+    keyword: '루프탑 호텔',
+    intro: (c) => `${c} 루프탑 바·인피니티 풀이 있는 호텔 모음. 야경과 분위기를 중시하는 커플·출장 여행자에게 추천합니다.`,
+    filter: (h) => RE_ROOFTOP.test(kwBlob(h)),
+    score: starScore,
   },
 ]
 
