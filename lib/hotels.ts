@@ -32,6 +32,11 @@ export type Hotel = {
 
 const AGODA_CID = '1962399'
 
+// Trip.com Affiliate Platform
+const TRIP_ALLIANCE_ID = '8110292'
+const TRIP_SID = '307164166'
+const TRIP_SUB3 = 'D15743933'
+
 /**
  * 호텔명을 URL slug로 변환
  * 예: "Hotel Hankyu RESPIRE OSAKA" → "hotel-hankyu-respire-osaka"
@@ -105,7 +110,7 @@ export function getOtaLinks(hotel: Hotel): OtaLink[] {
     {
       name: '트립닷컴',
       shortName: 'Trip.com',
-      url: `https://kr.trip.com/hotels/list?searchKeyword=${encodeQ(hotel.name)}&searchType=H`,
+      url: `https://kr.trip.com/hotels/list?searchKeyword=${encodeQ(hotel.name)}&searchType=H&Allianceid=${TRIP_ALLIANCE_ID}&SID=${TRIP_SID}&trip_sub3=${TRIP_SUB3}`,
     },
     {
       name: '호텔스닷컴',
