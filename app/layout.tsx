@@ -4,6 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { organizationJsonLd, websiteJsonLd, ldJson } from "@/lib/jsonld";
+import { COUNTRIES } from "@/lib/destinations";
 
 const GA_ID = "G-CVRE4H4QDX";
 
@@ -138,44 +139,65 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <footer className="bg-gray-900 text-gray-400 mt-20">
           <div className="max-w-6xl mx-auto px-4 py-12">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-sm">
-              <div>
-                <h4 className="text-white font-semibold mb-3">인기 여행지</h4>
-                <ul className="space-y-2">
-                  <li><a href="/japan" className="hover:text-white">일본 호텔</a></li>
-                  <li><a href="/thailand" className="hover:text-white">태국 호텔</a></li>
-                  <li><a href="/vietnam" className="hover:text-white">베트남 호텔</a></li>
-                  <li><a href="/indonesia" className="hover:text-white">인도네시아 호텔</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-3">인기 도시</h4>
-                <ul className="space-y-2">
-                  <li><a href="/japan/osaka" className="hover:text-white">오사카 호텔</a></li>
-                  <li><a href="/thailand/bangkok" className="hover:text-white">방콕 호텔</a></li>
-                  <li><a href="/vietnam/danang" className="hover:text-white">다낭 호텔</a></li>
-                  <li><a href="/indonesia/bali" className="hover:text-white">발리 호텔</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-3">테마별</h4>
-                <ul className="space-y-2">
-                  <li><a href="/japan/kyoto" className="hover:text-white">커플 여행</a></li>
-                  <li><a href="/indonesia/bali" className="hover:text-white">신혼여행 풀빌라</a></li>
-                  <li><a href="/japan/osaka" className="hover:text-white">가성비 호텔</a></li>
-                  <li><a href="/thailand/phuket" className="hover:text-white">비치 리조트</a></li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-white font-semibold mb-3">쿨스테이</h4>
-                <p className="text-xs leading-relaxed">
-                  일본·동남아 해외 호텔을 아고다 최저가로 비교하세요.
-                  무료 취소·즉시 예약 확정으로 편하게 여행하세요.
-                </p>
+            {/* 국가 × 도시 그리드 — 전체 21개 도시 internal link */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 text-sm mb-8">
+              {COUNTRIES.map((country) => (
+                <div key={country.slug}>
+                  <h4 className="text-white font-semibold mb-3">
+                    <a href={`/${country.slug}`} className="hover:text-orange-400">
+                      {country.name} 호텔
+                    </a>
+                  </h4>
+                  <ul className="space-y-1.5 text-xs">
+                    {country.cities.map((c) => (
+                      <li key={c.nameEn}>
+                        <a
+                          href={`/${country.slug}/${c.nameEn}`}
+                          className="hover:text-white"
+                        >
+                          {c.name} 호텔
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            {/* 인기 테마 — 도시×테마 조합 */}
+            <div className="border-t border-gray-800 pt-6 mb-6">
+              <h4 className="text-white font-semibold mb-3 text-sm">인기 테마</h4>
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                <a href="/japan/osaka/5-star" className="hover:text-white">오사카 5성급</a>
+                <a href="/japan/tokyo/luxury" className="hover:text-white">도쿄 럭셔리</a>
+                <a href="/japan/kyoto/onsen" className="hover:text-white">교토 온천</a>
+                <a href="/japan/sapporo/onsen" className="hover:text-white">삿포로 온천</a>
+                <a href="/japan/okinawa/resort" className="hover:text-white">오키나와 리조트</a>
+                <a href="/thailand/bangkok/rooftop" className="hover:text-white">방콕 루프탑</a>
+                <a href="/thailand/phuket/resort" className="hover:text-white">푸켓 리조트</a>
+                <a href="/thailand/chiangmai/boutique" className="hover:text-white">치앙마이 부티크</a>
+                <a href="/vietnam/danang/ocean-view" className="hover:text-white">다낭 오션뷰</a>
+                <a href="/vietnam/hoian/boutique" className="hover:text-white">호이안 부티크</a>
+                <a href="/vietnam/nhatrang/resort" className="hover:text-white">나트랑 리조트</a>
+                <a href="/indonesia/bali/luxury" className="hover:text-white">발리 럭셔리</a>
+                <a href="/philippines/boracay/resort" className="hover:text-white">보라카이 리조트</a>
+                <a href="/philippines/cebu/resort" className="hover:text-white">세부 리조트</a>
+                <a href="/japan/fukuoka/budget" className="hover:text-white">후쿠오카 가성비</a>
+                <a href="/japan/osaka/family" className="hover:text-white">오사카 가족호텔</a>
               </div>
             </div>
-            <div className="border-t border-gray-800 mt-8 pt-6 text-xs text-center">
-              © 2026 COOLSTAY. 본 사이트는 제휴 링크를 포함하고 있습니다.
+
+            {/* 소개 + 저작권 */}
+            <div className="border-t border-gray-800 pt-6 text-xs">
+              <p className="leading-relaxed mb-4 max-w-2xl">
+                <span className="text-white font-semibold">쿨스테이</span>는
+                일본·동남아 해외 호텔을 아고다·부킹닷컴·트립닷컴·호텔스닷컴
+                4개 사이트에서 실시간 최저가로 비교해 드립니다.
+                무료 취소·즉시 예약 확정으로 편하게 여행하세요.
+              </p>
+              <p className="text-center text-gray-500">
+                © 2026 COOLSTAY. 본 사이트는 제휴 링크를 포함하고 있습니다.
+              </p>
             </div>
           </div>
         </footer>
