@@ -8,6 +8,7 @@ import {
   hotelSlug,
   agodaHotelLink,
   hotelPhotoUrl,
+  getOtaLinks,
 } from "@/lib/hotels";
 import {
   breadcrumbJsonLd,
@@ -35,8 +36,8 @@ export async function generateMetadata({
   const cityData = getCityData(country, city);
   const cityName = cityData?.name ?? hotel.city;
   return {
-    title: `${hotel.name} 최저가 | ${cityName} 호텔 예약 - 쿨스테이`,
-    description: `${hotel.name} (${hotel.star_rating}성급) 실시간 최저가와 무료 취소 가능 옵션을 확인하세요. ${cityName} ${hotel.address}. 평점 ${hotel.rating_average}, 리뷰 ${hotel.number_of_reviews}개.`,
+    title: `${hotel.name} 최저가 비교 | ${cityName} 호텔 - 쿨스테이`,
+    description: `${hotel.name} (${hotel.star_rating}성급)을 아고다·부킹닷컴·트립닷컴·호텔스닷컴 4개 사이트에서 한 번에 가격 비교하세요. ${cityName} ${hotel.address}. 평점 ${hotel.rating_average}, 리뷰 ${hotel.number_of_reviews}개.`,
   };
 }
 
@@ -52,6 +53,7 @@ export default async function HotelPage({
   if (!hotel || !countryData || !cityData) notFound();
 
   const bookingUrl = agodaHotelLink(hotel.hotel_id);
+  const otaLinks = getOtaLinks(hotel);
   const rating = parseFloat(hotel.rating_average) || 0;
   const reviews = parseInt(hotel.number_of_reviews) || 0;
   const stars = parseInt(hotel.star_rating) || 0;
@@ -72,7 +74,7 @@ export default async function HotelPage({
   const faq = faqJsonLd([
     {
       q: `${hotel.name} 최저가는 어디서 확인하나요?`,
-      a: `아고다에서 ${hotel.name}의 실시간 최저가와 무료 취소 가능 요금을 비교해 볼 수 있습니다. 쿨스테이 예약 링크를 통해 이동하시면 최대 7% 추가 할인이 적용됩니다.`,
+      a: `쿨스테이 페이지에서 아고다·부킹닷컴·트립닷컴·호텔스닷컴 4개 사이트를 한 번에 비교할 수 있습니다. 날짜에 따라 최저가 사이트가 달라지므로 여행 일정으로 각 사이트 가격을 모두 확인해보시는 것을 추천합니다. 아고다 예약 시 쿨스테이 링크로 최대 7% 추가 할인이 적용됩니다.`,
     },
     {
       q: `${hotel.name} 체크인·체크아웃 시간은 어떻게 되나요?`,
@@ -344,29 +346,48 @@ export default async function HotelPage({
             <div className="sticky top-20 space-y-4">
               <div className="bg-white border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
                 <div className="text-center mb-4">
-                  <p className="text-xs text-gray-400 mb-1">Agoda 실시간 최저가</p>
+                  <p className="text-xs text-gray-400 mb-1">💰 4개 사이트 실시간 가격비교</p>
                   <p className="text-sm font-bold text-gray-800">{hotel.name}</p>
                 </div>
-                <a
-                  href={bookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full bg-orange-500 text-white text-center py-4 rounded-xl font-bold text-base hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30 mb-3"
-                >
-                  가격 확인 & 예약
-                </a>
-                <ul className="space-y-2 text-xs text-gray-500">
+
+                {/* OTA 비교 버튼 — 아고다는 하이라이트 */}
+                <div className="space-y-2 mb-4">
+                  {otaLinks.map((ota) => (
+                    <a
+                      key={ota.shortName}
+                      href={ota.url}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                      className={
+                        ota.highlight
+                          ? "flex items-center justify-between w-full bg-orange-500 text-white px-4 py-3.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors shadow-md shadow-orange-500/30"
+                          : "flex items-center justify-between w-full bg-white border border-gray-200 text-gray-700 px-4 py-3 rounded-xl font-semibold text-sm hover:border-orange-300 hover:bg-orange-50 transition-colors"
+                      }
+                    >
+                      <span className="flex items-center gap-2">
+                        {ota.name}
+                        {ota.highlight && (
+                          <span className="text-[10px] bg-white text-orange-600 px-1.5 py-0.5 rounded-full font-bold">
+                            추천
+                          </span>
+                        )}
+                      </span>
+                      <span className={ota.highlight ? "text-white/90" : "text-gray-400"}>
+                        가격보기 →
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <ul className="space-y-2 text-xs text-gray-500 pt-3 border-t border-gray-100">
                   <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span> 최대 7% 추가 할인
+                    <span className="text-green-500 font-bold">✓</span> 아고다 추가 할인 최대 7%
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span> 무료 취소 가능 요금
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-green-500 font-bold">✓</span> 즉시 예약 확정
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span> 예약 수수료 없음
                   </li>
                 </ul>
               </div>
@@ -386,10 +407,10 @@ export default async function HotelPage({
       <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 mt-12">
         <div className="max-w-6xl mx-auto px-4 text-center text-white">
           <h2 className="text-xl sm:text-2xl font-bold mb-2">
-            {hotel.name} 아고다 최저가 확인
+            {hotel.name} 4개 사이트 가격 비교
           </h2>
           <p className="text-white/80 text-sm mb-5">
-            무료 취소 · 즉시 예약 확정 · 최대 7% 추가 할인
+            아고다 · 부킹닷컴 · 트립닷컴 · 호텔스닷컴 실시간 최저가
           </p>
           <a
             href={bookingUrl}

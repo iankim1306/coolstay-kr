@@ -64,10 +64,55 @@ export function extractHotelId(slug: string): string | null {
 }
 
 /**
- * 아고다 호텔 직접 예약 링크
+ * 아고다 호텔 직접 예약 링크 (파트너 어필리에이트 CID 포함)
  */
 export function agodaHotelLink(hotelId: string): string {
   return `https://www.agoda.com/partners/partnersearch.aspx?hid=${hotelId}&cid=${AGODA_CID}`
+}
+
+/**
+ * OTA 가격비교용 검색 URL
+ * 각 사이트에서 호텔명으로 검색 결과 페이지를 띄움.
+ * 파트너 계약이 없는 OTA는 공개 검색 URL을 사용한다.
+ */
+export type OtaLink = {
+  name: string       // 표기명 (한글)
+  shortName: string  // 짧은 버전 (카드 UI용)
+  url: string
+  highlight?: boolean // "추천" 뱃지용 (어필리 수익 발생 OTA)
+}
+
+function encodeQ(s: string) {
+  return encodeURIComponent(s.trim())
+}
+
+export function getOtaLinks(hotel: Hotel): OtaLink[] {
+  const query = `${hotel.name} ${hotel.city}`
+  const q = encodeQ(query)
+
+  return [
+    {
+      name: '아고다',
+      shortName: 'Agoda',
+      url: agodaHotelLink(hotel.hotel_id),
+      highlight: true,
+    },
+    {
+      name: '부킹닷컴',
+      shortName: 'Booking',
+      url: `https://www.booking.com/searchresults.ko.html?ss=${q}`,
+    },
+    {
+      name: '트립닷컴',
+      shortName: 'Trip.com',
+      url: `https://kr.trip.com/hotels/list?searchKeyword=${encodeQ(hotel.name)}&searchType=H`,
+    },
+    {
+      name: '호텔스닷컴',
+      shortName: 'Hotels.com',
+      url: `https://kr.hotels.com/Hotel-Search?destination=${q}`,
+    },
+  ]
 }
 
 /**
