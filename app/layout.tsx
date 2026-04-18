@@ -55,28 +55,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', '${GA_ID}', { send_page_view: true });
           `}
         </Script>
-        <Script id="agoda-click-tracker" strategy="afterInteractive">
+        <Script id="ota-click-tracker" strategy="afterInteractive">
           {`
-            document.addEventListener('click', function(e) {
-              var target = e.target;
-              while (target && target !== document) {
-                if (target.tagName === 'A' && target.href && target.href.indexOf('agoda.com') !== -1) {
-                  if (window.gtag) {
-                    var hidMatch = target.href.match(/hid=(\\d+)/);
-                    var cityMatch = target.href.match(/city=(\\d+)/);
-                    window.gtag('event', 'agoda_click', {
-                      link_url: target.href,
-                      page_path: window.location.pathname,
-                      hotel_id: hidMatch ? hidMatch[1] : null,
-                      city_id: cityMatch ? cityMatch[1] : null,
-                      link_type: hidMatch ? 'hotel' : (cityMatch ? 'city_search' : 'other'),
-                    });
+            (function() {
+              var OTA_MAP = [
+                { host: 'agoda.com',      name: 'agoda'   },
+                { host: 'trip.com',       name: 'trip'    },
+                { host: 'booking.com',    name: 'booking' },
+                { host: 'hotels.com',     name: 'hotels'  },
+              ];
+              document.addEventListener('click', function(e) {
+                var target = e.target;
+                while (target && target !== document) {
+                  if (target.tagName === 'A' && target.href) {
+                    var href = target.href;
+                    for (var i = 0; i < OTA_MAP.length; i++) {
+                      if (href.indexOf(OTA_MAP[i].host) !== -1) {
+                        var ota = OTA_MAP[i].name;
+                        if (window.gtag) {
+                          var hidMatch = href.match(/hid=(\\d+)/);
+                          var cityMatch = href.match(/city=(\\d+)/);
+                          // GA4 권장 이벤트명: select_content (어필리 클릭 추적용)
+                          window.gtag('event', 'ota_click', {
+                            ota: ota,
+                            link_url: href,
+                            page_path: window.location.pathname,
+                            hotel_id: hidMatch ? hidMatch[1] : null,
+                            city_id: cityMatch ? cityMatch[1] : null,
+                            link_type: hidMatch ? 'hotel' : (cityMatch ? 'city_search' : 'search'),
+                          });
+                          // 레거시 이벤트 유지 (Agoda만 따로 보고 싶을 때)
+                          if (ota === 'agoda') {
+                            window.gtag('event', 'agoda_click', {
+                              link_url: href,
+                              page_path: window.location.pathname,
+                              hotel_id: hidMatch ? hidMatch[1] : null,
+                              city_id: cityMatch ? cityMatch[1] : null,
+                              link_type: hidMatch ? 'hotel' : (cityMatch ? 'city_search' : 'other'),
+                            });
+                          }
+                        }
+                        return;
+                      }
+                    }
                   }
-                  return;
+                  target = target.parentNode;
                 }
-                target = target.parentNode;
-              }
-            }, true);
+              }, true);
+            })();
           `}
         </Script>
         {/* 상단 띠 */}
