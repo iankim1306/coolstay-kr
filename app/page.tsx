@@ -2,6 +2,7 @@ import Link from "next/link";
 import { COUNTRIES } from "@/lib/destinations";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import SearchBar from "@/components/SearchBar";
+import HotDealTabs from "@/components/HotDealTabs";
 
 export const revalidate = 21600 // 6시간마다 갱신
 
@@ -31,8 +32,20 @@ const HOT_DEAL_CITIES = [
 export default async function HomePage() {
   const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8)
 
-  // 오사카 핫딜 TOP 6 (대표 도시 1개만 — API 부담 최소화)
-  const hotDeals = await fetchCityHotDeals(9590, 6).catch(() => [])
+  // 4개 도시 핫딜 병렬 fetch
+  const [osakaDeals, tokyoDeals, bangkokDeals, baliDeals] = await Promise.all([
+    fetchCityHotDeals(9590, 6).catch(() => []),
+    fetchCityHotDeals(5085, 6).catch(() => []),
+    fetchCityHotDeals(9395, 6).catch(() => []),
+    fetchCityHotDeals(17193, 6).catch(() => []),
+  ])
+
+  const hotDealCities = [
+    { name: '오사카', slug: '/japan/osaka',      deals: osakaDeals },
+    { name: '도쿄',   slug: '/japan/tokyo',      deals: tokyoDeals },
+    { name: '방콕',   slug: '/thailand/bangkok', deals: bangkokDeals },
+    { name: '발리',   slug: '/indonesia/bali',   deals: baliDeals },
+  ].filter(c => c.deals.length > 0)
 
   const fmt = (n: number) => new Intl.NumberFormat('ko-KR').format(Math.round(n))
 
@@ -101,59 +114,13 @@ export default async function HomePage() {
       </section>
 
       {/* 🔥 오늘의 특가 */}
-      {hotDeals.length > 0 && (
+      {hotDealCities.length > 0 && (
         <section id="hotdeals" className="max-w-6xl mx-auto px-4 py-14">
-          <div className="flex items-end justify-between mb-2">
-            <h2 className="text-2xl font-bold">🔥 오늘의 오사카 특가</h2>
-            <Link href="/japan/osaka" className="text-sm text-orange-500 hover:underline">전체 보기 →</Link>
+          <div className="mb-2">
+            <h2 className="text-2xl font-bold">🔥 오늘의 특가</h2>
           </div>
           <p className="text-gray-400 mb-7">실시간 아고다 최저가 · 6시간마다 자동 갱신</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {hotDeals.map((deal) => (
-              <a
-                key={deal.hotelId}
-                href={deal.landingURL}
-                target="_blank"
-                rel="noopener noreferrer sponsored"
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-orange-200 transition-all"
-              >
-                {deal.imageURL && (
-                  <div className="h-48 overflow-hidden">
-                    <img
-                      src={deal.imageURL.replace('?s=', '?s=600x')}
-                      alt={deal.hotelName}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                )}
-                <div className="p-4">
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="text-orange-400 text-xs">{'★'.repeat(Math.round(deal.starRating || 0))}</span>
-                    {deal.discountPercentage > 0 && (
-                      <span className="ml-auto text-[11px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold">
-                        -{Math.round(deal.discountPercentage)}%
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-bold text-gray-800 text-sm line-clamp-2 mb-2 group-hover:text-orange-500 transition-colors">
-                    {deal.hotelName}
-                  </h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      {deal.crossedOutRate > deal.dailyRate && (
-                        <p className="text-xs text-gray-400 line-through">₩{fmt(deal.crossedOutRate)}</p>
-                      )}
-                      <p className="text-lg font-bold text-orange-500">₩{fmt(deal.dailyRate)}<span className="text-xs font-normal text-gray-400">/박</span></p>
-                    </div>
-                    <div className="text-right text-xs text-gray-400">
-                      <p>⭐ {deal.reviewScore?.toFixed(1)}</p>
-                      {deal.freeWifi && <p>WiFi 무료</p>}
-                    </div>
-                  </div>
-                </div>
-              </a>
-            ))}
-          </div>
+          <HotDealTabs cities={hotDealCities} />
         </section>
       )}
 
