@@ -191,8 +191,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="border-t border-gray-800 pt-6 text-xs">
               <p className="leading-relaxed mb-4 max-w-2xl">
                 <span className="text-white font-semibold">쿨스테이</span>는
-                일본·동남아 해외 호텔을 아고다·부킹닷컴·트립닷컴·호텔스닷컴
-                4개 사이트에서 실시간 최저가로 비교해 드립니다.
+                일본·동남아 해외 호텔을 아고다 실시간 최저가로 찾아드립니다.
                 무료 취소·즉시 예약 확정으로 편하게 여행하세요.
               </p>
               <p className="text-center text-gray-500">
