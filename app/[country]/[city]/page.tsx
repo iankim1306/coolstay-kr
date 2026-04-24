@@ -191,6 +191,73 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
               </div>
             )}
 
+            {/* 여행 정보 — SEO 핵심 콘텐츠 */}
+            {city.travelInfo && (
+              <div className="mb-10">
+                <h2 className="text-xl font-bold mb-5">{city.name} 여행 정보</h2>
+                <div className="space-y-4">
+                  {/* 공항 접근성 */}
+                  <div className="bg-gray-50 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl">✈️</span>
+                      <h3 className="font-bold text-gray-800">공항 → 시내 이동</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.airport}</p>
+                  </div>
+
+                  {/* 추천 시즌 */}
+                  <div className="bg-gray-50 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl">🌤️</span>
+                      <h3 className="font-bold text-gray-800">추천 여행 시즌</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.bestSeason}</p>
+                  </div>
+
+                  {/* 호텔 추천 지역 */}
+                  <div className="bg-gray-50 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xl">🏨</span>
+                      <h3 className="font-bold text-gray-800">지역별 호텔 특징</h3>
+                    </div>
+                    <div className="space-y-3">
+                      {city.travelInfo.areas.map(area => (
+                        <div key={area.name} className="flex gap-3">
+                          <span className="text-orange-500 font-bold text-sm whitespace-nowrap mt-0.5">{area.name}</span>
+                          <p className="text-sm text-gray-600">{area.desc}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 평균 가격 */}
+                  <div className="bg-orange-50 rounded-2xl p-5 border border-orange-100">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl">💰</span>
+                      <h3 className="font-bold text-gray-800">평균 호텔 가격</h3>
+                    </div>
+                    <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.avgPrice}</p>
+                  </div>
+
+                  {/* 한국인 여행 팁 */}
+                  <div className="bg-gray-50 rounded-2xl p-5">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xl">💡</span>
+                      <h3 className="font-bold text-gray-800">한국인 여행자 꿀팁</h3>
+                    </div>
+                    <ul className="space-y-2">
+                      {city.travelInfo.tips.map((tip, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                          <span className="text-orange-400 font-bold mt-0.5 flex-shrink-0">·</span>
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* 도시 소개 */}
             <div className="mb-10">
               <h2 className="text-xl font-bold mb-4">{city.name} 숙소 추천 가이드</h2>
