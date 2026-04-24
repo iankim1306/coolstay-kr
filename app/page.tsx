@@ -22,17 +22,17 @@ const POPULAR_KEYWORDS = [
 
 // 인기 도시 city ID (오사카, 도쿄, 방콕, 발리, 다낭)
 const HOT_DEAL_CITIES = [
-  { cityId: 17280, name: '오사카', slug: '/japan/osaka' },
-  { cityId: 14409, name: '도쿄', slug: '/japan/tokyo' },
+  { cityId: 9590,  name: '오사카', slug: '/japan/osaka' },
+  { cityId: 5085,  name: '도쿄', slug: '/japan/tokyo' },
   { cityId: 9395,  name: '방콕', slug: '/thailand/bangkok' },
-  { cityId: 1,     name: '발리', slug: '/indonesia/bali' },
+  { cityId: 17193, name: '발리', slug: '/indonesia/bali' },
 ]
 
 export default async function HomePage() {
   const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8)
 
   // 오사카 핫딜 TOP 6 (대표 도시 1개만 — API 부담 최소화)
-  const hotDeals = await fetchCityHotDeals(17280, 6).catch(() => [])
+  const hotDeals = await fetchCityHotDeals(9590, 6).catch(() => [])
 
   const fmt = (n: number) => new Intl.NumberFormat('ko-KR').format(Math.round(n))
 
