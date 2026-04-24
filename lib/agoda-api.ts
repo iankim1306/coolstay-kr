@@ -9,6 +9,7 @@ export type AgodaHotelPrice = {
   discountPercentage: number
   currency: string
   reviewScore: number
+  starRating: number
   freeWifi: boolean
   includeBreakfast: boolean
   landingURL: string

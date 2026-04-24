@@ -1,5 +1,9 @@
 import Link from "next/link";
 import { COUNTRIES } from "@/lib/destinations";
+import { fetchCityHotDeals } from "@/lib/agoda-api";
+import SearchBar from "@/components/SearchBar";
+
+export const revalidate = 21600 // 6시간마다 갱신
 
 const POPULAR_KEYWORDS = [
   { kw: "오사카 가성비 호텔", href: "/japan/osaka" },
@@ -16,8 +20,21 @@ const POPULAR_KEYWORDS = [
   { kw: "후쿠오카 단기 여행", href: "/japan/fukuoka" },
 ];
 
-export default function HomePage() {
-  const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8);
+// 인기 도시 city ID (오사카, 도쿄, 방콕, 발리, 다낭)
+const HOT_DEAL_CITIES = [
+  { cityId: 17280, name: '오사카', slug: '/japan/osaka' },
+  { cityId: 14409, name: '도쿄', slug: '/japan/tokyo' },
+  { cityId: 9395,  name: '방콕', slug: '/thailand/bangkok' },
+  { cityId: 1,     name: '발리', slug: '/indonesia/bali' },
+]
+
+export default async function HomePage() {
+  const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8)
+
+  // 오사카 핫딜 TOP 6 (대표 도시 1개만 — API 부담 최소화)
+  const hotDeals = await fetchCityHotDeals(17280, 6).catch(() => [])
+
+  const fmt = (n: number) => new Intl.NumberFormat('ko-KR').format(Math.round(n))
 
   return (
     <div>
@@ -26,17 +43,23 @@ export default function HomePage() {
         <div className="absolute inset-0 opacity-20"
           style={{backgroundImage: 'url(https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1600&h=900&fit=crop)', backgroundSize: 'cover', backgroundPosition: 'center'}}
         />
-        <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-32 text-center">
+        <div className="relative max-w-6xl mx-auto px-4 py-20 sm:py-28 text-center">
           <p className="text-orange-400 text-sm font-semibold tracking-widest mb-4 uppercase">
             일본 · 동남아 · 전세계 호텔 비교
           </p>
           <h1 className="text-4xl sm:text-6xl font-bold mb-5 leading-tight">
             해외 호텔 최저가,<br />
-            <span className="text-orange-400">1초만에 비교</span>
+            <span className="text-orange-400">아고다로 바로 비교</span>
           </h1>
-          <p className="text-gray-300 text-lg mb-10 max-w-xl mx-auto">
-            아고다 최저가로 오사카, 방콕, 발리, 다낭 숙소를 비교하세요
+          <p className="text-gray-300 text-lg mb-8 max-w-xl mx-auto">
+            오사카, 방콕, 발리, 다낭 실시간 특가 — 무료 취소 · 즉시 확정
           </p>
+
+          {/* 검색바 */}
+          <div className="mb-8">
+            <SearchBar />
+          </div>
+
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href="https://www.agoda.com/?cid=1962399"
@@ -44,12 +67,12 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="bg-orange-500 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-xl shadow-orange-500/30"
             >
-              아고다 최저가 확인
+              아고다 특가 전체 보기
             </a>
-            <a href="#destinations"
+            <a href="#hotdeals"
               className="bg-white/10 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-colors border border-white/20"
             >
-              여행지 둘러보기
+              오늘의 특가 보기 🔥
             </a>
           </div>
           <div className="flex justify-center gap-8 mt-10 text-sm text-gray-400">
@@ -76,6 +99,63 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* 🔥 오늘의 특가 */}
+      {hotDeals.length > 0 && (
+        <section id="hotdeals" className="max-w-6xl mx-auto px-4 py-14">
+          <div className="flex items-end justify-between mb-2">
+            <h2 className="text-2xl font-bold">🔥 오늘의 오사카 특가</h2>
+            <Link href="/japan/osaka" className="text-sm text-orange-500 hover:underline">전체 보기 →</Link>
+          </div>
+          <p className="text-gray-400 mb-7">실시간 아고다 최저가 · 6시간마다 자동 갱신</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {hotDeals.map((deal) => (
+              <a
+                key={deal.hotelId}
+                href={deal.landingURL}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl hover:border-orange-200 transition-all"
+              >
+                {deal.imageURL && (
+                  <div className="h-48 overflow-hidden">
+                    <img
+                      src={deal.imageURL.replace('?s=', '?s=600x')}
+                      alt={deal.hotelName}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                )}
+                <div className="p-4">
+                  <div className="flex items-center gap-1 mb-1">
+                    <span className="text-orange-400 text-xs">{'★'.repeat(Math.round(deal.starRating || 0))}</span>
+                    {deal.discountPercentage > 0 && (
+                      <span className="ml-auto text-[11px] bg-red-500 text-white px-2 py-0.5 rounded-full font-bold">
+                        -{Math.round(deal.discountPercentage)}%
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="font-bold text-gray-800 text-sm line-clamp-2 mb-2 group-hover:text-orange-500 transition-colors">
+                    {deal.hotelName}
+                  </h3>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      {deal.crossedOutRate > deal.dailyRate && (
+                        <p className="text-xs text-gray-400 line-through">₩{fmt(deal.crossedOutRate)}</p>
+                      )}
+                      <p className="text-lg font-bold text-orange-500">₩{fmt(deal.dailyRate)}<span className="text-xs font-normal text-gray-400">/박</span></p>
+                    </div>
+                    <div className="text-right text-xs text-gray-400">
+                      <p>⭐ {deal.reviewScore?.toFixed(1)}</p>
+                      {deal.freeWifi && <p>WiFi 무료</p>}
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 국가별 */}
       <section id="destinations" className="max-w-6xl mx-auto px-4 py-14">

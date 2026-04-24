@@ -4,6 +4,7 @@ import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { getAvailableThemes } from "@/lib/themes";
 import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import CityHotelList from "@/components/CityHotelList";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -149,72 +150,21 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
               </div>
             )}
 
-            {/* 인기 호텔 TOP 10 */}
+            {/* 인기 호텔 TOP 10 — 실시간 가격 포함 */}
             {topHotels.length > 0 && (
-              <div className="mb-10">
-                <div className="flex items-end justify-between mb-4">
-                  <h2 className="text-xl font-bold">{city.name} 인기 호텔 TOP {topHotels.length}</h2>
-                  <span className="text-xs text-gray-400">실제 리뷰 기준</span>
-                </div>
-                <div className="space-y-4">
-                  {topHotels.map((hotel, i) => {
-                    const rating = parseFloat(hotel.rating_average) || 0;
-                    const reviews = parseInt(hotel.number_of_reviews) || 0;
-                    const stars = parseInt(hotel.star_rating) || 0;
-                    return (
-                      <Link
-                        key={hotel.hotel_id}
-                        href={`/${countrySlug}/${citySlug}/hotel/${hotelSlug(hotel)}`}
-                        className="group flex gap-4 bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:border-orange-200 transition-all"
-                      >
-                        <div className="relative w-32 sm:w-48 h-32 sm:h-40 flex-shrink-0 overflow-hidden">
-                          {hotel.photos[0] && (
-                            <img
-                              src={hotelPhotoUrl(hotel.photos[0], 600)}
-                              alt={hotel.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                          )}
-                          <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow">
-                            {i + 1}
-                          </div>
-                        </div>
-                        <div className="flex-1 min-w-0 py-3 pr-3 flex flex-col justify-between">
-                          <div>
-                            {stars > 0 && (
-                              <div className="text-orange-400 text-xs mb-1">
-                                {"★".repeat(stars)}
-                                <span className="text-gray-200">{"★".repeat(5 - stars)}</span>
-                              </div>
-                            )}
-                            <h3 className="font-bold text-gray-800 line-clamp-2 group-hover:text-orange-500 transition-colors text-sm sm:text-base mb-1">
-                              {hotel.name}
-                            </h3>
-                            <p className="text-xs text-gray-400 line-clamp-1">
-                              📍 {hotel.address}
-                            </p>
-                          </div>
-                          <div className="flex items-center justify-between mt-2">
-                            {rating > 0 && (
-                              <div className="flex items-center gap-2">
-                                <span className="bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded">
-                                  {rating.toFixed(1)}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  리뷰 {reviews.toLocaleString()}
-                                </span>
-                              </div>
-                            )}
-                            <span className="text-orange-500 text-xs font-semibold group-hover:translate-x-1 transition-transform">
-                              자세히 보기 →
-                            </span>
-                          </div>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
+              <CityHotelList
+                hotels={topHotels.map(h => ({
+                  hotel_id: h.hotel_id,
+                  name: h.name,
+                  address: h.address,
+                  star_rating: h.star_rating,
+                  rating_average: h.rating_average,
+                  number_of_reviews: h.number_of_reviews,
+                  photo: h.photos[0] ? hotelPhotoUrl(h.photos[0], 600) : '',
+                  href: `/${countrySlug}/${citySlug}/hotel/${hotelSlug(h)}`,
+                }))}
+                cityName={city.name}
+              />
             )}
 
             {/* 여행 테마 */}
