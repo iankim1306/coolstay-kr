@@ -69,6 +69,11 @@ export default function SearchBar() {
     // 결과 첫 번째 항목으로 이동
     if (results.length > 0) {
       router.push(results[0].href)
+      return
+    }
+    // 없는 지역이면 아고다로 직행
+    if (noResult) {
+      window.open(`https://www.agoda.com/search?searchText=${encodeURIComponent(q)}&cid=1962399`, '_blank')
     }
   }
 
@@ -121,8 +126,17 @@ export default function SearchBar() {
             ))
           ) : noResult ? (
             <div className="px-4 py-5 text-center text-sm text-gray-400">
-              <p className="mb-1">"{q}" 검색 결과가 없어요</p>
-              <p className="text-xs">도시명 전체를 입력해보세요 (예: 오사카, 도쿄, 방콕)</p>
+              <p className="font-semibold text-gray-600 mb-1">"{q}" 준비중인 지역이에요</p>
+              <p className="text-xs mb-3">아고다에서 직접 검색해보세요</p>
+              <a
+                href={`https://www.agoda.com/search?searchText=${encodeURIComponent(q)}&cid=1962399`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                아고다에서 "{q}" 검색하기 →
+              </a>
             </div>
           ) : null}
         </div>
