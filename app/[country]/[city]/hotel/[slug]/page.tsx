@@ -10,6 +10,7 @@ import {
   hotelPhotoUrl,
   getOtaLinks,
 } from "@/lib/hotels";
+import PriceWidget from "@/components/PriceWidget";
 import {
   breadcrumbJsonLd,
   hotelJsonLd,
@@ -344,52 +345,30 @@ export default async function HotelPage({
           {/* 사이드바: 예약 */}
           <div className="lg:w-80 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
-              <div className="bg-white border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
-                <div className="text-center mb-4">
-                  <p className="text-xs text-gray-400 mb-1">💰 4개 사이트 실시간 가격비교</p>
-                  <p className="text-sm font-bold text-gray-800">{hotel.name}</p>
-                </div>
+              {/* 아고다 실시간 가격 위젯 + 알림 */}
+              <PriceWidget
+                hotelId={hotel.hotel_id}
+                hotelName={hotel.name}
+                fallbackRate={parseFloat(hotel.rates_from) || undefined}
+              />
 
-                {/* OTA 비교 버튼 — 아고다는 하이라이트 */}
-                <div className="space-y-2 mb-4">
-                  {otaLinks.map((ota) => (
+              {/* 다른 OTA 비교 */}
+              <div className="bg-white border border-gray-100 rounded-2xl p-4">
+                <p className="text-xs text-gray-400 mb-3 font-medium">다른 사이트 가격 비교</p>
+                <div className="space-y-2">
+                  {otaLinks.filter(o => !o.highlight).map((ota) => (
                     <a
                       key={ota.shortName}
                       href={ota.url}
                       target="_blank"
                       rel="noopener noreferrer sponsored"
-                      className={
-                        ota.highlight
-                          ? "flex items-center justify-between w-full bg-orange-500 text-white px-4 py-3.5 rounded-xl font-bold text-sm hover:bg-orange-600 transition-colors shadow-md shadow-orange-500/30"
-                          : "flex items-center justify-between w-full bg-white border border-gray-200 text-gray-700 px-4 py-3 rounded-xl font-semibold text-sm hover:border-orange-300 hover:bg-orange-50 transition-colors"
-                      }
+                      className="flex items-center justify-between w-full bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl font-semibold text-sm hover:border-orange-300 hover:bg-orange-50 transition-colors"
                     >
-                      <span className="flex items-center gap-2">
-                        {ota.name}
-                        {ota.highlight && (
-                          <span className="text-[10px] bg-white text-orange-600 px-1.5 py-0.5 rounded-full font-bold">
-                            추천
-                          </span>
-                        )}
-                      </span>
-                      <span className={ota.highlight ? "text-white/90" : "text-gray-400"}>
-                        가격보기 →
-                      </span>
+                      <span>{ota.name}</span>
+                      <span className="text-gray-400 text-xs">가격 확인 →</span>
                     </a>
                   ))}
                 </div>
-
-                <ul className="space-y-2 text-xs text-gray-500 pt-3 border-t border-gray-100">
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span> 아고다 추가 할인 최대 7%
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span> 무료 취소 가능 요금
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="text-green-500 font-bold">✓</span> 즉시 예약 확정
-                  </li>
-                </ul>
               </div>
 
               <Link
