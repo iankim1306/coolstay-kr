@@ -99,6 +99,52 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
         </div>
       </section>
 
+      {/* 여행 정보 가이드 */}
+      {country.countryInfo && (
+        <section className="bg-gray-50 py-14">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-2">{country.name} 여행 정보</h2>
+            <p className="text-gray-400 mb-8">출발 전 꼭 확인하세요</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+              <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                <div className="text-2xl mb-2">✈️</div>
+                <div className="text-sm font-semibold text-gray-700 mb-1">직항 정보</div>
+                <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.flight}</p>
+              </div>
+              <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                <div className="text-2xl mb-2">💴</div>
+                <div className="text-sm font-semibold text-gray-700 mb-1">통화 · 환율</div>
+                <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.currency}</p>
+              </div>
+              <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                <div className="text-2xl mb-2">🛂</div>
+                <div className="text-sm font-semibold text-gray-700 mb-1">비자 정보</div>
+                <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.visa}</p>
+              </div>
+              <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
+                <div className="text-2xl mb-2">🌤️</div>
+                <div className="text-sm font-semibold text-gray-700 mb-1">추천 시즌</div>
+                <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.bestSeason}</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">💡</span>
+                <span className="font-semibold text-gray-700">{country.name} 여행 꿀팁</span>
+              </div>
+              <ul className="space-y-2">
+                {country.countryInfo.tips.map((tip, i) => (
+                  <li key={i} className="flex gap-2 text-sm text-gray-600">
+                    <span className="text-orange-400 font-bold shrink-0">•</span>
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-14">
         <div className="max-w-6xl mx-auto px-4 text-center text-white">

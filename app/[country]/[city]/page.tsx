@@ -4,7 +4,8 @@ import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { getAvailableThemes } from "@/lib/themes";
 import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
-import CityHotelList from "@/components/CityHotelList";
+import CityHotelList from "@/components/CityHotelList"
+import CityDateSearch from "@/components/CityDateSearch";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -302,19 +303,18 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
           {/* 사이드바 */}
           <div className="lg:w-80 flex-shrink-0">
             <div className="sticky top-20 space-y-4">
-              {/* 예약 카드 */}
-              <div className="bg-white border-2 border-orange-200 rounded-2xl p-6 shadow-lg">
-                <div className="text-center mb-5">
-                  <p className="text-sm font-bold text-gray-800 mb-1">{city.name} 아고다 최저가</p>
-                  <p className="text-xs text-gray-400">실시간 가격 비교</p>
-                </div>
+              {/* 날짜 선택 딥링크 */}
+              <CityDateSearch cityId={city.agodaCityId} cityName={city.name} />
+
+              {/* 바로 가기 카드 */}
+              <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
                 <a
                   href={city.agodaLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full bg-orange-500 text-white text-center py-4 rounded-xl font-bold text-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/30 mb-3"
+                  className="block w-full bg-orange-50 text-orange-600 text-center py-3 rounded-xl font-semibold text-sm hover:bg-orange-100 transition-colors mb-3"
                 >
-                  최저가 확인하기
+                  날짜 없이 전체 보기 →
                 </a>
                 <ul className="space-y-2 text-xs text-gray-500">
                   <li className="flex items-center gap-2">

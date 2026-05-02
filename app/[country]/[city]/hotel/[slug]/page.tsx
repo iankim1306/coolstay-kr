@@ -210,6 +210,36 @@ export default async function HotelPage({
               )}
             </div>
 
+            {/* 편의시설 뱃지 */}
+            {(() => {
+              const text = ((hotel as any).overview_en || hotel.description_ko || '').toLowerCase()
+              const amenities = [
+                { keywords: ['pool', 'swimming'], icon: '🏊', label: '수영장' },
+                { keywords: ['breakfast', 'buffet'], icon: '🍳', label: '조식 포함' },
+                { keywords: ['gym', 'fitness'], icon: '💪', label: '피트니스' },
+                { keywords: ['spa', 'massage'], icon: '💆', label: '스파' },
+                { keywords: ['wifi', 'wi-fi'], icon: '📶', label: '무료 와이파이' },
+                { keywords: ['parking'], icon: '🚗', label: '주차 가능' },
+                { keywords: ['airport', 'shuttle'], icon: '✈️', label: '공항 셔틀' },
+                { keywords: ['restaurant', 'dining'], icon: '🍽️', label: '레스토랑' },
+                { keywords: ['bar', 'lounge'], icon: '🍸', label: '바·라운지' },
+                { keywords: ['rooftop'], icon: '🌇', label: '루프탑' },
+                { keywords: ['villa', 'private pool'], icon: '🏡', label: '풀빌라' },
+                { keywords: ['ocean view', 'sea view', 'beach'], icon: '🌊', label: '오션뷰' },
+              ].filter(a => a.keywords.some(kw => text.includes(kw)))
+              return amenities.length > 0 ? (
+                <div className="mb-6">
+                  <div className="flex flex-wrap gap-2">
+                    {amenities.map(a => (
+                      <span key={a.label} className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-100">
+                        <span>{a.icon}</span>{a.label}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null
+            })()}
+
             {/* 한국어 소개 */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-3">호텔 소개</h2>
@@ -299,6 +329,24 @@ export default async function HotelPage({
                 ))}
               </div>
             </div>
+
+            {/* 이 지역 주요 관광지 */}
+            {cityData.travelInfo.attractions && cityData.travelInfo.attractions.length > 0 && (
+              <div className="mb-8">
+                <h2 className="text-xl font-bold mb-3">📍 {cityData.name} 주요 관광지</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {cityData.travelInfo.attractions.map((attr, i) => (
+                    <div key={i} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                      <div className="font-semibold text-gray-800 text-sm mb-1">{attr.name}</div>
+                      <p className="text-xs text-gray-500 mb-2">{attr.desc}</p>
+                      <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">
+                        🚶 {attr.distance}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* 주변 호텔 */}
             {siblings.length > 0 && (

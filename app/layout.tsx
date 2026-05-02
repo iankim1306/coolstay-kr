@@ -41,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script {...ldJson(organizationJsonLd())} />
         <script {...ldJson(websiteJsonLd())} />
 
-        <script dangerouslySetInnerHTML={{__html: `(function(){var script=document.createElement("script");script.async=1;script.src='https://emrldtp.com/NTE2NzQ4.js?t=516748';document.head.appendChild(script);})();`}} />
       </head>
       <body className="min-h-screen bg-white text-gray-900">
         <Script
