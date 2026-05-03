@@ -3,6 +3,7 @@ import { COUNTRIES } from "@/lib/destinations";
 import { CITY_NAME_EN, COUNTRY_NAME_EN, tagEn } from "@/lib/i18n";
 import { COUNTRY_DESC_EN, CITY_DESC_EN } from "@/lib/destinations-en";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
+import HotDealSections from "@/components/HotDealSections";
 
 export const revalidate = 21600;
 
@@ -21,25 +22,33 @@ const POPULAR_KEYWORDS = [
   { kw: 'Fukuoka Short Trip', href: '/en/japan/fukuoka' },
 ];
 
+// 8 popular cities (Korea 2 included for foreign visitors)
+const HOT_DEAL_CONFIG = [
+  { cityId: 9590,  name: 'Osaka',    slug: '/en/japan/osaka',      flag: '🇯🇵' },
+  { cityId: 5085,  name: 'Tokyo',    slug: '/en/japan/tokyo',      flag: '🇯🇵' },
+  { cityId: 17196, name: 'Seoul',    slug: '/en/korea/seoul',      flag: '🇰🇷', isNew: true },
+  { cityId: 14808, name: 'Busan',    slug: '/en/korea/busan',      flag: '🇰🇷', isNew: true },
+  { cityId: 9395,  name: 'Bangkok',  slug: '/en/thailand/bangkok', flag: '🇹🇭' },
+  { cityId: 17193, name: 'Bali',     slug: '/en/indonesia/bali',   flag: '🇮🇩' },
+  { cityId: 16440, name: 'Da Nang',  slug: '/en/vietnam/danang',   flag: '🇻🇳' },
+  { cityId: 16056, name: 'Phuket',   slug: '/en/thailand/phuket',  flag: '🇹🇭' },
+];
+
 export default async function EnHomePage() {
   const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8);
 
-  // 4-city hot deals parallel fetch
-  const [osakaDeals, tokyoDeals, bangkokDeals, baliDeals] = await Promise.all([
-    fetchCityHotDeals(9590, 6).catch(() => []),
-    fetchCityHotDeals(5085, 6).catch(() => []),
-    fetchCityHotDeals(9395, 6).catch(() => []),
-    fetchCityHotDeals(17193, 6).catch(() => []),
-  ]);
+  // 8-city hot deals parallel fetch
+  const dealsList = await Promise.all(
+    HOT_DEAL_CONFIG.map(c => fetchCityHotDeals(c.cityId, 6).catch(() => []))
+  );
 
-  const hotDealCities = [
-    { name: 'Osaka', slug: '/en/japan/osaka', deals: osakaDeals },
-    { name: 'Tokyo', slug: '/en/japan/tokyo', deals: tokyoDeals },
-    { name: 'Bangkok', slug: '/en/thailand/bangkok', deals: bangkokDeals },
-    { name: 'Bali', slug: '/en/indonesia/bali', deals: baliDeals },
-  ].filter(c => c.deals.length > 0);
-
-  const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
+  const hotDealCities = HOT_DEAL_CONFIG.map((c, i) => ({
+    name: c.name,
+    slug: c.slug,
+    flag: c.flag,
+    isNew: c.isNew,
+    deals: dealsList[i],
+  })).filter(c => c.deals.length > 0);
 
   return (
     <div>
@@ -57,7 +66,7 @@ export default async function EnHomePage() {
             <span className="text-orange-400">the Lowest Price</span>
           </h1>
           <p className="text-gray-300 text-lg mb-8 max-w-xl mx-auto">
-            Live Agoda deals on Osaka, Bangkok, Bali, and Da Nang — free cancellation, instant confirmation
+            Live Agoda deals across Osaka, Tokyo, Seoul, Bangkok, Bali, and more — free cancellation, instant confirmation
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -78,7 +87,7 @@ export default async function EnHomePage() {
           <div className="flex justify-center gap-8 mt-10 text-sm text-gray-400">
             <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> Best Price Guarantee</span>
             <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> Free Cancellation</span>
-            <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 2.9M+ Properties</span>
+            <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 6,000+ Curated Hotels</span>
           </div>
         </div>
       </section>
@@ -87,9 +96,9 @@ export default async function EnHomePage() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-6 flex justify-center gap-10 sm:gap-20 text-center text-sm">
           {[
-            { num: '2.9M+', label: 'Properties' },
-            { num: '6+', label: 'Asian Countries' },
-            { num: '7%', label: 'Max Discount' },
+            { num: '6,000+', label: 'Curated Hotels' },
+            { num: '26', label: 'Popular Cities' },
+            { num: '7', label: 'Asian Countries' },
             { num: '4.8★', label: 'Avg. Rating' },
           ].map(item => (
             <div key={item.label}>
@@ -100,38 +109,20 @@ export default async function EnHomePage() {
         </div>
       </section>
 
-      {/* Hot deals (simple grid version, no tabs for English MVP) */}
+      {/* 🔥 Today's Popular Hotels */}
       {hotDealCities.length > 0 && (
         <section id="hotdeals" className="max-w-6xl mx-auto px-4 py-14">
-          <div className="mb-2">
-            <h2 className="text-2xl font-bold">🔥 Today&apos;s Hot Deals</h2>
+          <div className="mb-2 flex items-end justify-between flex-wrap gap-2">
+            <div>
+              <h2 className="text-2xl font-bold">🔥 Today&apos;s Popular Hotels</h2>
+              <p className="text-gray-400 mt-1">Real-time Agoda lowest prices · refreshed every 6 hours · {hotDealCities.length} cities</p>
+            </div>
+            <span className="text-xs bg-orange-50 text-orange-600 px-3 py-1.5 rounded-full font-semibold">
+              {hotDealCities.reduce((sum, c) => sum + c.deals.length, 0)} hotels listed
+            </span>
           </div>
-          <p className="text-gray-400 mb-7">Real-time Agoda lowest prices · refreshed every 6 hours</p>
-          <div className="space-y-10">
-            {hotDealCities.map(city => (
-              <div key={city.name}>
-                <div className="flex justify-between items-end mb-4">
-                  <h3 className="text-lg font-bold">{city.name}</h3>
-                  <Link href={city.slug} className="text-sm text-orange-500 hover:underline">View all →</Link>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {city.deals.slice(0, 6).map((d: any) => (
-                    <a key={d.hotelId} href={d.landingURL} target="_blank" rel="noopener noreferrer"
-                      className="block bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-lg transition-all">
-                      {d.imageURL && (
-                        <div className="h-32 overflow-hidden">
-                          <img src={d.imageURL} alt={d.hotelName} className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                      <div className="p-3">
-                        <div className="text-xs text-gray-500 line-clamp-1 mb-1">{d.hotelName}</div>
-                        <div className="text-sm font-bold text-orange-600">${fmt((d.dailyRate || 0) * 0.00074)}</div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
+          <div className="mt-6">
+            <HotDealSections cities={hotDealCities} locale="en" />
           </div>
         </section>
       )}

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { COUNTRIES } from "@/lib/destinations";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import SearchBar from "@/components/SearchBar";
-import HotDealTabs from "@/components/HotDealTabs";
+import HotDealSections from "@/components/HotDealSections";
 
 export const revalidate = 21600 // 6시간마다 갱신
 
@@ -21,33 +21,33 @@ const POPULAR_KEYWORDS = [
   { kw: "후쿠오카 단기 여행", href: "/japan/fukuoka" },
 ];
 
-// 인기 도시 city ID (오사카, 도쿄, 방콕, 발리, 다낭)
-const HOT_DEAL_CITIES = [
-  { cityId: 9590,  name: '오사카', slug: '/japan/osaka' },
-  { cityId: 5085,  name: '도쿄', slug: '/japan/tokyo' },
-  { cityId: 9395,  name: '방콕', slug: '/thailand/bangkok' },
-  { cityId: 17193, name: '발리', slug: '/indonesia/bali' },
+// 8개 인기 도시 (한국 2개 포함)
+const HOT_DEAL_CONFIG = [
+  { cityId: 9590,  name: '오사카', slug: '/japan/osaka',      flag: '🇯🇵' },
+  { cityId: 5085,  name: '도쿄',   slug: '/japan/tokyo',      flag: '🇯🇵' },
+  { cityId: 17196, name: '서울',   slug: '/korea/seoul',      flag: '🇰🇷', isNew: true },
+  { cityId: 14808, name: '부산',   slug: '/korea/busan',      flag: '🇰🇷', isNew: true },
+  { cityId: 9395,  name: '방콕',   slug: '/thailand/bangkok', flag: '🇹🇭' },
+  { cityId: 17193, name: '발리',   slug: '/indonesia/bali',   flag: '🇮🇩' },
+  { cityId: 16440, name: '다낭',   slug: '/vietnam/danang',   flag: '🇻🇳' },
+  { cityId: 16056, name: '푸켓',   slug: '/thailand/phuket',  flag: '🇹🇭' },
 ]
 
 export default async function HomePage() {
   const allCities = COUNTRIES.flatMap(c => c.cities).slice(0, 8)
 
-  // 4개 도시 핫딜 병렬 fetch
-  const [osakaDeals, tokyoDeals, bangkokDeals, baliDeals] = await Promise.all([
-    fetchCityHotDeals(9590, 6).catch(() => []),
-    fetchCityHotDeals(5085, 6).catch(() => []),
-    fetchCityHotDeals(9395, 6).catch(() => []),
-    fetchCityHotDeals(17193, 6).catch(() => []),
-  ])
+  // 8개 도시 핫딜 병렬 fetch
+  const dealsList = await Promise.all(
+    HOT_DEAL_CONFIG.map(c => fetchCityHotDeals(c.cityId, 6).catch(() => []))
+  )
 
-  const hotDealCities = [
-    { name: '오사카', slug: '/japan/osaka',      deals: osakaDeals },
-    { name: '도쿄',   slug: '/japan/tokyo',      deals: tokyoDeals },
-    { name: '방콕',   slug: '/thailand/bangkok', deals: bangkokDeals },
-    { name: '발리',   slug: '/indonesia/bali',   deals: baliDeals },
-  ].filter(c => c.deals.length > 0)
-
-  const fmt = (n: number) => new Intl.NumberFormat('ko-KR').format(Math.round(n))
+  const hotDealCities = HOT_DEAL_CONFIG.map((c, i) => ({
+    name: c.name,
+    slug: c.slug,
+    flag: c.flag,
+    isNew: c.isNew,
+    deals: dealsList[i],
+  })).filter(c => c.deals.length > 0)
 
   return (
     <div>
@@ -65,7 +65,7 @@ export default async function HomePage() {
             <span className="text-orange-400">아고다로 바로 비교</span>
           </h1>
           <p className="text-gray-300 text-lg mb-8 max-w-xl mx-auto">
-            오사카, 방콕, 발리, 다낭 실시간 특가 — 무료 취소 · 즉시 확정
+            오사카·도쿄·서울·방콕·발리·다낭 등 8개 도시 실시간 특가 — 무료 취소·즉시 확정
           </p>
 
           {/* 검색바 */}
@@ -85,13 +85,13 @@ export default async function HomePage() {
             <a href="#hotdeals"
               className="bg-white/10 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-colors border border-white/20"
             >
-              오늘의 특가 보기 🔥
+              오늘의 인기 호텔 🔥
             </a>
           </div>
           <div className="flex justify-center gap-8 mt-10 text-sm text-gray-400">
             <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 최저가 보장</span>
             <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 무료 취소</span>
-            <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 290만개 숙소</span>
+            <span className="flex items-center gap-1.5"><span className="text-green-400">✓</span> 6,000+ 큐레이션 호텔</span>
           </div>
         </div>
       </section>
@@ -100,9 +100,9 @@ export default async function HomePage() {
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-6 flex justify-center gap-10 sm:gap-20 text-center text-sm">
           {[
-            { num: "290만+", label: "전세계 숙소" },
-            { num: "6개국+", label: "아시아 여행지" },
-            { num: "7%", label: "아고다 최대 할인" },
+            { num: "6,000+", label: "큐레이션 호텔" },
+            { num: "26개", label: "인기 도시" },
+            { num: "7개국", label: "아시아 여행지" },
             { num: "4.8★", label: "평균 평점" },
           ].map(item => (
             <div key={item.label}>
@@ -113,14 +113,21 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 🔥 오늘의 특가 */}
+      {/* 🔥 오늘의 인기 호텔 */}
       {hotDealCities.length > 0 && (
         <section id="hotdeals" className="max-w-6xl mx-auto px-4 py-14">
-          <div className="mb-2">
-            <h2 className="text-2xl font-bold">🔥 오늘의 특가</h2>
+          <div className="mb-2 flex items-end justify-between flex-wrap gap-2">
+            <div>
+              <h2 className="text-2xl font-bold">🔥 오늘의 인기 호텔</h2>
+              <p className="text-gray-400 mt-1">실시간 아고다 최저가 · 6시간마다 자동 갱신 · {hotDealCities.length}개 도시 동시 비교</p>
+            </div>
+            <span className="text-xs bg-orange-50 text-orange-600 px-3 py-1.5 rounded-full font-semibold">
+              총 {hotDealCities.reduce((sum, c) => sum + c.deals.length, 0)}개 호텔
+            </span>
           </div>
-          <p className="text-gray-400 mb-7">실시간 아고다 최저가 · 6시간마다 자동 갱신</p>
-          <HotDealTabs cities={hotDealCities} />
+          <div className="mt-6">
+            <HotDealSections cities={hotDealCities} locale="ko" />
+          </div>
         </section>
       )}
 
