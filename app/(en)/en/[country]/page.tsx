@@ -14,9 +14,18 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   const country = getCountryData(slug);
   if (!country) return {};
   const name = COUNTRY_NAME_EN[slug] || country.nameEn;
+  const info = COUNTRY_INFO_EN[slug];
+  const cityList = COUNTRY_DESC_EN[slug] || '';
+  const visaShort = info?.visa?.split('.')[0] || '';
+  const seasonShort = info?.bestSeason?.split('.')[0] || '';
+  const longDesc = `${name} hotels — compare ${country.cities.length} popular cities (${cityList}) at real-time Agoda lowest prices. ${visaShort}. ${seasonShort}. From 3-star budget to 5-star luxury, pool villas, ryokan, and resorts. Free cancellation, instant confirmation, up to 7% extra off.`;
+  const shortDesc = `${name} hotels in ${country.cities.length} cities at the best Agoda prices. Free cancellation, instant confirmation, up to 7% extra off.`;
+
   return {
     title: `${name} Hotels — Compare Lowest Prices | Agoda Partner`,
-    description: `Compare ${name} hotels (${COUNTRY_DESC_EN[slug]}) at the lowest Agoda prices. Free cancellation, instant booking confirmation.`,
+    description: longDesc,
+    openGraph: { title: `${name} Hotels — Compare Lowest Prices | Agoda Partner`, description: shortDesc, url: `https://coolstay.kr/en/${slug}` },
+    twitter: { card: 'summary_large_image', title: `${name} Hotels — Lowest Prices`, description: shortDesc },
     alternates: {
       languages: {
         ko: `https://coolstay.kr/${slug}`,

@@ -39,9 +39,25 @@ export async function generateMetadata({
   if (!hotel) return {};
   const cityData = getCityData(country, city);
   const cityName = cityData?.name ?? hotel.city;
+  // amenity 키워드 자동 감지
+  const text = ((hotel as any).overview_en || hotel.description_ko || '').toLowerCase();
+  const amenityList: string[] = [];
+  if (/pool|swimming|수영/.test(text)) amenityList.push('수영장');
+  if (/breakfast|조식|buffet/.test(text)) amenityList.push('조식');
+  if (/spa|스파/.test(text)) amenityList.push('스파');
+  if (/fitness|gym|피트니스/.test(text)) amenityList.push('피트니스');
+  if (/ocean view|sea view|beach|오션뷰/.test(text)) amenityList.push('오션뷰');
+  if (/rooftop|루프탑/.test(text)) amenityList.push('루프탑');
+  const amenityStr = amenityList.slice(0, 3).join('·') || '편의시설 다수';
+  const checkinStr = hotel.checkin || '15:00';
+  const longDesc = `${hotel.name} ${hotel.star_rating ? `(${hotel.star_rating}성급 ${hotel.accommodation_type})` : ''} 아고다 실시간 최저가. ${cityName} ${hotel.address}. 평점 ${hotel.rating_average}/10·리뷰 ${parseInt(hotel.number_of_reviews).toLocaleString()}개. ${amenityStr}. 무료 취소·즉시 예약 확정·${checkinStr} 체크인.`;
+  const shortDesc = `${hotel.name} 아고다 최저가. ${cityName}, 평점 ${hotel.rating_average}/10. ${amenityStr}. 무료 취소·즉시 확정.`;
+
   return {
     title: `${hotel.name} 최저가 비교 | ${cityName} 호텔 - 쿨스테이`,
-    description: `${hotel.name} (${hotel.star_rating}성급) 아고다 실시간 최저가 확인. ${cityName} ${hotel.address}. 평점 ${hotel.rating_average}, 리뷰 ${hotel.number_of_reviews}개. 무료 취소·즉시 예약 확정.`,
+    description: longDesc,
+    openGraph: { title: `${hotel.name} 최저가 | ${cityName}`, description: shortDesc, url: `https://coolstay.kr/${country}/${city}/hotel/${slug}`, images: hotel.photos[0] ? [hotel.photos[0]] : undefined },
+    twitter: { card: 'summary_large_image', title: `${hotel.name} 최저가`, description: shortDesc },
     alternates: {
       canonical: `https://coolstay.kr/${country}/${city}/hotel/${slug}`,
       languages: {

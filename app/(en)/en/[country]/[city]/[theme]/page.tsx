@@ -35,9 +35,15 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   if (!theme || !cityData || !countryData) return {};
   const cityName = CITY_NAME_EN[city] || city;
   const tEn = THEME_LABEL_EN[themeSlug];
+  const keyword = tEn?.keyword || theme.label;
+  const longDesc = `Top 10 ${keyword} in ${cityName}, ${countryData.nameEn} — handpicked from real guest reviews (8.0+ ratings only). Compare live Agoda lowest prices in one place. Free cancellation, instant booking confirmation, up to 7% extra off. Curated for couples, families, honeymooners, and solo travelers.`;
+  const shortDesc = `Top 10 ${keyword} in ${cityName} — verified 8.0+ ratings, live Agoda prices. Free cancellation, instant confirmation.`;
+
   return {
-    title: `${cityName} ${tEn?.keyword || theme.label} TOP 10 | COOLSTAY`,
-    description: `Top 10 ${tEn?.keyword || theme.label} in ${cityName}, ranked by real guest reviews with live Agoda lowest prices.`,
+    title: `${cityName} ${keyword} TOP 10 | COOLSTAY`,
+    description: longDesc,
+    openGraph: { title: `${cityName} ${keyword} TOP 10`, description: shortDesc, url: `https://coolstay.kr/en/${country}/${city}/${themeSlug}`, images: [cityData.img] },
+    twitter: { card: 'summary_large_image', title: `${cityName} ${keyword} TOP 10`, description: shortDesc, images: [cityData.img] },
     alternates: {
       canonical: `https://coolstay.kr/en/${country}/${city}/${themeSlug}`,
       languages: {

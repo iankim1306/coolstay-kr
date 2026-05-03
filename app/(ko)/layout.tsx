@@ -14,16 +14,20 @@ const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://coolstay.kr"),
   title: "쿨스테이 - 해외 호텔 최저가 비교 | 아고다 특가",
-  description: "일본, 태국, 베트남, 발리, 필리핀, 대만 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.",
+  description: "일본·태국·베트남·발리·필리핀·대만 21개 도시 6,000개+ 호텔을 아고다 실시간 최저가로 비교하세요. 오사카·도쿄·방콕·발리·다낭 인기 도시 가성비 호텔부터 5성급 럭셔리·풀빌라까지 한 곳에서. 무료 취소·즉시 예약 확정·평균 7% 추가 할인.",
   openGraph: {
     siteName: "쿨스테이",
     locale: "ko_KR",
     type: "website",
     url: "https://coolstay.kr",
+    title: "쿨스테이 - 해외 호텔 최저가 비교 | 아고다 특가",
+    description: "일본·동남아 21개 도시 6,000개 호텔 아고다 실시간 최저가 비교. 오사카·방콕·발리·다낭 인기 도시 가성비 호텔부터 5성급 풀빌라까지. 무료 취소·즉시 확정·최대 7% 추가 할인.",
   },
   twitter: {
     card: "summary_large_image",
     site: "@coolstay_kr",
+    title: "쿨스테이 - 해외 호텔 최저가 비교",
+    description: "일본·동남아 21개 도시 6,000개 호텔 아고다 실시간 최저가 비교. 무료 취소·즉시 예약 확정·최대 7% 추가 할인.",
   },
   verification: {
     other: {

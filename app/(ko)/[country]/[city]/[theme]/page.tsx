@@ -30,9 +30,15 @@ export async function generateMetadata({
   const countryData = getCountryData(country);
   if (!theme || !cityData || !countryData) return {};
   const cityName = cityData.name;
+  const seasonShort = cityData.travelInfo?.bestSeason?.split('.')[0] || '';
+  const longDesc = `${cityName} ${theme.keyword} TOP 10 추천 — 실제 투숙객 리뷰·평점 8.0+ 기준으로 엄선한 ${countryData.name} ${cityName} ${theme.keyword} 리스트. 아고다 실시간 최저가, 무료 취소 가능, 즉시 예약 확정. ${seasonShort}. 평균 7% 추가 할인 혜택 포함.`;
+  const shortDesc = `${cityName} ${theme.keyword} TOP 10 — 평점 8.0+ 검증, 아고다 최저가. 무료 취소·즉시 확정·최대 7% 추가 할인.`;
+
   return {
     title: `${cityName} ${theme.keyword} TOP 10 - ${countryData.name} 여행 | 쿨스테이`,
-    description: `${cityName} ${theme.keyword} 추천 리스트. 실제 투숙객 리뷰 기반으로 엄선한 TOP 10과 아고다 실시간 최저가를 한 곳에서 비교하세요.`,
+    description: longDesc,
+    openGraph: { title: `${cityName} ${theme.keyword} TOP 10`, description: shortDesc, url: `https://coolstay.kr/${country}/${city}/${themeSlug}`, images: [cityData.img] },
+    twitter: { card: 'summary_large_image', title: `${cityName} ${theme.keyword} TOP 10`, description: shortDesc, images: [cityData.img] },
     alternates: {
       canonical: `https://coolstay.kr/${country}/${city}/${themeSlug}`,
       languages: {

@@ -19,9 +19,24 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   const hotel = getHotel(country, city, slug);
   if (!hotel) return {};
   const cityName = CITY_NAME_EN[city] || city;
+  const text = ((hotel as any).overview_en || hotel.description_ko || '').toLowerCase();
+  const amenityList: string[] = [];
+  if (/pool|swimming/.test(text)) amenityList.push('Pool');
+  if (/breakfast|buffet/.test(text)) amenityList.push('Breakfast');
+  if (/spa/.test(text)) amenityList.push('Spa');
+  if (/fitness|gym/.test(text)) amenityList.push('Fitness');
+  if (/ocean view|sea view|beach/.test(text)) amenityList.push('Ocean View');
+  if (/rooftop/.test(text)) amenityList.push('Rooftop');
+  const amenityStr = amenityList.slice(0, 3).join(' · ') || 'multiple amenities';
+  const checkinStr = hotel.checkin || '3:00 PM';
+  const longDesc = `${hotel.name} ${hotel.star_rating ? `(${hotel.star_rating}-star ${hotel.accommodation_type})` : ''} live Agoda lowest price. ${cityName}, ${hotel.address}. Rated ${hotel.rating_average}/10 from ${parseInt(hotel.number_of_reviews).toLocaleString()} verified reviews. Features: ${amenityStr}. Free cancellation, instant confirmation, check-in from ${checkinStr}.`;
+  const shortDesc = `${hotel.name} at Agoda's lowest price in ${cityName}. ${hotel.rating_average}/10 rating. ${amenityStr}. Free cancellation, instant confirmation.`;
+
   return {
     title: `${hotel.name} — Compare Lowest Price | ${cityName} Hotels`,
-    description: `${hotel.name} (${hotel.star_rating}-star). Live Agoda price for ${cityName}. ${hotel.address}. Rating ${hotel.rating_average}, ${hotel.number_of_reviews} reviews. Free cancellation, instant confirmation.`,
+    description: longDesc,
+    openGraph: { title: `${hotel.name} — Lowest Price | ${cityName}`, description: shortDesc, url: `https://coolstay.kr/en/${country}/${city}/hotel/${slug}`, images: hotel.photos[0] ? [hotel.photos[0]] : undefined },
+    twitter: { card: 'summary_large_image', title: `${hotel.name} — Lowest Price`, description: shortDesc },
     alternates: {
       languages: {
         ko: `https://coolstay.kr/${country}/${city}/hotel/${slug}`,

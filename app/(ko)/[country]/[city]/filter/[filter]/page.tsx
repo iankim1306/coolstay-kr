@@ -28,9 +28,15 @@ export async function generateMetadata({
   const filter = getFilter(filterSlug);
   const cityData = getCityData(country, city);
   if (!filter || !cityData) return {};
+  const introShort = filter.intro(cityData.name).split('.')[0];
+  const longDesc = `${cityData.name} ${filter.longLabel} TOP 20 추천 — 실제 투숙객 평점 7.5+ 검증된 호텔만 모음. ${introShort}. 아고다 실시간 최저가 비교, 무료 취소 가능, 즉시 예약 확정. 평균 7% 추가 할인 혜택 포함.`;
+  const shortDesc = `${cityData.name} ${filter.longLabel} TOP 20 — 평점 7.5+ 검증, 아고다 최저가. 무료 취소·즉시 확정.`;
+
   return {
     title: `${cityData.name} ${filter.longLabel} TOP 20 | 쿨스테이`,
-    description: `${cityData.name} ${filter.longLabel} 추천 리스트. 평점·가격 검증된 호텔 20개와 아고다 실시간 최저가 비교.`,
+    description: longDesc,
+    openGraph: { title: `${cityData.name} ${filter.longLabel} TOP 20`, description: shortDesc, url: `https://coolstay.kr/${country}/${city}/filter/${filterSlug}`, images: [cityData.img] },
+    twitter: { card: 'summary_large_image', title: `${cityData.name} ${filter.longLabel} TOP 20`, description: shortDesc, images: [cityData.img] },
     alternates: {
       canonical: `https://coolstay.kr/${country}/${city}/filter/${filterSlug}`,
     },

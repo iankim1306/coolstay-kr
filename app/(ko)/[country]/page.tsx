@@ -11,9 +11,17 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   const { country: slug } = await params;
   const country = getCountryData(slug);
   if (!country) return {};
+  const cityNames = country.cities.map(c => c.name).join('·');
+  const visaShort = country.countryInfo?.visa?.split('.')[0] || '';
+  const seasonShort = country.countryInfo?.bestSeason?.split('.')[0] || '';
+  const longDesc = `${country.name} 호텔 추천 — ${cityNames} ${country.cities.length}개 도시 호텔 아고다 실시간 최저가 비교. ${visaShort}. ${seasonShort}. 3성급 가성비부터 5성급 럭셔리·풀빌라·온천·료칸까지 모든 가격대. 무료 취소·즉시 예약 확정·평균 7% 추가 할인.`;
+  const shortDesc = `${country.name} ${cityNames} ${country.cities.length}개 도시 호텔 아고다 실시간 최저가. 가성비부터 럭셔리까지. 무료 취소·즉시 확정·최대 7% 추가 할인.`;
+
   return {
     title: `${country.name} 호텔 최저가 비교 | 아고다 특가`,
-    description: `${country.name} ${country.desc} 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.`,
+    description: longDesc,
+    openGraph: { title: `${country.name} 호텔 최저가 비교 | 아고다 특가`, description: shortDesc, url: `https://coolstay.kr/${slug}` },
+    twitter: { card: 'summary_large_image', title: `${country.name} 호텔 최저가 비교`, description: shortDesc },
     alternates: {
       canonical: `https://coolstay.kr/${slug}`,
       languages: {

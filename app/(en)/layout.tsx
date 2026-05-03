@@ -15,16 +15,20 @@ const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 export const metadata: Metadata = {
   metadataBase: new URL("https://coolstay.kr"),
   title: "COOLSTAY — Asia Hotels at Lowest Price | Agoda Partner",
-  description: "Compare hotels in Japan, Thailand, Vietnam, Bali, Philippines, and Taiwan at the best Agoda prices. Free cancellation. Instant booking confirmation.",
+  description: "Compare 6,000+ hotels across 21 Asian cities — Japan, Thailand, Vietnam, Bali, Philippines, Taiwan — at real-time Agoda lowest prices. From budget rooms in Osaka and Bangkok to 5-star luxury and pool villas in Bali and Phuket. Free cancellation, instant confirmation, up to 7% extra off.",
   openGraph: {
     siteName: "COOLSTAY",
     locale: "en_US",
     type: "website",
     url: "https://coolstay.kr/en",
+    title: "COOLSTAY — Asia Hotels at Lowest Price | Agoda Partner",
+    description: "Compare 6,000+ Asian hotels at Agoda lowest prices across 21 cities including Osaka, Tokyo, Bangkok, Bali, and Da Nang. Free cancellation, instant confirmation, up to 7% extra off.",
   },
   twitter: {
     card: "summary_large_image",
     site: "@coolstay_kr",
+    title: "COOLSTAY — Asia Hotels at Lowest Price",
+    description: "6,000+ hotels in Japan, Thailand, Vietnam, Bali, Philippines, Taiwan. Live Agoda prices, free cancellation, instant confirmation.",
   },
   verification: {
     other: {

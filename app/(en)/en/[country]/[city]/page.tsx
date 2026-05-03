@@ -22,9 +22,17 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   if (!city) return {};
   const name = CITY_NAME_EN[citySlug] || city.nameEn;
   const desc = CITY_DESC_EN[citySlug] || city.desc;
+  const info = CITY_TRAVEL_INFO_EN[citySlug];
+  const areaNames = info?.areas?.slice(0, 3).map(a => a.name).join(', ') || '';
+  const avgPriceShort = info?.avgPrice?.split('.')[0] || '';
+  const longDesc = `${name} hotels — compare prices across ${areaNames || 'top neighborhoods'}. ${desc}. ${avgPriceShort}. Real-time Agoda lowest prices, free cancellation, instant confirmation, up to 7% extra off.`;
+  const shortDesc = `${name} hotels at Agoda lowest prices in ${areaNames || 'top areas'}. ${desc}. Free cancellation, instant confirmation.`;
+
   return {
     title: `${name} Hotels — Lowest Prices on Agoda`,
-    description: `Compare ${name} hotels at the lowest Agoda prices. ${desc}. Free cancellation, instant confirmation.`,
+    description: longDesc,
+    openGraph: { title: `${name} Hotels — Lowest Prices on Agoda`, description: shortDesc, url: `https://coolstay.kr/en/${countrySlug}/${citySlug}`, images: [city.img] },
+    twitter: { card: 'summary_large_image', title: `${name} Hotels — Lowest Prices`, description: shortDesc, images: [city.img] },
     alternates: {
       languages: {
         ko: `https://coolstay.kr/${countrySlug}/${citySlug}`,
