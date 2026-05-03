@@ -6,12 +6,27 @@ import { CITY_NAME_EN, COUNTRY_NAME_EN } from "@/lib/i18n";
 import { CITY_TRAVEL_INFO_EN } from "@/lib/destinations-en";
 import { breadcrumbJsonLd, hotelJsonLd, faqJsonLd, ldJson } from "@/lib/jsonld";
 
+export const revalidate = 21600; // 6시간 ISR 캐시
+
+// ISR 전략: 빌드 시 각 도시 TOP 4개만 정적, 나머지는 동적 생성 + 6시간 캐시
 export async function generateStaticParams() {
-  return getAllHotels().map(({ countrySlug, citySlug, hotel }) => ({
-    country: countrySlug,
-    city: citySlug,
-    slug: hotelSlug(hotel),
-  }));
+  const all = getAllHotels();
+  const byCity: Record<string, typeof all> = {};
+  for (const item of all) {
+    const key = `${item.countrySlug}/${item.citySlug}`;
+    if (!byCity[key]) byCity[key] = [];
+    byCity[key].push(item);
+  }
+  const result: Array<{ country: string; city: string; slug: string }> = [];
+  for (const cityHotels of Object.values(byCity)) {
+    const top4 = cityHotels
+      .sort((a, b) => (parseFloat(b.hotel.rating_average) || 0) - (parseFloat(a.hotel.rating_average) || 0))
+      .slice(0, 4);
+    for (const { countrySlug, citySlug, hotel } of top4) {
+      result.push({ country: countrySlug, city: citySlug, slug: hotelSlug(hotel) });
+    }
+  }
+  return result;
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ country: string; city: string; slug: string }> }) {

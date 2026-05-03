@@ -21,12 +21,27 @@ import {
   ldJson,
 } from "@/lib/jsonld";
 
+// ISR 전략: 빌드 시 각 도시 평점 TOP 4개만 정적 생성, 나머지는 첫 요청 시 동적 생성 후 6시간 캐시
+// → deployment 크기 95% 감소 (3,897개 → ~104개), Vercel Hobby 한도 안 건드림
+// dynamicParams는 기본값 true이므로 명시 불필요
 export async function generateStaticParams() {
-  return getAllHotels().map(({ countrySlug, citySlug, hotel }) => ({
-    country: countrySlug,
-    city: citySlug,
-    slug: hotelSlug(hotel),
-  }));
+  const all = getAllHotels();
+  const byCity: Record<string, typeof all> = {};
+  for (const item of all) {
+    const key = `${item.countrySlug}/${item.citySlug}`;
+    if (!byCity[key]) byCity[key] = [];
+    byCity[key].push(item);
+  }
+  const result: Array<{ country: string; city: string; slug: string }> = [];
+  for (const cityHotels of Object.values(byCity)) {
+    const top4 = cityHotels
+      .sort((a, b) => (parseFloat(b.hotel.rating_average) || 0) - (parseFloat(a.hotel.rating_average) || 0))
+      .slice(0, 4);
+    for (const { countrySlug, citySlug, hotel } of top4) {
+      result.push({ country: countrySlug, city: citySlug, slug: hotelSlug(hotel) });
+    }
+  }
+  return result;
 }
 
 export async function generateMetadata({
