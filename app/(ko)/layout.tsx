@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
-import "./globals.css";
+import "../globals.css";
 import { organizationJsonLd, websiteJsonLd, ldJson } from "@/lib/jsonld";
 import { COUNTRIES } from "@/lib/destinations";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const GA_ID = "G-CVRE4H4QDX";
 
@@ -123,14 +124,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="/indonesia" className="hover:text-orange-500 transition-colors">인도네시아</a>
               <a href="/taiwan" className="hover:text-orange-500 transition-colors">대만</a>
             </nav>
-            <a
-              href="https://www.agoda.com/?cid=1962399"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
-            >
-              아고다 특가
-            </a>
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher />
+              <a
+                href="https://www.agoda.com/?cid=1962399"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-orange-500 text-white text-sm px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
+              >
+                아고다 특가
+              </a>
+            </div>
           </div>
         </header>
 
