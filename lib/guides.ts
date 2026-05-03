@@ -166,6 +166,115 @@ export const GUIDES: GuideContent[] = [
     bestSeasonNote: '4~10월 건기가 최고이지만 가격이 비쌉니다. 11~3월 우기는 30% 저렴하며, 풀빌라 안에서 즐기기엔 충분합니다.',
     keywords: ['발리 호텔', '발리 풀빌라', '우붓 풀빌라', '스미냑 풀빌라', '발리 신혼여행', '발리 호텔 추천', '발리 호텔 가성비'],
   },
+  {
+    slug: 'seoul-hotels-foreign-guide-2026',
+    title: 'Seoul Hotels Guide 2026 — Where to Stay for First-Time Foreign Visitors | COOLSTAY',
+    h1: 'Seoul Hotels Guide 2026 — Best Areas for Foreign Visitors',
+    metaDescription: 'Complete 2026 guide for foreign visitors to Seoul. Compare Myeongdong, Gangnam, Hongdae, and Jongno districts. K-pop fan hotels, English-friendly stays, prices, and seasonal tips.',
+    cityKey: 'seoul',
+    countryKey: 'korea',
+    intro: 'Seoul is one of Asia\'s most dynamic capitals — a 24-hour city that blends Joseon Dynasty palaces with K-pop entertainment, Michelin-starred Korean BBQ, and futuristic shopping districts. For first-time foreign visitors, choosing where to stay is the single biggest decision affecting your trip. This 2026 guide breaks down Seoul\'s four major hotel districts (Myeongdong, Gangnam, Hongdae, Jongno), explains who each area is best for, and shares practical tips on prices, English-language services, K-pop fan experiences, and the best seasons to visit.',
+    sections: [
+      {
+        h2: 'Seoul Hotel Districts — Where Should You Stay?',
+        content: 'Seoul has four major hotel districts, each with a completely different vibe. **Myeongdong** is the #1 choice for first-time visitors — it\'s the tourist hub with the highest concentration of English-speaking hotels, duty-free shopping, money exchanges, and street food, all walkable. **Gangnam** (yes, the one from "Gangnam Style") is upscale Seoul — luxury hotels, K-pop entertainment company HQs (SM, JYP, HYBE), high-end shopping, and Korea\'s most expensive nightlife. **Hongdae** is for younger travelers and music lovers — it surrounds Hongik University with clubs, indie music venues, trendy cafes, and budget-friendly accommodations. **Jongno** is for culture seekers — Gyeongbokgung Palace, Insadong traditional crafts, and Bukchon Hanok Village are all within walking distance. Most foreign first-timers choose Myeongdong; K-pop fans prefer Gangnam; backpackers love Hongdae.',
+        bullets: [
+          'Myeongdong — first-time visitors, English-friendly: $80–180/night',
+          'Gangnam — luxury, K-pop fans, business: $150–400/night',
+          'Hongdae — backpackers, nightlife, students: $50–120/night',
+          'Jongno/Insadong — culture, palaces, traditional: $80–180/night',
+        ],
+      },
+      {
+        h2: 'K-pop Fan Hotels — Where Idols Stay',
+        content: 'For K-pop fans, hotel choice is part of the experience. Major entertainment companies are concentrated in Gangnam and Yongsan: **SM Entertainment** is in Seongsu (near Seongsu Stn), **HYBE** (BTS) is in Yongsan, **JYP** is in Gangdong, and **YG** is in Hapjeong (Hongdae area). The Conrad Seoul and Glad Yeouido are popular among industry insiders. For fan meetings and concerts, **Olympic Park (Songpa)** and **Gocheok Sky Dome (Guro)** are major venues — staying near subway lines that connect to these areas saves time. Many tourists also stay at hotels near **HYBE Insight** (BTS museum, Yongsan) or **SMTOWN @COEX** (Gangnam).',
+      },
+      {
+        h2: 'Seoul Hotel Prices by Season',
+        content: 'Seoul hotel prices fluctuate significantly by season. **Cherry blossom season (early April)** and **autumn leaves season (mid-October to early November)** are peak — expect prices 1.5–2x normal. **K-pop concert dates** (especially BLACKPINK, BTS, NCT major events) drive up prices in concert venue neighborhoods. **Korean holidays** (Chuseok in September/October, Lunar New Year in January/February) see hotel prices double as domestic travel surges. **Winter (December–February)** is generally cheaper despite cold weather — except for ski season packages. The sweet spot for value: late May, late June, or early November when weather is good and prices are reasonable.',
+      },
+      {
+        h2: 'Common Mistakes Foreign Visitors Make',
+        content: 'Five most common Seoul hotel booking mistakes. First, **staying outside the subway loop** — even saving $20/night on a hotel in Songpa or Mapo means daily 30+ minute commutes to tourist sites. Second, **not checking English-friendliness** — some Korean business hotels have minimal English support; check reviews. Third, **booking last-minute during peak Korean holidays** — Chuseok week prices triple. Fourth, **assuming Hongdae = quiet** — it\'s a 24-hour party district, choose carefully if you need sleep. Fifth, **booking too far from a subway station** — Seoul subway is incredibly efficient (₩1,400/ride), but 10+ min walks add up over 3 days.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Where is the best area for first-time visitors to Seoul?',
+        a: 'Myeongdong is the top recommendation for first-time foreign visitors. It has the highest concentration of English-speaking hotel staff, walking-distance access to duty-free shopping, money exchange, and street food, plus easy subway access (Lines 4 and 2) to all major tourist sites including Gyeongbokgung Palace and Namsan/N Seoul Tower.',
+      },
+      {
+        q: 'Which Seoul hotels do K-pop celebrities stay at?',
+        a: 'Industry insiders frequently mention the Conrad Seoul (Yeouido), Park Hyatt Seoul (Gangnam), Four Seasons Seoul (Jongno), and Signiel Seoul (Lotte Tower, Jamsil). For visiting fans, hotels in Gangnam (SMTOWN @COEX) or Yongsan (HYBE Insight) make sense for entertainment-related sightseeing.',
+      },
+      {
+        q: 'Is K-ETA required for visa-free entry to Korea?',
+        a: 'Yes, K-ETA (Korea Electronic Travel Authorization) is required for citizens of visa-free countries (US, Japan, EU, etc.) since 2021. Apply online at least 24 hours before arrival at koreavisa.go.kr. Cost is approximately $7. Some nationalities are temporarily exempt — check current rules.',
+      },
+      {
+        q: 'How much should I budget for hotels in Seoul?',
+        a: 'Budget travelers can find clean 3-star hotels in Myeongdong or Hongdae for $50–80/night. Mid-range 4-star hotels in Gangnam or Myeongdong average $120–180/night. Luxury 5-star hotels (Lotte, Hyatt, Conrad) start at $250 and go up to $500+/night. Boutique hanok stays in Jongno are around $100–250/night.',
+      },
+      {
+        q: 'Can I get around Seoul without speaking Korean?',
+        a: 'Absolutely. Seoul is one of the most foreigner-friendly Asian cities. Subway signs are in Korean, English, Chinese, and Japanese. Most major restaurants have English menus. Younger Koreans (under 35) generally have basic English. Apps like Naver Map, KakaoMap, and Papago translation are essential. T-money transit cards work like contactless payment.',
+      },
+    ],
+    bestSeasonNote: 'April (cherry blossoms) and mid-October to early November (autumn leaves) are most beautiful but most expensive. For best value: late May, late June, or early November. Avoid Korean holidays (Chuseok, Lunar New Year) when domestic travel triples prices.',
+    keywords: ['Seoul hotels', 'Seoul hotel guide', 'Where to stay in Seoul', 'Myeongdong hotels', 'Gangnam hotels', 'Hongdae hotels', 'Seoul K-pop hotels', 'Seoul travel guide 2026'],
+  },
+  {
+    slug: 'busan-hotels-foreign-guide-2026',
+    title: 'Busan Hotels Guide 2026 — Beach, City, Spa Districts | COOLSTAY',
+    h1: 'Busan Hotels Guide 2026 — Beach, Downtown, and Spa Districts',
+    metaDescription: 'Complete 2026 Busan hotels guide for foreign visitors. Compare Haeundae beach resorts, Seomyeon downtown, and Gwangalli ocean-view districts. KTX from Seoul, Gyeongju day trips, and Korean BBQ tips.',
+    cityKey: 'busan',
+    countryKey: 'korea',
+    intro: 'Busan is South Korea\'s second-largest city and the country\'s premier beach destination. Located on the southeastern coast, it offers a striking contrast to Seoul: Haeundae Beach\'s skyscrapers, Gamcheon Culture Village\'s rainbow houses, fresh sashimi at Jagalchi Market, and a mountain backdrop that touches the sea. For foreign visitors, Busan is ideally a 2-night extension to a Seoul trip via KTX (2.5 hours), or a base for exploring Gyeongju (UNESCO World Heritage, 30 minutes away). This guide covers Busan\'s three main hotel districts and shows you how to combine Busan with surrounding cities.',
+    sections: [
+      {
+        h2: 'Busan Hotel Districts — Beach vs Downtown',
+        content: 'Busan has three core hotel zones with distinct vibes. **Haeundae** is Korea\'s most famous beach district — luxury 5-star hotels (Park Hyatt, Paradise, Westin Chosun) line the 1.5km beach. Best for couples, honeymooners, and anyone wanting a beach vacation. **Seomyeon** is downtown Busan — the transit hub with the most subway lines, shopping, and restaurants. Good for travelers prioritizing convenience and budget. **Gwangalli** is the photogenic alternative — quieter than Haeundae, with the iconic Gwangan Bridge night views and seafood restaurants. Often cheaper than Haeundae for similar quality.',
+        bullets: [
+          'Haeundae — beach resort, luxury, couples: $100–350/night',
+          'Seomyeon — downtown convenience, business: $50–150/night',
+          'Gwangalli — ocean view, quieter, photo spots: $70–180/night',
+        ],
+      },
+      {
+        h2: 'KTX Access from Seoul + Gyeongju Day Trip',
+        content: 'Busan is highly accessible via KTX high-speed rail from Seoul (2h 30min, ₩59,800 standard one-way). Departure stations: **Seoul Stn** (KTX) or **Suseo Stn** (SRT). Arrival: **Busan Stn** (downtown). For maximum efficiency, many foreign visitors do a 4-night trip: 3 nights in Seoul + 1–2 nights in Busan via KTX. **Gyeongju**, Korea\'s ancient Silla Dynasty capital with UNESCO World Heritage temples (Bulguksa, Seokguram), is just 30 minutes from Busan by KTX. Many travelers use Busan as a base and day-trip to Gyeongju, then return to Busan for evening seafood at Jagalchi or Gwangalli Beach.',
+      },
+      {
+        h2: 'Busan Food Guide — Seafood, Pork, Street Eats',
+        content: 'Busan is a food paradise distinct from Seoul. **Sashimi (회)** at Haeundae Market or Jagalchi Market — pick your fish live, eat it filleted with spicy fish stew (매운탕). **Pork-based gukbap (돼지국밥)** is a Busan signature — try Seomyeon Market\'s 70-year-old shops. **Milmyeon (밀면)** is Busan\'s answer to naengmyeon — cold wheat noodles in spicy or cold broth. **Gwangalli\'s seafood pajeon (해물파전)** with makgeolli at sunset on the beach is iconic. Street food at Gukje Market (BIFF Square) includes ssiat hotteok (seed-filled pancakes) — Busan-only treat.',
+      },
+      {
+        h2: 'Best Time to Visit Busan',
+        content: 'Busan is generally warmer than Seoul year-round. **May–June** and **September–October** are ideal — pleasant 18–25°C, low humidity, perfect for beach walks. **July–August** is Haeundae\'s peak — Korean families flock here for summer vacation, and hotel prices double. The beach is still beautiful but extremely crowded. **Winter (December–February)** is cool but rarely freezing — beach hotels offer significant discounts (sometimes 50% off summer prices). The **Busan International Film Festival (BIFF)** in early October brings global crowds — book early if visiting then.',
+      },
+    ],
+    faq: [
+      {
+        q: 'Is Busan worth visiting if I only have a few days in Korea?',
+        a: 'Yes, especially if you have 5+ days. Busan offers a completely different experience from Seoul — beach, mountains, fresh seafood, and a slower pace. A 4-night trip splitting 3 nights Seoul + 1–2 nights Busan via KTX is the most popular foreign visitor itinerary. If you only have 3 days total, focus on Seoul.',
+      },
+      {
+        q: 'Should I stay in Haeundae or downtown (Seomyeon)?',
+        a: 'Haeundae for vacation/beach experience and luxury hotels. Seomyeon for budget travelers, business, or those prioritizing transit convenience. Gwangalli is the underrated middle option — quieter than Haeundae but with great ocean views and seafood, often 20–30% cheaper than Haeundae for similar quality.',
+      },
+      {
+        q: 'How do I get from Busan to Gyeongju?',
+        a: 'KTX from Busan to Singyeongju Stn takes 30 minutes (₩11,000 one-way). From Singyeongju, take a city bus or taxi to Bulguksa Temple (about 20 min). A typical Gyeongju day trip from Busan is 8–10 hours: morning Bulguksa + Seokguram, lunch in Gyeongju, afternoon Daereungwon and city center, evening return to Busan.',
+      },
+      {
+        q: 'Are Busan beaches safe for swimming?',
+        a: 'Yes, in summer (July–August), Haeundae and Gwangalli beaches have official swimming zones with lifeguards, ropes, and safety facilities. Outside the official season, swimming is not supervised. Korean beach culture is very modest — most Koreans wear t-shirts and shorts in the water rather than swimsuits.',
+      },
+    ],
+    bestSeasonNote: 'May–June and September–October are best — warm but not crowded. July–August is peak season at Haeundae (prices double). Winter offers great value at beach resorts (50% off summer rates).',
+    keywords: ['Busan hotels', 'Busan hotel guide', 'Haeundae hotels', 'Seomyeon hotels', 'Gwangalli hotels', 'Busan beach resort', 'Busan travel guide 2026', 'KTX Seoul to Busan'],
+  },
 ];
 
 export const GUIDE_MAP: Record<string, GuideContent> = Object.fromEntries(GUIDES.map(g => [g.slug, g]));

@@ -26,6 +26,7 @@ export const COUNTRY_DESC_EN: Record<string, string> = {
   philippines: 'Cebu · Boracay · Manila',
   indonesia: 'Bali · Jakarta · Lombok',
   taiwan: 'Taipei · Taichung · Kaohsiung',
+  korea: 'Seoul · Busan · Jeju · Incheon · Gyeongju',
 }
 
 export const COUNTRY_INFO_EN: Record<string, CountryTravelInfoEn> = {
@@ -107,6 +108,19 @@ export const COUNTRY_INFO_EN: Record<string, CountryTravelInfoEn> = {
       '3 – 4 days is enough to enjoy Taipei thoroughly.',
     ],
   },
+  korea: {
+    visa: 'K-ETA required for visa-free entry (US/Japan/EU citizens, 90 days). Apply online at least 24 hours before arrival.',
+    currency: 'Korean Won (₩). 1 USD ≈ 1,400 KRW. Cards widely accepted; airport money exchanges convenient.',
+    flight: 'Incheon International (ICN) is the Northeast Asia hub with 80+ international airlines. Gimpo (GMP) for short-haul. Jeju (CJU) for the island.',
+    bestSeason: 'Apr – May (cherry blossoms) and Sep – Oct (autumn leaves) are best. Jul – Aug is rainy and humid. Dec – Feb is cold but ski season.',
+    tips: [
+      'Get a T-money transit card at any convenience store — works on subway, buses, and convenience stores nationwide.',
+      'Pocket WiFi at airport pickup or KT/SKT eSIM is essential.',
+      'KTX high-speed rail connects Seoul to Busan in 2.5 hours.',
+      'Most younger Koreans speak basic English; signage is well-translated in Seoul.',
+      'Try Korean BBQ, bibimbap, jjajangmyeon, and street food — many late-night dining options.',
+    ],
+  },
 }
 
 export const CITY_DESC_EN: Record<string, string> = {
@@ -131,6 +145,11 @@ export const CITY_DESC_EN: Record<string, string> = {
   boracay: 'White Beach, pool villas, honeymoon',
   bali: 'Ubud, Kuta, Seminyak pool villas',
   taipei: 'Ximending, Da-an, near Taipei 101',
+  seoul: 'Myeongdong, Gangnam, Hongdae, Jongno hotels',
+  busan: 'Haeundae Beach, Seomyeon, Gwangalli hotels',
+  jeju: 'Jeju City, Seogwipo, Hallasan hotels',
+  incheon: 'Airport, Songdo, Chinatown hotels',
+  gyeongju: 'Bomun Resort, City center, Bulguksa hotels',
 }
 
 export const CITY_TRAVEL_INFO_EN: Record<string, CityTravelInfoEn> = {
@@ -607,6 +626,124 @@ export const CITY_TRAVEL_INFO_EN: Record<string, CityTravelInfoEn> = {
       { name: 'Shilin Night Market', desc: "Taiwan's biggest night market. Affordable food and souvenirs", distance: '5 min walk from Jiantan Stn' },
       { name: 'National Palace Museum', desc: 'Royal Chinese treasures (700,000 items). One of the world\'s top 4', distance: '15 min bus from Shilin Stn' },
       { name: 'Ximending', desc: "Taiwan's youth culture center. Markets, cinemas, shopping", distance: '5 min walk from Ximen Stn' },
+    ],
+  },
+  seoul: {
+    airport: 'Incheon International (ICN) → Seoul Stn ~50 min via Airport Railroad (₩9,500). Gimpo (GMP) is 30 min from city via subway.',
+    bestSeason: 'Apr–May (cherry blossoms) and Sep–Oct (autumn leaves) are best. Jul–Aug rainy season. Dec–Feb cold but festive.',
+    areas: [
+      { name: 'Myeongdong', desc: 'Tourist & shopping #1. English-friendly hotels concentrated here. Duty-free shops, money exchange, food all walkable. Best for first-time visitors.' },
+      { name: 'Gangnam/Yeoksam', desc: 'Business and luxury shopping. K-pop entertainment district. Many 4-star+ hotels. Trendy nightlife.' },
+      { name: 'Hongdae/Hapjeong', desc: 'Clubs, live music, trendy cafes. Popular with 20s–30s and backpackers. Walking distance to Hongik University.' },
+      { name: 'Jongno/Insadong', desc: 'Walking distance to Gyeongbokgung Palace, Insadong, and Bukchon Hanok Village. Best for cultural travelers.' },
+    ],
+    avgPrice: '3-star $50–90/night, 4-star $95–180/night, 5-star $215+/night. Myeongdong and Gangnam are priciest.',
+    tips: [
+      'Myeongdong hotels have the most English-speaking staff.',
+      'Get a T-money card on arrival — works on subway, buses, and convenience stores nationwide.',
+      'KTX/SRT high-speed rail leaves from Seoul Stn (KTX) or Suseo Stn (SRT). Day trips to Busan and Gyeongju possible.',
+      'Free entry to Gyeongbokgung and Changdeokgung Palaces if wearing hanbok (rentable nearby).',
+      'Seoul never sleeps — many 24-hour cafes, restaurants, and convenience stores.',
+    ],
+    attractions: [
+      { name: 'Gyeongbokgung Palace', desc: 'Joseon Dynasty main palace. Royal guard ceremony + free entry with hanbok', distance: 'Direct at Gyeongbokgung Stn' },
+      { name: 'N Seoul Tower', desc: '360° panoramic Seoul night view. Cable car or hike from Namsan', distance: '15 min cable car from Myeongdong Stn' },
+      { name: 'Myeongdong Street', desc: 'Shopping, food, duty-free hub. Most-visited spot for foreign tourists', distance: 'Direct at Myeongdong Stn' },
+      { name: 'Dongdaemun Design Plaza (DDP)', desc: 'Zaha Hadid-designed futuristic building. 24-hour fashion shopping', distance: 'Direct at DDP Stn' },
+      { name: 'Bukchon Hanok Village', desc: '600 preserved traditional Korean houses. Instagram famous', distance: '5 min walk from Anguk Stn' },
+    ],
+  },
+  busan: {
+    airport: 'Gimhae International (PUS) → city ~30 min (taxi ₩20,000–25,000, light rail+subway ~40 min).',
+    bestSeason: 'May–Jun and Sep–Oct are best. Jul–Aug is Haeundae Beach peak (hotels 2x). Winter milder than Seoul.',
+    areas: [
+      { name: 'Haeundae', desc: "Busan's signature beach. 5-star hotels concentrated near the beach. Sunrise spot." },
+      { name: 'Seomyeon', desc: "Busan's downtown hub. Shopping, food, underground mall. Transit hub for everywhere." },
+      { name: 'Gwangalli', desc: 'Quieter than Haeundae. Gwangan Bridge night view + raw seafood restaurants. Many budget hotels.' },
+    ],
+    avgPrice: '3-star $45–75/night, 4-star $85–150/night. Haeundae peak (Jul–Aug) doubles prices.',
+    tips: [
+      'KTX from Seoul takes 2.5h (₩59,800). Easy 1–2 night trip.',
+      'Try fresh sashimi + spicy fish stew at Haeundae or Gwangalli seafood centers.',
+      'Pork-based gukbap (rice soup) is a Busan signature — try Seomyeon Market.',
+      'Gamcheon Culture Village and Taejongdae are great half-day trips.',
+      'Gyeongju is just 30 min by KTX → use Busan as base for day trips.',
+    ],
+    attractions: [
+      { name: 'Haeundae Beach', desc: "Busan's iconic 1.5km beach. Summer swimming + sand festival", distance: '5 min walk from Haeundae Stn' },
+      { name: 'Gamcheon Culture Village', desc: 'Colorful hillside houses. "Korea\'s Machu Picchu"', distance: '30 min bus from Seomyeon Stn' },
+      { name: 'Gwangan Bridge', desc: '7.4km bridge with stunning night views. Best from Gwangalli Beach', distance: '10 min walk from Gwangan Stn' },
+      { name: 'Jagalchi Market', desc: "Korea's largest seafood market. Fresh sashimi + seafood", distance: 'Direct at Jagalchi Stn' },
+      { name: 'Yongdusan Park / Busan Tower', desc: 'City panorama + cable car connection', distance: '5 min walk from Nampo Stn' },
+    ],
+  },
+  jeju: {
+    airport: 'Jeju International (CJU) → Jeju City ~15 min. Seogwipo ~1h. Renting a car strongly recommended.',
+    bestSeason: 'Apr–Jun and Sep–Oct are best. Jul–Aug is Korea\'s top vacation island (hotels 2–3x). Winter milder than mainland.',
+    areas: [
+      { name: 'Jeju City', desc: 'Near the airport. Dongmun Market, Gwandeokjeong. Urban hotels. Best for first-timers.' },
+      { name: 'Seogwipo / Jungmun', desc: '5-star resorts concentrated. Cheonjiyeon and Jeongbang waterfalls walkable. #1 honeymoon area.' },
+      { name: 'Hallim / Aewol', desc: 'Cafe street + west coast. Near Hyeopjae Beach. Instagram aesthetic.' },
+    ],
+    avgPrice: '3-star $55–110/night, 5-star resorts $180–360/night. Jul–Aug and Korean holidays 2–3x.',
+    tips: [
+      'Renting a car is essential. Public transit is very limited.',
+      'Hallasan Mountain hike best Apr–Oct. Seongpanak or Gwaneumsa trail.',
+      'Black pork BBQ and braised cutlassfish are Jeju must-eats.',
+      'Day trips to Udo and Mara islands available by ferry.',
+      'K-beauty fans: visit Innisfree Jeju House and Osulloc Tea Museum.',
+    ],
+    attractions: [
+      { name: 'Hallasan Mountain', desc: "Korea's highest peak (1,947m). UNESCO Natural Heritage", distance: '40 min drive from Jeju City' },
+      { name: 'Seongsan Ilchulbong', desc: '5,000-year-old volcanic crater. UNESCO Natural Heritage', distance: '1h drive from Jeju City' },
+      { name: 'Hyeopjae Beach', desc: 'Emerald water + Biyangdo island view. West coast', distance: '30 min drive from Jeju City' },
+      { name: 'Cheonjiyeon Falls', desc: 'Seogwipo downtown waterfall. Night illumination', distance: 'Seogwipo center' },
+      { name: 'Udo Island', desc: '15-min ferry to a small island. Bike or e-cart loop', distance: '15 min ferry from Seongsan Port' },
+    ],
+  },
+  incheon: {
+    airport: 'Incheon International (ICN) is itself a city. Two zones: airport-area hotels and Songdo downtown.',
+    bestSeason: 'Same as Seoul. Apr–May and Sep–Oct are best. For transit travelers, season is irrelevant.',
+    areas: [
+      { name: 'Near ICN Airport', desc: 'For transit travelers and early-morning departures. 24-hour shuttle service.' },
+      { name: 'Songdo International City', desc: 'Modern district + business. Convention center, Tri-bowl night view. Connected by Incheon Line 1.' },
+      { name: 'Chinatown / Freedom Park', desc: "Korea's first Chinatown. Birthplace of Korean-style jjajangmyeon. Popular day trip." },
+    ],
+    avgPrice: '3-star $50–90/night, 5-star (Grand Hyatt etc.) $145+/night.',
+    tips: [
+      'Free 6-hour transit tour at ICN airport (Seoul tour + Chinatown).',
+      'Songdo hotels are 30 min from airport, 1h to Seoul via Incheon Line 1.',
+      'Wolmido and Chinatown are walkable from Incheon Station — half-day trip.',
+      'Seoul is 50 min away by Airport Railroad — staying in Seoul is also viable.',
+    ],
+    attractions: [
+      { name: 'Incheon International Airport', desc: 'Northeast Asia hub. Duty-free shopping + culture street', distance: 'ICN Airport Stn' },
+      { name: 'Songdo Central Park', desc: 'Saltwater canal + water taxi. New city landmark', distance: '5 min walk from Central Park Stn' },
+      { name: 'Incheon Chinatown', desc: "Korea's first Chinatown. Birthplace of jjajangmyeon", distance: 'Direct at Incheon Stn' },
+      { name: 'Wolmido', desc: 'Seaside promenade + amusement park + disco-pang', distance: 'Incheon Stn + 10 min shuttle' },
+    ],
+  },
+  gyeongju: {
+    airport: 'Ulsan or Pohang Airport (40 min) or KTX Singyeongju Stn. Seoul ~2h, Busan ~30 min by KTX.',
+    bestSeason: 'Apr (cherry blossoms at Bulguksa and Bomun Lake) and Oct (autumn leaves) are stunning.',
+    areas: [
+      { name: 'Bomun Resort', desc: '5-star resorts concentrated. Bomun Lake + golf course + water park. #1 family destination.' },
+      { name: 'City Center / Hwangridan-gil', desc: 'Walking distance to Daereungwon and Cheomseongdae. Hanok guesthouses. Trendy cafe street for younger travelers.' },
+    ],
+    avgPrice: '3-star $45–75/night, Bomun resorts $110–220/night.',
+    tips: [
+      'Seoul to Gyeongju: KTX 2h (₩49,800). Busan: 30 min (₩11,000). Day trip possible.',
+      'Bulguksa + Seokguram = half-day course. UNESCO World Heritage.',
+      'Daereungwon, Cheomseongdae, and Donggung Palace (night view) = walkable city center.',
+      'Bomun Resort area: rent bikes for the lakeside trail.',
+      'Cherry blossom season (early April): Bomun Lake night-illuminated walkway is iconic.',
+    ],
+    attractions: [
+      { name: 'Bulguksa Temple', desc: 'UNESCO World Heritage. Unified Silla masterpiece temple', distance: '30 min bus from Gyeongju center' },
+      { name: 'Seokguram Grotto', desc: 'UNESCO World Heritage. Silla\'s greatest stone Buddha', distance: 'Shuttle from Bulguksa' },
+      { name: 'Daereungwon / Cheonmachong', desc: '23 Silla royal tombs. Cheonmachong interior viewable', distance: 'City center' },
+      { name: 'Donggung Palace and Wolji Pond', desc: 'Silla detached palace. Famous night-view spot', distance: '10 min walk from city center' },
+      { name: 'Bomun Resort', desc: 'Lakeside path + cherry blossoms + autumn leaves', distance: '15 min drive from city' },
     ],
   },
 }

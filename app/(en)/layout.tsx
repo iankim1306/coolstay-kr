@@ -108,6 +108,7 @@ export default function EnRootLayout({ children }: { children: React.ReactNode }
               <span className="text-orange-500">COOL</span><span className="text-gray-800">STAY</span>
             </a>
             <nav className="hidden sm:flex gap-5 text-sm text-gray-500">
+              <a href="/en/korea" className="hover:text-orange-500 transition-colors">Korea</a>
               <a href="/en/japan" className="hover:text-orange-500 transition-colors">Japan</a>
               <a href="/en/thailand" className="hover:text-orange-500 transition-colors">Thailand</a>
               <a href="/en/vietnam" className="hover:text-orange-500 transition-colors">Vietnam</a>

@@ -40,6 +40,11 @@ TARGETS = [
     ("philippines", "boracay", "Philippines", ["Boracay", "Malay (Boracay)"]),
     ("indonesia", "bali",     "Indonesia", ["Bali"]),  # 발리는 city 필드가 "Bali"거나 지역명일 수 있음
     ("taiwan", "taipei",      "Taiwan",    ["Taipei"]),
+    ("korea", "seoul",        "South Korea", ["Seoul"]),
+    ("korea", "busan",        "South Korea", ["Busan", "Pusan"]),
+    ("korea", "jeju",         "South Korea", ["Jeju City", "Jeju", "Seogwipo"]),
+    ("korea", "incheon",      "South Korea", ["Incheon"]),
+    ("korea", "gyeongju",     "South Korea", ["Gyeongju", "Kyongju"]),
 ]
 
 TOP_N = 150  # 도시당 상위 N개 호텔

@@ -93,4 +93,28 @@ export const NEARBY_CITIES: Record<string, Array<{ city: string; country: string
 
   // 대만 — 타이베이 단독
   taipei: [],
+
+  // 한국
+  seoul: [
+    { city: 'busan', country: 'korea', distance: 'KTX 2시간 30분' },
+    { city: 'incheon', country: 'korea', distance: '공항철도 50분' },
+    { city: 'gyeongju', country: 'korea', distance: 'KTX 약 2시간' },
+    { city: 'jeju', country: 'korea', distance: '비행 1시간' },
+  ],
+  busan: [
+    { city: 'gyeongju', country: 'korea', distance: 'KTX 30분' },
+    { city: 'seoul', country: 'korea', distance: 'KTX 2시간 30분' },
+    { city: 'jeju', country: 'korea', distance: '비행 50분' },
+  ],
+  jeju: [
+    { city: 'seoul', country: 'korea', distance: '비행 1시간' },
+    { city: 'busan', country: 'korea', distance: '비행 50분' },
+  ],
+  incheon: [
+    { city: 'seoul', country: 'korea', distance: '공항철도 50분' },
+  ],
+  gyeongju: [
+    { city: 'busan', country: 'korea', distance: 'KTX 30분' },
+    { city: 'seoul', country: 'korea', distance: 'KTX 약 2시간' },
+  ],
 }

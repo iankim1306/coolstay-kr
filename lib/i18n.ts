@@ -251,11 +251,13 @@ export const CITY_NAME_EN: Record<string, string> = {
   cebu: 'Cebu', boracay: 'Boracay',
   bali: 'Bali',
   taipei: 'Taipei',
+  seoul: 'Seoul', busan: 'Busan', jeju: 'Jeju', incheon: 'Incheon', gyeongju: 'Gyeongju',
 }
 
 export const COUNTRY_NAME_EN: Record<string, string> = {
   japan: 'Japan', thailand: 'Thailand', vietnam: 'Vietnam',
   philippines: 'Philippines', indonesia: 'Indonesia', taiwan: 'Taiwan',
+  korea: 'Korea',
 }
 
 // 태그 영문 매핑
