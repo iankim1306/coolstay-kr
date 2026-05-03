@@ -196,6 +196,24 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* 가이드 + 블로그 */}
+      <section className="max-w-6xl mx-auto px-4 py-14">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <Link href="/guide" className="group bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-100 rounded-2xl p-6 hover:shadow-lg transition-all">
+            <div className="text-3xl mb-3">📖</div>
+            <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-blue-600">완벽 가이드</h3>
+            <p className="text-sm text-gray-600">도시별 호텔 추천, 지역·예산·시즌별 깊이있는 정보</p>
+            <div className="mt-3 text-sm font-semibold text-blue-600">가이드 보기 →</div>
+          </Link>
+          <Link href="/blog" className="group bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-100 rounded-2xl p-6 hover:shadow-lg transition-all">
+            <div className="text-3xl mb-3">✍️</div>
+            <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-orange-600">블로그</h3>
+            <p className="text-sm text-gray-600">아고다 할인법, 시즌 가이드, 여행지 비교</p>
+            <div className="mt-3 text-sm font-semibold text-orange-600">블로그 보기 →</div>
+          </Link>
+        </div>
+      </section>
+
       {/* 인기 검색 키워드 */}
       <section className="max-w-6xl mx-auto px-4 py-14">
         <h2 className="text-2xl font-bold mb-2">인기 검색 키워드</h2>

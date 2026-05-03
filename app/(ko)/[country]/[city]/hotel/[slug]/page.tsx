@@ -1,15 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCityData, getCountryData } from "@/lib/destinations";
+
+export const revalidate = 21600; // 6시간마다 자동 갱신 → 가격/freshness 신호
 import {
   getHotel,
   getHotelsByCity,
   getAllHotels,
+  getSimilarHotels,
   hotelSlug,
   agodaHotelLink,
   hotelPhotoUrl,
 } from "@/lib/hotels";
 import PriceWidget from "@/components/PriceWidget";
+import HotelMap from "@/components/HotelMap";
 import {
   breadcrumbJsonLd,
   hotelJsonLd,
@@ -38,6 +42,14 @@ export async function generateMetadata({
   return {
     title: `${hotel.name} 최저가 비교 | ${cityName} 호텔 - 쿨스테이`,
     description: `${hotel.name} (${hotel.star_rating}성급) 아고다 실시간 최저가 확인. ${cityName} ${hotel.address}. 평점 ${hotel.rating_average}, 리뷰 ${hotel.number_of_reviews}개. 무료 취소·즉시 예약 확정.`,
+    alternates: {
+      canonical: `https://coolstay.kr/${country}/${city}/hotel/${slug}`,
+      languages: {
+        ko: `https://coolstay.kr/${country}/${city}/hotel/${slug}`,
+        en: `https://coolstay.kr/en/${country}/${city}/hotel/${slug}`,
+        'x-default': `https://coolstay.kr/${country}/${city}/hotel/${slug}`,
+      },
+    },
   };
 }
 
@@ -61,6 +73,15 @@ export default async function HotelPage({
   const siblings = getHotelsByCity(country, city)
     .filter((h) => h.hotel_id !== hotel.hotel_id)
     .slice(0, 4);
+
+  // 비슷한 가격대 + 같은 별점 호텔 (Internal linking 강화)
+  const sameBudget = getSimilarHotels(country, city, hotel, { mode: 'price', limit: 4 });
+  const sameStars = stars > 0
+    ? getSimilarHotels(country, city, hotel, { mode: 'star', limit: 4 })
+    : [];
+  const sameChain = hotel.chain
+    ? getSimilarHotels(country, city, hotel, { mode: 'chain', limit: 4 })
+    : [];
 
   // 구조화 데이터
   const breadcrumb = breadcrumbJsonLd([
@@ -240,6 +261,15 @@ export default async function HotelPage({
               ) : null
             })()}
 
+            {/* Freshness 배지 */}
+            <div className="mb-4 flex items-center gap-2 text-xs text-gray-500">
+              <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2.5 py-1 rounded-full border border-green-100 font-medium">
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                실시간 가격 연동
+              </span>
+              <span>마지막 업데이트: {new Intl.DateTimeFormat('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date())}</span>
+            </div>
+
             {/* 한국어 소개 */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-3">호텔 소개</h2>
@@ -247,6 +277,19 @@ export default async function HotelPage({
                 {hotel.description_ko}
               </p>
             </div>
+
+            {/* 지도 */}
+            {hotel.latitude && hotel.longitude && (() => {
+              const lat = parseFloat(hotel.latitude);
+              const lng = parseFloat(hotel.longitude);
+              if (isNaN(lat) || isNaN(lng)) return null;
+              return (
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3">위치</h2>
+                  <HotelMap lat={lat} lng={lng} hotelName={hotel.name} />
+                </div>
+              );
+            })()}
 
             {/* 기본 정보 */}
             <div className="mb-8">
@@ -350,7 +393,7 @@ export default async function HotelPage({
 
             {/* 주변 호텔 */}
             {siblings.length > 0 && (
-              <div>
+              <div className="mb-8">
                 <h2 className="text-xl font-bold mb-3">{cityData.name}의 다른 인기 호텔</h2>
                 <div className="grid grid-cols-2 gap-4">
                   {siblings.map((h) => (
@@ -386,6 +429,41 @@ export default async function HotelPage({
                 </div>
               </div>
             )}
+
+            {/* 비슷한 가격대 / 같은 별점 / 같은 체인 (Internal linking) */}
+            {[
+              { title: `비슷한 가격대의 ${cityData.name} 호텔`, list: sameBudget, icon: '💰' },
+              { title: `${stars}성급 ${cityData.name} 호텔`, list: sameStars, icon: '⭐' },
+              hotel.chain ? { title: `${hotel.chain} 다른 지점`, list: sameChain, icon: '🏨' } : null,
+            ].filter((x): x is { title: string; list: typeof sameBudget; icon: string } => x !== null && x.list.length > 0).map((section) => (
+              <div key={section.title} className="mb-8">
+                <h3 className="text-base font-bold mb-3 flex items-center gap-2">
+                  <span>{section.icon}</span>{section.title}
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {section.list.map((h) => (
+                    <Link
+                      key={h.hotel_id}
+                      href={`/${country}/${city}/hotel/${hotelSlug(h)}`}
+                      className="group block bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow hover:border-orange-200 transition-all"
+                    >
+                      {h.photos[0] && (
+                        <div className="h-24 overflow-hidden">
+                          <img src={hotelPhotoUrl(h.photos[0], 400)} alt={h.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                        </div>
+                      )}
+                      <div className="p-2">
+                        <div className="text-xs font-medium text-gray-800 line-clamp-2 mb-1">{h.name}</div>
+                        <div className="text-[11px] text-orange-500 font-bold">
+                          {parseFloat(h.rating_average).toFixed(1)} <span className="text-gray-400 font-normal">({parseInt(h.number_of_reviews).toLocaleString()})</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* 사이드바: 예약 */}

@@ -138,6 +138,110 @@ export function websiteJsonLd() {
   }
 }
 
+/** TouristDestination + AggregateRating for city pages */
+export function touristDestinationJsonLd({
+  cityName,
+  countryName,
+  url,
+  description,
+  image,
+  hotels,
+}: {
+  cityName: string
+  countryName: string
+  url: string
+  description: string
+  image: string
+  hotels: Hotel[]
+}) {
+  // Aggregate rating across all hotels in this city
+  const validHotels = hotels.filter(h => parseFloat(h.rating_average) > 0 && parseInt(h.number_of_reviews) > 0)
+  const totalReviews = validHotels.reduce((sum, h) => sum + parseInt(h.number_of_reviews), 0)
+  const weightedSum = validHotels.reduce(
+    (sum, h) => sum + parseFloat(h.rating_average) * parseInt(h.number_of_reviews),
+    0
+  )
+  const avgRating = totalReviews > 0 ? (weightedSum / totalReviews) : 0
+
+  const data: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'TouristDestination',
+    name: cityName,
+    url,
+    description,
+    image,
+    touristType: ['Couples', 'Families', 'Honeymooners', 'Solo travelers'],
+    includesAttraction: undefined,
+  }
+
+  if (totalReviews > 0 && avgRating > 0) {
+    data.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: avgRating.toFixed(1),
+      bestRating: 10,
+      worstRating: 1,
+      ratingCount: totalReviews,
+      reviewCount: totalReviews,
+      itemReviewed: { '@type': 'Place', name: cityName, address: countryName },
+    }
+  }
+
+  return data
+}
+
+/** Place schema for individual attractions */
+export function attractionJsonLd(name: string, description: string, cityName: string, url: string) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TouristAttraction',
+    name,
+    description,
+    url,
+    address: { '@type': 'PostalAddress', addressLocality: cityName },
+  }
+}
+
+/** Hotel review (single) — synthesized from aggregate data */
+export function hotelReviewJsonLd(hotel: Hotel, cityName: string, url: string) {
+  const rating = parseFloat(hotel.rating_average) || 0
+  if (rating < 7) return null
+  const ratingLabel =
+    rating >= 9 ? '최고' : rating >= 8 ? '매우 좋음' : '좋음'
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    itemReviewed: {
+      '@type': 'Hotel',
+      name: hotel.name,
+      address: { '@type': 'PostalAddress', addressLocality: cityName },
+    },
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: rating.toFixed(1),
+      bestRating: 10,
+      worstRating: 1,
+    },
+    name: `${hotel.name} ${ratingLabel}`,
+    author: { '@type': 'Organization', name: 'COOLSTAY' },
+    reviewBody: `${hotel.name}은 실제 투숙객 ${parseInt(hotel.number_of_reviews).toLocaleString()}명 리뷰 평균 ${rating.toFixed(1)}점을 받은 ${cityName} 호텔입니다.`,
+    publisher: { '@type': 'Organization', name: 'COOLSTAY', url: SITE },
+  }
+}
+
+/** SearchAction for site-wide search */
+export function searchActionJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: SITE,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${SITE}/api/search?q={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
 /** <script type="application/ld+json"> 용 prop helper */
 export function ldJson(data: unknown) {
   return {

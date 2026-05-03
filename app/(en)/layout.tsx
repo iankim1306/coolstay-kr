@@ -38,6 +38,8 @@ export default function EnRootLayout({ children }: { children: React.ReactNode }
     <html lang="en" className={geist.variable}>
       <head>
         <meta name="google-site-verification" content="1UVK4e-DptUMt3rLxv8LUvndSIwJouKhNK4fvsGeNCQ" />
+        <meta name="msvalidate.01" content="" />
+        <meta name="yandex-verification" content="" />
 
         <script {...ldJson(organizationJsonLd())} />
         <script {...ldJson(websiteJsonLd())} />

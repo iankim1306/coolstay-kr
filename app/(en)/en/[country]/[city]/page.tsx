@@ -5,7 +5,7 @@ import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { getAvailableThemes } from "@/lib/themes";
 import { CITY_NAME_EN, COUNTRY_NAME_EN, tagEn } from "@/lib/i18n";
 import { CITY_DESC_EN, CITY_TRAVEL_INFO_EN } from "@/lib/destinations-en";
-import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { breadcrumbJsonLd, touristDestinationJsonLd, ldJson } from "@/lib/jsonld";
 
 export async function generateStaticParams() {
   return COUNTRIES.flatMap(country =>
@@ -58,18 +58,30 @@ export default async function EnCityPage({ params }: { params: Promise<{ country
   const desc = CITY_DESC_EN[citySlug] || city.desc;
   const info = CITY_TRAVEL_INFO_EN[citySlug];
 
-  const topHotels = getHotelsByCity(countrySlug, citySlug).slice(0, 10);
+  const allHotels = getHotelsByCity(countrySlug, citySlug);
+  const topHotels = allHotels.slice(0, 10);
   const availableThemes = getAvailableThemes(countrySlug, citySlug);
 
+  const cityUrl = `https://coolstay.kr/en/${countrySlug}/${citySlug}`;
   const breadcrumb = breadcrumbJsonLd([
     { name: 'Home', url: 'https://coolstay.kr/en' },
     { name: countryName, url: `https://coolstay.kr/en/${countrySlug}` },
-    { name, url: `https://coolstay.kr/en/${countrySlug}/${citySlug}` },
+    { name, url: cityUrl },
   ]);
+
+  const touristLd = touristDestinationJsonLd({
+    cityName: name,
+    countryName,
+    url: cityUrl,
+    description: `${name} is a popular ${countryName} destination known for ${desc}. Compare the lowest hotel prices on Agoda in one place.`,
+    image: city.img,
+    hotels: allHotels,
+  });
 
   return (
     <div>
       <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(touristLd)} />
       <section className="relative bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-30"
           style={{ backgroundImage: `url(${city.img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}

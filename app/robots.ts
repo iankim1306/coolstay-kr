@@ -19,7 +19,13 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
       },
     ],
-    sitemap: 'https://coolstay.kr/sitemap.xml',
+    sitemap: [
+      'https://coolstay.kr/sitemap.xml',
+      'https://coolstay.kr/sitemap-cities/sitemap.xml',
+      'https://coolstay.kr/sitemap-themes/sitemap.xml',
+      'https://coolstay.kr/sitemap-hotels/sitemap.xml',
+      'https://coolstay.kr/sitemap-images/sitemap.xml',
+    ],
     host: 'https://coolstay.kr',
   }
 }

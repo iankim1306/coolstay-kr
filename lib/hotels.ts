@@ -170,3 +170,43 @@ export function getAllHotels(): Array<{ countrySlug: string; citySlug: string; h
   }
   return result
 }
+
+/** 같은 도시 내 비슷한 호텔 추천 (가격대 / 별점 / 체인) */
+export function getSimilarHotels(
+  countrySlug: string,
+  citySlug: string,
+  current: Hotel,
+  options: { mode: 'price' | 'star' | 'chain'; limit?: number } = { mode: 'price', limit: 4 }
+): Hotel[] {
+  const limit = options.limit ?? 4
+  const all = getHotelsByCity(countrySlug, citySlug).filter(h => h.hotel_id !== current.hotel_id)
+
+  if (options.mode === 'price') {
+    const currentPrice = parseFloat(current.rates_from) || 0
+    if (!currentPrice) return []
+    // 현재 가격의 ±30% 범위
+    const min = currentPrice * 0.7
+    const max = currentPrice * 1.3
+    return all
+      .filter(h => {
+        const p = parseFloat(h.rates_from) || 0
+        return p >= min && p <= max
+      })
+      .sort((a, b) => (parseFloat(b.rating_average) || 0) - (parseFloat(a.rating_average) || 0))
+      .slice(0, limit)
+  }
+
+  if (options.mode === 'star') {
+    const stars = current.star_rating
+    return all
+      .filter(h => h.star_rating === stars)
+      .sort((a, b) => (parseFloat(b.rating_average) || 0) - (parseFloat(a.rating_average) || 0))
+      .slice(0, limit)
+  }
+
+  if (options.mode === 'chain' && current.chain) {
+    return all.filter(h => h.chain === current.chain).slice(0, limit)
+  }
+
+  return []
+}

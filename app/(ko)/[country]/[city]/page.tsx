@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getCityData, getCountryData, COUNTRIES } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { getAvailableThemes } from "@/lib/themes";
-import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { getAvailableFilters } from "@/lib/filter-pages";
+import { breadcrumbJsonLd, touristDestinationJsonLd, ldJson } from "@/lib/jsonld";
+import { NEARBY_CITIES } from "@/lib/nearby-cities";
 import CityHotelList from "@/components/CityHotelList"
 import CityDateSearch from "@/components/CityDateSearch";
 
@@ -23,6 +25,14 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   return {
     title: `${city.name} 호텔 최저가 | 아고다 특가 추천`,
     description: `${city.name} 호텔을 아고다 최저가로 비교하세요. ${city.desc}. ${city.tags.join(', ')} 여행자에게 인기. 무료 취소 가능.`,
+    alternates: {
+      canonical: `https://coolstay.kr/${countrySlug}/${citySlug}`,
+      languages: {
+        ko: `https://coolstay.kr/${countrySlug}/${citySlug}`,
+        en: `https://coolstay.kr/en/${countrySlug}/${citySlug}`,
+        'x-default': `https://coolstay.kr/${countrySlug}/${citySlug}`,
+      },
+    },
   };
 }
 
@@ -42,18 +52,31 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
   if (!city || !country) notFound();
 
   const matchedThemes = THEMES.filter(t => city.tags.includes(t.tag));
-  const topHotels = getHotelsByCity(countrySlug, citySlug).slice(0, 10);
+  const allHotels = getHotelsByCity(countrySlug, citySlug);
+  const topHotels = allHotels.slice(0, 10);
   const availableThemes = getAvailableThemes(countrySlug, citySlug);
+  const availableFilters = getAvailableFilters(countrySlug, citySlug);
 
+  const cityUrl = `https://coolstay.kr/${countrySlug}/${citySlug}`;
   const breadcrumb = breadcrumbJsonLd([
     { name: "홈", url: "https://coolstay.kr/" },
     { name: country.name, url: `https://coolstay.kr/${countrySlug}` },
-    { name: city.name, url: `https://coolstay.kr/${countrySlug}/${citySlug}` },
+    { name: city.name, url: cityUrl },
   ]);
+
+  const touristLd = touristDestinationJsonLd({
+    cityName: city.name,
+    countryName: country.name,
+    url: cityUrl,
+    description: `${city.name}는 ${city.desc}로 유명한 ${country.name} 인기 여행지입니다. 아고다 최저가 호텔을 한눈에 비교하세요.`,
+    image: city.img,
+    hotels: allHotels,
+  });
 
   return (
     <div>
       <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(touristLd)} />
       {/* 헤더 */}
       <section className="relative bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-30"
@@ -280,6 +303,51 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                 </p>
               </div>
             </div>
+
+            {/* 가격대 / 평점 필터 페이지 (롱테일) */}
+            {availableFilters.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-xl font-bold mb-4">{city.name} 호텔, 조건별로 보기</h2>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {availableFilters.map(f => (
+                    <Link key={f.slug} href={`/${countrySlug}/${citySlug}/filter/${f.slug}`}
+                      className="group flex items-center justify-between bg-white border border-gray-100 rounded-xl px-4 py-3 hover:border-orange-200 hover:shadow transition-all">
+                      <div className="font-semibold text-sm text-gray-800">{city.name} {f.label}</div>
+                      <span className="text-xs text-orange-500 group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 근처 도시 — Internal linking */}
+            {NEARBY_CITIES[citySlug] && NEARBY_CITIES[citySlug].length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-xl font-bold mb-4">{city.name}과 함께 가면 좋은 도시</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {NEARBY_CITIES[citySlug].map(nc => {
+                    const ncCountry = COUNTRIES.find(co => co.slug === nc.country);
+                    const ncCity = ncCountry?.cities.find(c => c.nameEn === nc.city);
+                    if (!ncCity) return null;
+                    return (
+                      <Link key={nc.city} href={`/${nc.country}/${nc.city}`}
+                        className="group bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-orange-200 transition-all">
+                        <div className="relative h-32 overflow-hidden">
+                          <img src={ncCity.img} alt={ncCity.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                          <div className="absolute bottom-2 left-3">
+                            <div className="text-white font-bold text-base">{ncCity.name}</div>
+                            <div className="text-white/80 text-xs">{nc.distance}</div>
+                          </div>
+                        </div>
+                        <div className="p-3 text-xs text-orange-500 font-medium">{ncCity.name} 호텔 보기 →</div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* 예약 팁 */}
             <div className="mb-10">

@@ -35,6 +35,11 @@ export async function generateMetadata({
     description: `${cityName} ${theme.keyword} 추천 리스트. 실제 투숙객 리뷰 기반으로 엄선한 TOP 10과 아고다 실시간 최저가를 한 곳에서 비교하세요.`,
     alternates: {
       canonical: `https://coolstay.kr/${country}/${city}/${themeSlug}`,
+      languages: {
+        ko: `https://coolstay.kr/${country}/${city}/${themeSlug}`,
+        en: `https://coolstay.kr/en/${country}/${city}/${themeSlug}`,
+        'x-default': `https://coolstay.kr/${country}/${city}/${themeSlug}`,
+      },
     },
   };
 }

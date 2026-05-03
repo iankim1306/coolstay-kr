@@ -14,6 +14,14 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
   return {
     title: `${country.name} 호텔 최저가 비교 | 아고다 특가`,
     description: `${country.name} ${country.desc} 호텔을 아고다 최저가로 비교하세요. 무료 취소, 즉시 예약 확정.`,
+    alternates: {
+      canonical: `https://coolstay.kr/${slug}`,
+      languages: {
+        ko: `https://coolstay.kr/${slug}`,
+        en: `https://coolstay.kr/en/${slug}`,
+        'x-default': `https://coolstay.kr/${slug}`,
+      },
+    },
   };
 }
 
