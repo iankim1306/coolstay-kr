@@ -2,7 +2,7 @@ import Link from "next/link";
 import { COUNTRIES } from "@/lib/destinations";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import SearchBar from "@/components/SearchBar";
-import HotDealSections from "@/components/HotDealSections";
+import HotDealTabs from "@/components/HotDealTabs";
 
 export const revalidate = 21600 // 6시간마다 갱신
 
@@ -126,7 +126,7 @@ export default async function HomePage() {
             </span>
           </div>
           <div className="mt-6">
-            <HotDealSections cities={hotDealCities} locale="ko" />
+            <HotDealTabs cities={hotDealCities} locale="ko" />
           </div>
         </section>
       )}

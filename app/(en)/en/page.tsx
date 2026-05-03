@@ -3,7 +3,7 @@ import { COUNTRIES } from "@/lib/destinations";
 import { CITY_NAME_EN, COUNTRY_NAME_EN, tagEn } from "@/lib/i18n";
 import { COUNTRY_DESC_EN, CITY_DESC_EN } from "@/lib/destinations-en";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
-import HotDealSections from "@/components/HotDealSections";
+import HotDealTabs from "@/components/HotDealTabs";
 
 export const revalidate = 21600;
 
@@ -122,7 +122,7 @@ export default async function EnHomePage() {
             </span>
           </div>
           <div className="mt-6">
-            <HotDealSections cities={hotDealCities} locale="en" />
+            <HotDealTabs cities={hotDealCities} locale="en" />
           </div>
         </section>
       )}

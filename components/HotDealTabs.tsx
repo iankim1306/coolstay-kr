@@ -16,33 +16,61 @@ type Deal = {
   imageURL: string
 }
 
-type CityDeals = {
+export type CityDeals = {
   name: string
   slug: string
   deals: Deal[]
+  flag?: string
+  isNew?: boolean
 }
 
-export default function HotDealTabs({ cities }: { cities: CityDeals[] }) {
+interface Props {
+  cities: CityDeals[]
+  locale?: 'ko' | 'en'
+}
+
+export default function HotDealTabs({ cities, locale = 'ko' }: Props) {
   const [active, setActive] = useState(0)
 
-  const fmt = (n: number) => new Intl.NumberFormat('ko-KR').format(Math.round(n))
+  // 가격 포맷 (한국어 ₩, 영어 USD 환산)
+  const fmt = (krwAmount: number) => {
+    if (locale === 'en') {
+      const usd = Math.round(krwAmount * 0.00074)
+      return `$${usd.toLocaleString('en-US')}`
+    }
+    return `₩${new Intl.NumberFormat('ko-KR').format(Math.round(krwAmount))}`
+  }
+
+  const labels = locale === 'en'
+    ? { perNight: '/night', wifi: 'Free WiFi', viewAll: 'View all', newBadge: 'NEW', noData: 'Loading deals...' }
+    : { perNight: '/박', wifi: 'WiFi 무료', viewAll: '전체보기', newBadge: 'NEW', noData: '현재 특가 정보를 불러오는 중이에요' }
+
   const current = cities[active]
+  if (!current) return null
 
   return (
     <div>
-      {/* 탭 */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+      {/* 탭 (가로 스크롤) */}
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-hide">
         {cities.map((city, i) => (
           <button
             key={city.name}
             onClick={() => setActive(i)}
-            className={`flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
+            className={`relative flex-shrink-0 px-5 py-2.5 rounded-full text-sm font-bold transition-all ${
               active === i
                 ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
                 : 'bg-white text-gray-500 border border-gray-200 hover:border-orange-300 hover:text-orange-500'
             }`}
           >
+            {city.flag && <span className="mr-1">{city.flag}</span>}
             {city.name}
+            {city.isNew && (
+              <span className={`ml-1.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                active === i ? 'bg-white text-orange-500' : 'bg-red-500 text-white'
+              }`}>
+                {labels.newBadge}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -64,6 +92,7 @@ export default function HotDealTabs({ cities }: { cities: CityDeals[] }) {
                     src={deal.imageURL.replace('?s=', '?s=600x')}
                     alt={deal.hotelName}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
                 </div>
               )}
@@ -84,16 +113,16 @@ export default function HotDealTabs({ cities }: { cities: CityDeals[] }) {
                 <div className="flex items-center justify-between">
                   <div>
                     {deal.crossedOutRate > deal.dailyRate && (
-                      <p className="text-xs text-gray-400 line-through">₩{fmt(deal.crossedOutRate)}</p>
+                      <p className="text-xs text-gray-400 line-through">{fmt(deal.crossedOutRate)}</p>
                     )}
                     <p className="text-lg font-bold text-orange-500">
-                      ₩{fmt(deal.dailyRate)}
-                      <span className="text-xs font-normal text-gray-400">/박</span>
+                      {fmt(deal.dailyRate)}
+                      <span className="text-xs font-normal text-gray-400">{labels.perNight}</span>
                     </p>
                   </div>
                   <div className="text-right text-xs text-gray-400">
                     {deal.reviewScore > 0 && <p>⭐ {deal.reviewScore.toFixed(1)}</p>}
-                    {deal.freeWifi && <p>WiFi 무료</p>}
+                    {deal.freeWifi && <p>{labels.wifi}</p>}
                   </div>
                 </div>
               </div>
@@ -102,7 +131,7 @@ export default function HotDealTabs({ cities }: { cities: CityDeals[] }) {
         </div>
       ) : (
         <div className="text-center py-10 text-gray-400 text-sm">
-          현재 특가 정보를 불러오는 중이에요
+          {labels.noData}
         </div>
       )}
 
@@ -112,7 +141,8 @@ export default function HotDealTabs({ cities }: { cities: CityDeals[] }) {
           href={current.slug}
           className="inline-block border border-orange-300 text-orange-500 hover:bg-orange-50 font-semibold text-sm px-6 py-3 rounded-xl transition-colors"
         >
-          {current.name} 호텔 전체보기 →
+          {current.flag && <span className="mr-1">{current.flag}</span>}
+          {current.name} {labels.viewAll} →
         </Link>
       </div>
     </div>
