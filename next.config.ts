@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'pix10.agoda.net' },
       { protocol: 'https', hostname: '**.agoda.net' },
       { protocol: 'https', hostname: '**.unsplash.com' },
+      { protocol: 'https', hostname: 'images.pexels.com' },
     ],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
