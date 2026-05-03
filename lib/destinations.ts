@@ -836,7 +836,7 @@ export const COUNTRIES: Country[] = [
     name: '한국',
     nameEn: 'Korea',
     slug: 'korea',
-    img: 'https://images.unsplash.com/photo-1538485399081-7c8970e90bdf?w=800&h=600&fit=crop',
+    img: 'https://images.unsplash.com/photo-1538669715315-155098f0fb1d?w=800&h=600&fit=crop',
     desc: '서울 · 부산 · 제주 · 인천 · 경주',
     countryInfo: {
       visa: '한국인 자국 여행 — 비자 무관. 외국인은 90일 무비자(미국/일본 등 주요국), K-ETA 사전 신청 필요.',
@@ -854,7 +854,7 @@ export const COUNTRIES: Country[] = [
     cities: [
       {
         name: '서울', nameEn: 'seoul', country: '한국', countryEn: 'korea',
-        img: 'https://images.unsplash.com/photo-1538485399081-7c8970e90bdf?w=800&h=600&fit=crop',
+        img: 'https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=800&h=600&fit=crop',
         desc: '명동, 강남, 홍대, 종로 호텔',
         tags: ['도심', '쇼핑', '맛집', '문화'],
         agodaLink: agodaLink(17196),
@@ -919,7 +919,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '제주', nameEn: 'jeju', country: '한국', countryEn: 'korea',
-        img: 'https://images.unsplash.com/photo-1610540605781-2c81367ae9b1?w=800&h=600&fit=crop',
+        img: 'https://images.unsplash.com/photo-1551361415-69c87624334f?w=800&h=600&fit=crop',
         desc: '제주시, 서귀포, 한라산 호텔',
         tags: ['자연', '가족', '신혼', '커플'],
         agodaLink: agodaLink(19800),
