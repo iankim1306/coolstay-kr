@@ -102,7 +102,6 @@ export async function fetchAdmobByApp(
         'MATCHED_REQUESTS',
         'IMPRESSION_CTR',
         'MATCH_RATE',
-        'IMPRESSION_RPM', // = AdMob UI의 eCPM (1000 노출당 추정수익)
       ],
     },
   }
@@ -143,17 +142,20 @@ export async function fetchAdmobByApp(
       const int = (k: string) => Number(m[k]?.integerValue ?? 0)
       const micros = (k: string) => Number(m[k]?.microsValue ?? 0) / 1_000_000
       const dbl = (k: string) => Number(m[k]?.doubleValue ?? 0)
+      const earnings = round2(micros('ESTIMATED_EARNINGS'))
+      const impressions = int('IMPRESSIONS')
       apps.push({
         appId: r.dimensionValues.APP.value ?? '',
         appName: r.dimensionValues.APP.displayLabel || r.dimensionValues.APP.value || '(이름 없음)',
-        earnings: round2(micros('ESTIMATED_EARNINGS')),
-        impressions: int('IMPRESSIONS'),
+        earnings,
+        impressions,
         clicks: int('CLICKS'),
         adRequests: int('AD_REQUESTS'),
         matchedRequests: int('MATCHED_REQUESTS'),
         ctr: dbl('IMPRESSION_CTR'),
         matchRate: dbl('MATCH_RATE'),
-        ecpm: round2(micros('IMPRESSION_RPM')),
+        // eCPM = 수익 / 노출 × 1000 (직접 계산이 IMPRESSION_RPM보다 안정적)
+        ecpm: impressions > 0 ? round2((earnings / impressions) * 1000) : 0,
       })
     }
     apps.sort((a, b) => b.earnings - a.earnings)
