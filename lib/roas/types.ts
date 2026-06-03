@@ -38,6 +38,10 @@ export type RoasResponse = {
   generatedAt: string
 }
 
+/** 통화 코드 (애드몹 localizationSettings로 서버 변환) */
+export type Currency = 'USD' | 'KRW'
+export const CURRENCIES: Currency[] = ['USD', 'KRW']
+
 /** 앱별 성과 한 줄 (애드몹 APP 단위) */
 export type AppRow = {
   appId: string
@@ -49,7 +53,8 @@ export type AppRow = {
   matchedRequests: number // 매칭된 요청
   ctr: number // 노출 CTR (0~1)
   matchRate: number // 일치율 (0~1)
-  ecpm: number // 관측 eCPM (통화)
+  ecpm: number // eCPM (수익/노출*1000)
+  spark: number[] // 일자별 수익 시계열 (스파크라인용, 오래된→최신)
 }
 
 /** 앱별 성과 API 응답 */
@@ -57,6 +62,22 @@ export type AppsResponse = {
   range: { startDate: string; endDate: string; label: string }
   currency: string
   apps: AppRow[]
+  source: 'live' | 'sample'
+  generatedAt: string
+}
+
+/** 앱 메타데이터 (앱 관리 페이지) */
+export type AppMeta = {
+  appId: string
+  appName: string
+  platform: string // ANDROID / IOS
+  storeId: string // 패키지명 또는 앱스토어 ID
+  approvalState: string // 승인 상태
+  linked: boolean // 스토어 연결 여부
+}
+
+export type AppListResponse = {
+  apps: AppMeta[]
   source: 'live' | 'sample'
   generatedAt: string
 }

@@ -5,6 +5,8 @@ import {
   DateRangeKey,
   RoasResponse,
   DailyRowComputed,
+  Currency,
+  CURRENCIES,
   resolveRange,
   eachDay,
 } from '@/lib/roas/types'
@@ -17,11 +19,13 @@ const VALID: DateRangeKey[] = ['today', 'yesterday', '7d', '30d']
 export async function GET(req: NextRequest) {
   const key = (req.nextUrl.searchParams.get('range') ?? '7d') as DateRangeKey
   const rangeKey: DateRangeKey = VALID.includes(key) ? key : '7d'
+  const cq = (req.nextUrl.searchParams.get('currency') ?? 'USD') as Currency
+  const currency: Currency = CURRENCIES.includes(cq) ? cq : 'USD'
   const { startDate, endDate, label } = resolveRange(rangeKey)
 
   const [liveCost, liveRev] = await Promise.all([
     fetchAdsCost(startDate, endDate),
-    fetchAdmobRevenue(startDate, endDate),
+    fetchAdmobRevenue(startDate, endDate, currency),
   ])
 
   // 광고비: 구글 애즈 미연결(토큰 승인 전)이면 가짜값 대신 null = "대기중"
@@ -44,7 +48,7 @@ export async function GET(req: NextRequest) {
 
   const body: RoasResponse = {
     range: { startDate, endDate, label },
-    currency: process.env.ROAS_CURRENCY ?? 'USD',
+    currency,
     totals: {
       cost: totalCost,
       revenue: totalRev,
