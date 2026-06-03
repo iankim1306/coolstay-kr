@@ -102,7 +102,7 @@ export async function fetchAdmobByApp(
         'MATCHED_REQUESTS',
         'IMPRESSION_CTR',
         'MATCH_RATE',
-        'OBSERVED_ECPM',
+        'IMPRESSION_RPM', // = AdMob UI의 eCPM (1000 노출당 추정수익)
       ],
     },
   }
@@ -153,7 +153,7 @@ export async function fetchAdmobByApp(
         matchedRequests: int('MATCHED_REQUESTS'),
         ctr: dbl('IMPRESSION_CTR'),
         matchRate: dbl('MATCH_RATE'),
-        ecpm: round2(micros('OBSERVED_ECPM')),
+        ecpm: round2(micros('IMPRESSION_RPM')),
       })
     }
     apps.sort((a, b) => b.earnings - a.earnings)
