@@ -1,7 +1,7 @@
 // 애드몹 API — 일자별 앱 광고수익 조회 (networkReport)
 // 자격증명이 없으면 샘플 데이터로 폴백한다.
 import { getAccessToken } from './oauth'
-import { eachDay } from './types'
+import { eachDay, type AppRow } from './types'
 
 /** 애드몹 실데이터를 쓸 수 있는 상태인지 */
 export function admobConfigured(): boolean {
@@ -76,6 +76,125 @@ export async function fetchAdmobRevenue(
     console.error('[roas/admob] 예외:', err)
     return null
   }
+}
+
+/** 앱별 성과 조회 (networkReport, dimension=APP). 실패/미설정 시 null */
+export async function fetchAdmobByApp(
+  startDate: string,
+  endDate: string
+): Promise<AppRow[] | null> {
+  if (!admobConfigured()) return null
+
+  const token = await getAccessToken()
+  if (!token) return null
+
+  const publisherId = process.env.ADMOB_PUBLISHER_ID!
+
+  const body = {
+    reportSpec: {
+      dateRange: { startDate: ymd(startDate), endDate: ymd(endDate) },
+      dimensions: ['APP'],
+      metrics: [
+        'ESTIMATED_EARNINGS',
+        'IMPRESSIONS',
+        'CLICKS',
+        'AD_REQUESTS',
+        'MATCHED_REQUESTS',
+        'IMPRESSION_CTR',
+        'MATCH_RATE',
+        'OBSERVED_ECPM',
+      ],
+    },
+  }
+
+  try {
+    const res = await fetch(
+      `https://admob.googleapis.com/v1/accounts/${publisherId}/networkReport:generate`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      }
+    )
+
+    if (!res.ok) {
+      console.error('[roas/admob/app] 조회 실패:', res.status, await res.text())
+      return null
+    }
+
+    const rows = (await res.json()) as Array<{
+      row?: {
+        dimensionValues?: { APP?: { value?: string; displayLabel?: string } }
+        metricValues?: Record<
+          string,
+          { microsValue?: string; integerValue?: string; doubleValue?: number }
+        >
+      }
+    }>
+
+    const apps: AppRow[] = []
+    for (const item of rows) {
+      const r = item.row
+      if (!r?.dimensionValues?.APP) continue
+      const m = r.metricValues ?? {}
+      const int = (k: string) => Number(m[k]?.integerValue ?? 0)
+      const micros = (k: string) => Number(m[k]?.microsValue ?? 0) / 1_000_000
+      const dbl = (k: string) => Number(m[k]?.doubleValue ?? 0)
+      apps.push({
+        appId: r.dimensionValues.APP.value ?? '',
+        appName: r.dimensionValues.APP.displayLabel || r.dimensionValues.APP.value || '(이름 없음)',
+        earnings: round2(micros('ESTIMATED_EARNINGS')),
+        impressions: int('IMPRESSIONS'),
+        clicks: int('CLICKS'),
+        adRequests: int('AD_REQUESTS'),
+        matchedRequests: int('MATCHED_REQUESTS'),
+        ctr: dbl('IMPRESSION_CTR'),
+        matchRate: dbl('MATCH_RATE'),
+        ecpm: round2(micros('OBSERVED_ECPM')),
+      })
+    }
+    apps.sort((a, b) => b.earnings - a.earnings)
+    return apps
+  } catch (err) {
+    console.error('[roas/admob/app] 예외:', err)
+    return null
+  }
+}
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100
+}
+
+/** 앱별 샘플 — 데모용 (실데이터 미연결 시) */
+export function sampleAdmobByApp(): AppRow[] {
+  const names = [
+    'FIRE Calculator',
+    '음력 달력',
+    '큰글씨 돋보기',
+    'RSU Calculator',
+    'Dividend Tracker',
+  ]
+  return names.map((name, i) => {
+    const impressions = 1200 - i * 180
+    const clicks = Math.round(impressions * (0.02 + i * 0.003))
+    const adRequests = Math.round(impressions / (0.55 + i * 0.05))
+    const earnings = round2((impressions / 1000) * (1.2 + i * 0.15))
+    return {
+      appId: `sample-${i}`,
+      appName: name,
+      earnings,
+      impressions,
+      clicks,
+      adRequests,
+      matchedRequests: Math.round(adRequests * (0.9 - i * 0.05)),
+      ctr: clicks / impressions,
+      matchRate: 0.9 - i * 0.05,
+      ecpm: round2((earnings / impressions) * 1000),
+    }
+  })
 }
 
 /** 결정적 샘플 수익 — 데모/심사용. 광고비보다 살짝 높게(흑자 느낌) */

@@ -7,10 +7,14 @@ export type DailyRow = {
   revenue: number // 앱 수익 (애드몹)
 }
 
-/** ROAS가 계산된 하루치 행 */
-export type DailyRowComputed = DailyRow & {
-  profit: number // 순수익 = revenue - cost
-  roas: number // ROAS(%) = revenue / cost * 100 (cost 0이면 0)
+/** ROAS가 계산된 하루치 행.
+ *  광고 애즈 미연결(토큰 승인 전)이면 cost/profit/roas 는 null = "대기중". */
+export type DailyRowComputed = {
+  date: string
+  revenue: number // 앱 수익 (애드몹) — 항상 값 있음
+  cost: number | null // 광고비 (구글 애즈) — 미연결 시 null
+  profit: number | null // 순수익 — cost 없으면 null
+  roas: number | null // ROAS(%) — cost 없으면 null
 }
 
 /** API 응답 전체 */
@@ -18,17 +22,42 @@ export type RoasResponse = {
   range: { startDate: string; endDate: string; label: string }
   currency: string
   totals: {
-    cost: number
+    cost: number | null
     revenue: number
-    profit: number
-    roas: number
+    profit: number | null
+    roas: number | null
   }
   rows: DailyRowComputed[]
-  /** 실데이터인지(both API 연결됨) / 일부 샘플인지 표시 */
+  /** 구글 애즈 토큰 승인 대기 상태(광고비 데이터 없음) */
+  adsPending: boolean
+  /** 데이터 출처. ads: 연결됨/승인대기, admob: 실데이터/샘플 */
   source: {
-    ads: 'live' | 'sample'
+    ads: 'live' | 'pending'
     admob: 'live' | 'sample'
   }
+  generatedAt: string
+}
+
+/** 앱별 성과 한 줄 (애드몹 APP 단위) */
+export type AppRow = {
+  appId: string
+  appName: string
+  earnings: number // 수익
+  impressions: number // 노출
+  clicks: number // 클릭
+  adRequests: number // 광고 요청
+  matchedRequests: number // 매칭된 요청
+  ctr: number // 노출 CTR (0~1)
+  matchRate: number // 일치율 (0~1)
+  ecpm: number // 관측 eCPM (통화)
+}
+
+/** 앱별 성과 API 응답 */
+export type AppsResponse = {
+  range: { startDate: string; endDate: string; label: string }
+  currency: string
+  apps: AppRow[]
+  source: 'live' | 'sample'
   generatedAt: string
 }
 

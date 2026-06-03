@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { fetchAdsCost, sampleAdsCost } from '@/lib/roas/google-ads'
+import { fetchAdsCost } from '@/lib/roas/google-ads'
 import { fetchAdmobRevenue, sampleAdmobRevenue } from '@/lib/roas/admob'
 import {
   DateRangeKey,
@@ -19,25 +19,28 @@ export async function GET(req: NextRequest) {
   const rangeKey: DateRangeKey = VALID.includes(key) ? key : '7d'
   const { startDate, endDate, label } = resolveRange(rangeKey)
 
-  // 실데이터 시도 → 실패/미설정 시 샘플로 폴백 (둘은 독립적으로 판정)
   const [liveCost, liveRev] = await Promise.all([
     fetchAdsCost(startDate, endDate),
     fetchAdmobRevenue(startDate, endDate),
   ])
 
-  const costMap = liveCost ?? sampleAdsCost(startDate, endDate)
+  // 광고비: 구글 애즈 미연결(토큰 승인 전)이면 가짜값 대신 null = "대기중"
+  const adsLive = liveCost !== null
+  // 수익: 애드몹 미설정이면 데모용 샘플 (지금은 실데이터)
   const revMap = liveRev ?? sampleAdmobRevenue(startDate, endDate)
 
   const rows: DailyRowComputed[] = eachDay(startDate, endDate).map((date) => {
-    const cost = round2(costMap[date] ?? 0)
     const revenue = round2(revMap[date] ?? 0)
-    const profit = round2(revenue - cost)
-    const roas = cost > 0 ? round2((revenue / cost) * 100) : 0
-    return { date, cost, revenue, profit, roas }
+    const cost = adsLive ? round2(liveCost![date] ?? 0) : null
+    const profit = cost === null ? null : round2(revenue - cost)
+    const roas = cost === null ? null : cost > 0 ? round2((revenue / cost) * 100) : 0
+    return { date, revenue, cost, profit, roas }
   })
 
-  const totalCost = round2(rows.reduce((s, r) => s + r.cost, 0))
   const totalRev = round2(rows.reduce((s, r) => s + r.revenue, 0))
+  const totalCost = adsLive
+    ? round2(rows.reduce((s, r) => s + (r.cost ?? 0), 0))
+    : null
 
   const body: RoasResponse = {
     range: { startDate, endDate, label },
@@ -45,12 +48,14 @@ export async function GET(req: NextRequest) {
     totals: {
       cost: totalCost,
       revenue: totalRev,
-      profit: round2(totalRev - totalCost),
-      roas: totalCost > 0 ? round2((totalRev / totalCost) * 100) : 0,
+      profit: totalCost === null ? null : round2(totalRev - totalCost),
+      roas:
+        totalCost === null ? null : totalCost > 0 ? round2((totalRev / totalCost) * 100) : 0,
     },
     rows,
+    adsPending: !adsLive,
     source: {
-      ads: liveCost ? 'live' : 'sample',
+      ads: adsLive ? 'live' : 'pending',
       admob: liveRev ? 'live' : 'sample',
     },
     generatedAt: new Date().toISOString(),
