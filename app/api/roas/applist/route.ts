@@ -1,13 +1,15 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { fetchAppList, sampleAppList } from '@/lib/roas/admob'
 import { resolveIcons } from '@/lib/roas/icons'
+import { SESSION_COOKIE, getSessionAuth } from '@/lib/roas/session'
 import { AppListResponse } from '@/lib/roas/types'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
-export async function GET() {
-  const live = await fetchAppList()
+export async function GET(req: NextRequest) {
+  const auth = await getSessionAuth(req.cookies.get(SESSION_COOKIE)?.value)
+  const live = auth ? await fetchAppList(auth) : null
   const apps = live ?? sampleAppList()
 
   // 아이콘 해석 (실데이터일 때만 — 샘플은 패키지가 가짜라 스킵)

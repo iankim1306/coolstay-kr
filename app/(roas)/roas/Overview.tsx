@@ -13,7 +13,7 @@ const TABS: { key: Tab; label: string }[] = [
 ]
 
 export default function Overview() {
-  const { range, currency } = useRoas()
+  const { range, currency, auth } = useRoas()
   const [data, setData] = useState<RoasResponse | null>(null)
   const [apps, setApps] = useState<AppsResponse | null>(null)
   const [icons, setIcons] = useState<Record<string, string>>({})
@@ -60,7 +60,10 @@ export default function Overview() {
 
   return (
     <div>
-      <SourceBanner adsPending={data?.adsPending} admobSample={data?.source.admob === 'sample'} />
+      <SourceBanner
+        adsPending={Boolean(auth?.loggedIn) && data?.adsPending}
+        admobSample={Boolean(auth?.loggedIn) && data?.source.admob === 'sample'}
+      />
 
       {/* 요약 카드 */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-7">

@@ -42,6 +42,9 @@ export type RoasResponse = {
 export type Currency = 'USD' | 'KRW'
 export const CURRENCIES: Currency[] = ['USD', 'KRW']
 
+/** 애드몹 호출 인증 컨텍스트 (로그인 유저별) */
+export type AdmobAuth = { accessToken: string; publisherId: string }
+
 /** 앱별 성과 한 줄 (애드몹 APP 단위) */
 export type AppRow = {
   appId: string

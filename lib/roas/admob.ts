@@ -1,12 +1,6 @@
 // 애드몹 API — 일자별 수익 / 앱별 성과 / 앱 목록 조회
-// 자격증명이 없으면 샘플 데이터로 폴백한다. 통화는 localizationSettings로 서버 변환.
-import { getAccessToken } from './oauth'
-import { eachDay, type AppRow, type AppMeta, type Currency } from './types'
-
-/** 애드몹 실데이터를 쓸 수 있는 상태인지 */
-export function admobConfigured(): boolean {
-  return Boolean(process.env.ADMOB_PUBLISHER_ID && process.env.GOOGLE_OAUTH_REFRESH_TOKEN)
-}
+// 호출마다 유저 인증(auth: accessToken + publisherId)을 받는다. 멀티유저.
+import { eachDay, type AppRow, type AppMeta, type Currency, type AdmobAuth } from './types'
 
 function ymd(date: string) {
   const [year, month, day] = date.split('-').map(Number)
@@ -20,28 +14,46 @@ function ymdToIso(raw?: string): string | null {
   return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`
 }
 
-async function postReport(publisherId: string, token: string, body: unknown) {
+async function postReport(auth: AdmobAuth, body: unknown) {
   return fetch(
-    `https://admob.googleapis.com/v1/accounts/${publisherId}/networkReport:generate`,
+    `https://admob.googleapis.com/v1/accounts/${auth.publisherId}/networkReport:generate`,
     {
       method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${auth.accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     }
   )
 }
 
-/** 일자별 수익 맵 { 'YYYY-MM-DD': revenue }. 실패/미설정 시 null */
+/** 로그인 유저의 애드몹 게시자ID 조회 (accounts.list). 없으면 null */
+export async function fetchPublisherId(accessToken: string): Promise<string | null> {
+  try {
+    const res = await fetch('https://admob.googleapis.com/v1/accounts', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    if (!res.ok) {
+      console.error('[roas/admob/accounts] 실패:', res.status, await res.text())
+      return null
+    }
+    const j = (await res.json()) as { account?: Array<{ name?: string; publisherId?: string }> }
+    const acc = j.account?.[0]
+    if (acc?.publisherId) return acc.publisherId
+    // name = "accounts/pub-XXXX"
+    const m = acc?.name?.match(/accounts\/(pub-\w+)/)
+    return m?.[1] ?? null
+  } catch (err) {
+    console.error('[roas/admob/accounts] 예외:', err)
+    return null
+  }
+}
+
+/** 일자별 수익 맵 { 'YYYY-MM-DD': revenue }. 실패 시 null */
 export async function fetchAdmobRevenue(
   startDate: string,
   endDate: string,
-  currency: Currency = 'USD'
+  currency: Currency,
+  auth: AdmobAuth
 ): Promise<Record<string, number> | null> {
-  if (!admobConfigured()) return null
-  const token = await getAccessToken()
-  if (!token) return null
-  const publisherId = process.env.ADMOB_PUBLISHER_ID!
-
   const body = {
     reportSpec: {
       dateRange: { startDate: ymd(startDate), endDate: ymd(endDate) },
@@ -50,9 +62,8 @@ export async function fetchAdmobRevenue(
       localizationSettings: { currencyCode: currency },
     },
   }
-
   try {
-    const res = await postReport(publisherId, token, body)
+    const res = await postReport(auth, body)
     if (!res.ok) {
       console.error('[roas/admob] 조회 실패:', res.status, await res.text())
       return null
@@ -77,35 +88,24 @@ export async function fetchAdmobRevenue(
   }
 }
 
-/** 앱별 성과 (dimension=APP+DATE → 일자 스파크라인 포함). 실패/미설정 시 null */
+/** 앱별 성과 (APP+DATE → 스파크라인 포함). 실패 시 null */
 export async function fetchAdmobByApp(
   startDate: string,
   endDate: string,
-  currency: Currency = 'USD'
+  currency: Currency,
+  auth: AdmobAuth
 ): Promise<AppRow[] | null> {
-  if (!admobConfigured()) return null
-  const token = await getAccessToken()
-  if (!token) return null
-  const publisherId = process.env.ADMOB_PUBLISHER_ID!
   const days = eachDay(startDate, endDate)
-
   const body = {
     reportSpec: {
       dateRange: { startDate: ymd(startDate), endDate: ymd(endDate) },
       dimensions: ['APP', 'DATE'],
-      metrics: [
-        'ESTIMATED_EARNINGS',
-        'IMPRESSIONS',
-        'CLICKS',
-        'AD_REQUESTS',
-        'MATCHED_REQUESTS',
-      ],
+      metrics: ['ESTIMATED_EARNINGS', 'IMPRESSIONS', 'CLICKS', 'AD_REQUESTS', 'MATCHED_REQUESTS'],
       localizationSettings: { currencyCode: currency },
     },
   }
-
   try {
-    const res = await postReport(publisherId, token, body)
+    const res = await postReport(auth, body)
     if (!res.ok) {
       console.error('[roas/admob/app] 조회 실패:', res.status, await res.text())
       return null
@@ -120,7 +120,6 @@ export async function fetchAdmobByApp(
       }
     }>
 
-    // appId 단위로 누적 + 일자별 수익 맵
     type Acc = {
       name: string
       earnings: number
@@ -131,7 +130,6 @@ export async function fetchAdmobByApp(
       daily: Record<string, number>
     }
     const accs = new Map<string, Acc>()
-
     for (const item of rows) {
       const app = item.row?.dimensionValues?.APP
       if (!app) continue
@@ -140,18 +138,9 @@ export async function fetchAdmobByApp(
       const int = (k: string) => Number(m[k]?.integerValue ?? 0)
       const micros = (k: string) => Number(m[k]?.microsValue ?? 0) / 1_000_000
       const date = ymdToIso(item.row?.dimensionValues?.DATE?.value)
-
       let acc = accs.get(id)
       if (!acc) {
-        acc = {
-          name: app.displayLabel || id || '(이름 없음)',
-          earnings: 0,
-          impressions: 0,
-          clicks: 0,
-          adRequests: 0,
-          matchedRequests: 0,
-          daily: {},
-        }
+        acc = { name: app.displayLabel || id || '(이름 없음)', earnings: 0, impressions: 0, clicks: 0, adRequests: 0, matchedRequests: 0, daily: {} }
         accs.set(id, acc)
       }
       const e = micros('ESTIMATED_EARNINGS')
@@ -188,21 +177,16 @@ export async function fetchAdmobByApp(
   }
 }
 
-/** 앱 목록 (accounts.apps.list). 실패/미설정 시 null */
-export async function fetchAppList(): Promise<AppMeta[] | null> {
-  if (!admobConfigured()) return null
-  const token = await getAccessToken()
-  if (!token) return null
-  const publisherId = process.env.ADMOB_PUBLISHER_ID!
-
+/** 앱 목록 (accounts.apps.list). 실패 시 null */
+export async function fetchAppList(auth: AdmobAuth): Promise<AppMeta[] | null> {
   try {
     const out: AppMeta[] = []
     let pageToken = ''
     do {
-      const url = new URL(`https://admob.googleapis.com/v1/accounts/${publisherId}/apps`)
+      const url = new URL(`https://admob.googleapis.com/v1/accounts/${auth.publisherId}/apps`)
       url.searchParams.set('pageSize', '1000')
       if (pageToken) url.searchParams.set('pageToken', pageToken)
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } })
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${auth.accessToken}` } })
       if (!res.ok) {
         console.error('[roas/admob/list] 조회 실패:', res.status, await res.text())
         return null
@@ -220,8 +204,7 @@ export async function fetchAppList(): Promise<AppMeta[] | null> {
       for (const a of json.apps ?? []) {
         out.push({
           appId: a.appId ?? '',
-          appName:
-            a.linkedAppInfo?.displayName || a.manualAppInfo?.displayName || a.appId || '(이름 없음)',
+          appName: a.linkedAppInfo?.displayName || a.manualAppInfo?.displayName || a.appId || '(이름 없음)',
           platform: a.platform ?? '-',
           storeId: a.linkedAppInfo?.appStoreId ?? '-',
           approvalState: a.appApprovalState ?? '-',
@@ -237,7 +220,7 @@ export async function fetchAppList(): Promise<AppMeta[] | null> {
   }
 }
 
-/* ───────────────────────── 샘플 데이터 (미연결 시 데모) ───────────────────────── */
+/* ───────────────────────── 샘플 데이터 (비로그인 데모) ───────────────────────── */
 
 export function sampleAdmobByApp(startDate: string, endDate: string): AppRow[] {
   const days = eachDay(startDate, endDate)
@@ -268,11 +251,11 @@ export function sampleAdmobByApp(startDate: string, endDate: string): AppRow[] {
 
 export function sampleAppList(): AppMeta[] {
   const apps = [
-    ['FIRE Calculator', 'com.hadam.firecalculator'],
-    ['음력 달력', 'com.hadam.bigluna'],
-    ['큰글씨 돋보기', 'com.hadam.bigmagnifier'],
-    ['RSU Calculator', 'com.hadam.rsucalc'],
-    ['Dividend Tracker', 'com.hadam.dividendtracker'],
+    ['FIRE Calculator', 'com.example.firecalculator'],
+    ['음력 달력', 'com.example.luna'],
+    ['큰글씨 돋보기', 'com.example.magnifier'],
+    ['RSU Calculator', 'com.example.rsucalc'],
+    ['Dividend Tracker', 'com.example.dividend'],
   ]
   return apps.map(([appName, storeId], i) => ({
     appId: `sample-${i}`,
@@ -284,7 +267,6 @@ export function sampleAppList(): AppMeta[] {
   }))
 }
 
-/** 결정적 샘플 수익 — 데모/심사용 */
 export function sampleAdmobRevenue(startDate: string, endDate: string): Record<string, number> {
   const map: Record<string, number> = {}
   for (const d of eachDay(startDate, endDate)) {

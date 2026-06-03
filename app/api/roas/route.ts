@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchAdsCost } from '@/lib/roas/google-ads'
 import { fetchAdmobRevenue, sampleAdmobRevenue } from '@/lib/roas/admob'
+import { SESSION_COOKIE, getSessionAuth } from '@/lib/roas/session'
 import {
   DateRangeKey,
   RoasResponse,
@@ -23,14 +24,17 @@ export async function GET(req: NextRequest) {
   const currency: Currency = CURRENCIES.includes(cq) ? cq : 'USD'
   const { startDate, endDate, label } = resolveRange(rangeKey)
 
+  // 로그인 유저면 그 유저의 애드몹 데이터, 아니면 샘플(타인 데이터 노출 방지)
+  const auth = await getSessionAuth(req.cookies.get(SESSION_COOKIE)?.value)
+
   const [liveCost, liveRev] = await Promise.all([
     fetchAdsCost(startDate, endDate),
-    fetchAdmobRevenue(startDate, endDate, currency),
+    auth ? fetchAdmobRevenue(startDate, endDate, currency, auth) : Promise.resolve(null),
   ])
 
   // 광고비: 구글 애즈 미연결(토큰 승인 전)이면 가짜값 대신 null = "대기중"
   const adsLive = liveCost !== null
-  // 수익: 애드몹 미설정이면 데모용 샘플 (지금은 실데이터)
+  // 수익: 비로그인/실패면 데모용 샘플
   const revMap = liveRev ?? sampleAdmobRevenue(startDate, endDate)
 
   const rows: DailyRowComputed[] = eachDay(startDate, endDate).map((date) => {

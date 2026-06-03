@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { fetchAdmobByApp, sampleAdmobByApp } from '@/lib/roas/admob'
+import { SESSION_COOKIE, getSessionAuth } from '@/lib/roas/session'
 import { DateRangeKey, AppsResponse, Currency, CURRENCIES, resolveRange } from '@/lib/roas/types'
 
 export const runtime = 'nodejs'
@@ -14,7 +15,8 @@ export async function GET(req: NextRequest) {
   const currency: Currency = CURRENCIES.includes(cq) ? cq : 'USD'
   const { startDate, endDate, label } = resolveRange(rangeKey)
 
-  const live = await fetchAdmobByApp(startDate, endDate, currency)
+  const auth = await getSessionAuth(req.cookies.get(SESSION_COOKIE)?.value)
+  const live = auth ? await fetchAdmobByApp(startDate, endDate, currency, auth) : null
   const apps = live ?? sampleAdmobByApp(startDate, endDate)
 
   const body: AppsResponse = {
