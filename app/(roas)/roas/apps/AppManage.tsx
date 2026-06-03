@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { AppListResponse } from '@/lib/roas/types'
+import { AppIcon } from '../../ui'
 
 export default function AppManage() {
   const [data, setData] = useState<AppListResponse | null>(null)
@@ -85,7 +86,12 @@ export default function AppManage() {
               : apps.map((a, i) => (
                   <tr key={a.appId} className="border-t border-gray-100 hover:bg-gray-50">
                     <td className="px-4 py-2.5 text-gray-400">{i + 1}</td>
-                    <td className="px-4 py-2.5 font-medium text-gray-800">{a.appName}</td>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-3">
+                        <AppIcon name={a.appName} src={a.iconUrl} />
+                        <span className="font-medium text-gray-800">{a.appName}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-2.5 text-gray-500 font-mono text-xs">{a.storeId}</td>
                     <td className="px-4 py-2.5">
                       <span

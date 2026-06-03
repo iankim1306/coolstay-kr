@@ -19,10 +19,27 @@ export function useRoas(): Ctx {
   return c
 }
 
+const I = {
+  dash: (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" />
+    </svg>
+  ),
+  apps: (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" />
+    </svg>
+  ),
+  cal: (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M3 10h18M8 2v4M16 2v4" />
+    </svg>
+  ),
+}
 const NAV = [
-  { href: '/roas', label: '대시보드', icon: '▦' },
-  { href: '/roas/apps', label: '앱 관리', icon: '▤' },
-  { href: '/roas/calendar', label: '수익 캘린더', icon: '▩' },
+  { href: '/roas', label: '대시보드', icon: I.dash },
+  { href: '/roas/apps', label: '앱 관리', icon: I.apps },
+  { href: '/roas/calendar', label: '수익 캘린더', icon: I.cal },
 ]
 const RANGES: { key: DateRangeKey; label: string }[] = [
   { key: 'today', label: '오늘' },
@@ -55,8 +72,11 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen">
         {/* 사이드바 */}
         <aside className="hidden md:flex w-56 shrink-0 flex-col bg-gray-900 text-gray-300">
-          <div className="px-5 py-5 text-lg font-bold text-white">
-            <span className="text-orange-400">ROAS</span> 대시보드
+          <div className="px-5 py-5 flex items-center gap-2.5">
+            <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 grid place-items-center text-white font-extrabold text-sm shadow-lg shadow-orange-900/30">
+              R
+            </span>
+            <span className="text-base font-bold text-white tracking-tight">ROAS 대시보드</span>
           </div>
           <nav className="flex-1 px-3 space-y-1">
             {NAV.map((n) => {
@@ -86,7 +106,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                   className="flex items-center justify-between px-3 py-2.5 rounded-lg text-sm text-gray-600 cursor-not-allowed"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="text-base">▷</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
                     {t}
                   </span>
                   <span className="text-[10px] bg-gray-800 text-gray-400 px-1.5 py-0.5 rounded">

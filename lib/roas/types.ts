@@ -74,6 +74,7 @@ export type AppMeta = {
   storeId: string // 패키지명 또는 앱스토어 ID
   approvalState: string // 승인 상태
   linked: boolean // 스토어 연결 여부
+  iconUrl?: string // 스토어 아이콘 URL (있으면)
 }
 
 export type AppListResponse = {
