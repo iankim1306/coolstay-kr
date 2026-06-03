@@ -94,7 +94,11 @@ export default function Overview() {
       {/* 앱별 성과 */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-lg font-bold text-gray-900">앱별 성과 분석</h2>
-        {apps && <span className="text-xs text-gray-400">{apps.apps.length}개 앱 · 애드몹 실데이터</span>}
+        {apps && (
+          <span className="text-xs text-gray-400">
+            {apps.apps.length}개 앱 · {apps.source === 'live' ? '애드몹 실데이터' : '샘플 (로그인 전)'}
+          </span>
+        )}
       </div>
 
       <div className="flex gap-1 mb-3 bg-gray-100 rounded-lg p-1 w-fit">
