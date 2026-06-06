@@ -37,11 +37,17 @@ const I = {
       <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M3 10h18M8 2v4M16 2v4" />
     </svg>
   ),
+  info: (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" />
+    </svg>
+  ),
 }
 const NAV = [
   { href: '/roas', label: '대시보드', icon: I.dash },
   { href: '/roas/apps', label: '앱 관리', icon: I.apps },
   { href: '/roas/calendar', label: '수익 캘린더', icon: I.cal },
+  { href: '/roas/about', label: '소개 / About', icon: I.info },
 ]
 const RANGES: { key: DateRangeKey; label: string }[] = [
   { key: 'today', label: '오늘' },
