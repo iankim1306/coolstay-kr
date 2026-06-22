@@ -5,7 +5,7 @@ import { COUNTRY_DESC_EN, CITY_DESC_EN } from "@/lib/destinations-en";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import HotDealTabs from "@/components/HotDealTabs";
 
-export const revalidate = 21600;
+export const revalidate = 86400;
 
 const POPULAR_KEYWORDS = [
   { kw: 'Osaka Budget Hotels', href: '/en/japan/osaka' },

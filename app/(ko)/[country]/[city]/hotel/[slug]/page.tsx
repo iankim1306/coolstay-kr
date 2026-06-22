@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCityData, getCountryData } from "@/lib/destinations";
 
-export const revalidate = 21600; // 6시간마다 자동 갱신 → 가격/freshness 신호
+export const revalidate = 86400; // 1일마다 자동 갱신 → 가격/freshness 신호
 import {
   getHotel,
   getHotelsByCity,
@@ -21,7 +21,7 @@ import {
   ldJson,
 } from "@/lib/jsonld";
 
-// ISR 전략: 빌드 시 각 도시 평점 TOP 4개만 정적 생성, 나머지는 첫 요청 시 동적 생성 후 6시간 캐시
+// ISR 전략: 빌드 시 각 도시 평점 TOP 4개만 정적 생성, 나머지는 첫 요청 시 동적 생성 후 1일 캐시
 // → deployment 크기 95% 감소 (3,897개 → ~104개), Vercel Hobby 한도 안 건드림
 // dynamicParams는 기본값 true이므로 명시 불필요
 export async function generateStaticParams() {
