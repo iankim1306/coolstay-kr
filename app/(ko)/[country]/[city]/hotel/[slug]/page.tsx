@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCityData, getCountryData } from "@/lib/destinations";
 
-export const revalidate = 86400; // 1일마다 자동 갱신 → 가격/freshness 신호
+export const revalidate = false; // 시간기반 재생성 끔 — 가격은 PriceWidget(클라이언트)로 실시간 로드, 호텔정보는 빌드시점 데이터라 재배포 때만 갱신. ISR Write 폭증 방지(2026-07)
 import {
   getHotel,
   getHotelsByCity,

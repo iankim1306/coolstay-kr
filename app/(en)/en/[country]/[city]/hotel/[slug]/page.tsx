@@ -6,7 +6,7 @@ import { CITY_NAME_EN, COUNTRY_NAME_EN } from "@/lib/i18n";
 import { CITY_TRAVEL_INFO_EN } from "@/lib/destinations-en";
 import { breadcrumbJsonLd, hotelJsonLd, faqJsonLd, ldJson } from "@/lib/jsonld";
 
-export const revalidate = 86400; // 1일 ISR 캐시
+export const revalidate = false; // 시간기반 재생성 끔 — 재배포 때만 갱신. ISR Write 폭증 방지(2026-07)
 
 // ISR 전략: 빌드 시 각 도시 TOP 4개만 정적, 나머지는 동적 생성 + 1일 캐시
 export async function generateStaticParams() {
