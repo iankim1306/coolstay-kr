@@ -182,7 +182,6 @@ export function touristDestinationJsonLd({
       worstRating: 1,
       ratingCount: totalReviews,
       reviewCount: totalReviews,
-      itemReviewed: { '@type': 'Place', name: cityName, address: countryName },
     }
   }
 
