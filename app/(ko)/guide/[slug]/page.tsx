@@ -4,6 +4,7 @@ import { getGuide, GUIDES } from "@/lib/guides";
 import { getCityData, getCountryData } from "@/lib/destinations";
 import { getHotelsByCity, hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { breadcrumbJsonLd, faqJsonLd, ldJson } from "@/lib/jsonld";
+import { getLandmarksByCity } from "@/lib/landmarks";
 
 export async function generateStaticParams() {
   return GUIDES.map(g => ({ slug: g.slug }));
@@ -31,6 +32,7 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
   const city = getCityData(guide.countryKey, guide.cityKey);
   const country = getCountryData(guide.countryKey);
   const topHotels = getHotelsByCity(guide.countryKey, guide.cityKey).slice(0, 5);
+  const guideLandmarks = getLandmarksByCity(guide.countryKey, guide.cityKey);
 
   const breadcrumb = breadcrumbJsonLd([
     { name: "홈", url: "https://coolstay.kr/" },
@@ -125,6 +127,23 @@ export default async function GuidePage({ params }: { params: Promise<{ slug: st
                 className="inline-block text-sm text-orange-500 hover:text-orange-600 font-semibold">
                 {city.name} 전체 호텔 보기 →
               </Link>
+            </div>
+          </section>
+        )}
+
+        {/* 명소 근처 숙소 — 좌표 기반 페이지로 연결 */}
+        {guideLandmarks.length > 0 && (
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">가고 싶은 곳 근처에서 고르기</h2>
+            <p className="text-gray-500 text-sm mb-4">명소를 고르면 그 좌표에서 가까운 순으로 숙소를 보여드립니다.</p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {guideLandmarks.map(l => (
+                <Link key={l.slug} href={`/near/${l.slug}`}
+                  className="flex items-center justify-between gap-3 border border-gray-100 rounded-xl px-4 py-3 hover:border-orange-200 hover:shadow-sm transition-all">
+                  <span className="font-semibold text-sm text-gray-800 truncate">{l.name} 근처 호텔</span>
+                  <span className="text-orange-500 text-sm flex-shrink-0">→</span>
+                </Link>
+              ))}
             </div>
           </section>
         )}

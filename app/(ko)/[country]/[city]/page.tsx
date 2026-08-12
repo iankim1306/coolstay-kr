@@ -6,6 +6,7 @@ import { getAvailableThemes } from "@/lib/themes";
 import { getAvailableFilters } from "@/lib/filter-pages";
 import { breadcrumbJsonLd, touristDestinationJsonLd, ldJson } from "@/lib/jsonld";
 import { NEARBY_CITIES } from "@/lib/nearby-cities";
+import { getLandmarksByCity, CATEGORY_LABEL } from "@/lib/landmarks";
 import CityHotelList from "@/components/CityHotelList"
 import CityDateSearch from "@/components/CityDateSearch";
 
@@ -64,6 +65,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
   const topHotels = allHotels.slice(0, 10);
   const availableThemes = getAvailableThemes(countrySlug, citySlug);
   const availableFilters = getAvailableFilters(countrySlug, citySlug);
+  const cityLandmarks = getLandmarksByCity(countrySlug, citySlug);
 
   const cityUrl = `https://coolstay.kr/${countrySlug}/${citySlug}`;
   const breadcrumb = breadcrumbJsonLd([
@@ -322,6 +324,28 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                       className="group flex items-center justify-between bg-white border border-gray-100 rounded-xl px-4 py-3 hover:border-orange-200 hover:shadow transition-all">
                       <div className="font-semibold text-sm text-gray-800">{city.name} {f.label}</div>
                       <span className="text-xs text-orange-500 group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 명소 근처 숙소 — GPS 거리 기준 롱테일 페이지로 연결 */}
+            {cityLandmarks.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-xl font-bold mb-1">{city.name} 명소 근처 숙소</h2>
+                <p className="text-sm text-gray-500 mb-4">
+                  가고 싶은 곳을 고르면 그 좌표에서 가까운 순으로 숙소를 보여드립니다.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {cityLandmarks.map(l => (
+                    <Link key={l.slug} href={`/near/${l.slug}`}
+                      className="group flex items-center justify-between gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 hover:border-orange-200 hover:shadow-sm transition-all">
+                      <div className="min-w-0">
+                        <div className="text-[11px] text-gray-400 mb-0.5">{CATEGORY_LABEL[l.category]}</div>
+                        <div className="font-semibold text-sm text-gray-800 truncate">{l.name} 근처 호텔</div>
+                      </div>
+                      <span className="text-orange-500 text-sm flex-shrink-0 group-hover:translate-x-0.5 transition-transform">→</span>
                     </Link>
                   ))}
                 </div>

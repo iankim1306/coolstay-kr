@@ -22,6 +22,7 @@ export default function robots(): MetadataRoute.Robots {
     sitemap: [
       'https://coolstay.kr/sitemap.xml',
       'https://coolstay.kr/sitemap-cities/sitemap.xml',
+      'https://coolstay.kr/sitemap-content/sitemap.xml',
       'https://coolstay.kr/sitemap-themes/sitemap.xml',
       'https://coolstay.kr/sitemap-hotels/sitemap.xml',
       'https://coolstay.kr/sitemap-images/sitemap.xml',

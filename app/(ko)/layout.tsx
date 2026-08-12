@@ -196,6 +196,42 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </div>
 
+            {/* 명소 근처 숙소 — 좌표 기반 롱테일 허브 */}
+            <div className="border-t border-gray-800 pt-6 mb-6">
+              <h4 className="text-white font-semibold mb-3 text-sm">
+                <a href="/near" className="hover:text-orange-400">명소 근처 숙소</a>
+              </h4>
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                <a href="/near/universal-studios-japan" className="hover:text-white">유니버설 근처 호텔</a>
+                <a href="/near/dotonbori" className="hover:text-white">도톤보리 근처 호텔</a>
+                <a href="/near/shinjuku-station" className="hover:text-white">신주쿠역 근처 호텔</a>
+                <a href="/near/tokyo-skytree" className="hover:text-white">스카이트리 근처 호텔</a>
+                <a href="/near/kyoto-station" className="hover:text-white">교토역 근처 호텔</a>
+                <a href="/near/hakata-station" className="hover:text-white">하카타역 근처 호텔</a>
+                <a href="/near/my-khe-beach" className="hover:text-white">미케비치 근처 호텔</a>
+                <a href="/near/nha-trang-beach" className="hover:text-white">나트랑비치 근처 호텔</a>
+                <a href="/near/siam-paragon" className="hover:text-white">시암 근처 호텔</a>
+                <a href="/near/patong-beach" className="hover:text-white">파통비치 근처 호텔</a>
+                <a href="/near/ximending" className="hover:text-white">시먼딩 근처 호텔</a>
+                <a href="/near" className="text-orange-400 hover:text-orange-300">전체 보기 →</a>
+              </div>
+            </div>
+
+            {/* 여행 가이드 */}
+            <div className="border-t border-gray-800 pt-6 mb-6">
+              <h4 className="text-white font-semibold mb-3 text-sm">
+                <a href="/guide" className="hover:text-orange-400">여행 가이드</a>
+              </h4>
+              <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs">
+                <a href="/guide/osaka-hotel-2026" className="hover:text-white">오사카 호텔 가이드</a>
+                <a href="/guide/tokyo-hotel-2026" className="hover:text-white">도쿄 호텔 가이드</a>
+                <a href="/guide/fukuoka-hotel-2026" className="hover:text-white">후쿠오카 호텔 가이드</a>
+                <a href="/guide/danang-hotel-2026" className="hover:text-white">다낭 호텔 가이드</a>
+                <a href="/guide/phuket-hotel-2026" className="hover:text-white">푸켓 호텔 가이드</a>
+                <a href="/guide" className="text-orange-400 hover:text-orange-300">전체 보기 →</a>
+              </div>
+            </div>
+
             {/* 소개 + 저작권 */}
             <div className="border-t border-gray-800 pt-6 text-xs">
               <p className="leading-relaxed mb-4 max-w-2xl">
