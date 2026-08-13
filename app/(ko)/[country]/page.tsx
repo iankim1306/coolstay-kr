@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCountryData, COUNTRIES } from "@/lib/destinations";
 import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { PlaneIcon, WalletIcon, PassportIcon, SunIcon, BulbIcon } from "@/components/Icons";
 
 export async function generateStaticParams() {
   return COUNTRIES.map(c => ({ country: c.slug }));
@@ -123,29 +124,29 @@ export default async function CountryPage({ params }: { params: Promise<{ countr
             <p className="text-gray-400 mb-8">출발 전 꼭 확인하세요</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
               <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                <div className="text-2xl mb-2">✈️</div>
+                <PlaneIcon className="w-6 h-6 mb-2 mx-auto text-gray-400" />
                 <div className="text-sm font-semibold text-gray-700 mb-1">직항 정보</div>
                 <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.flight}</p>
               </div>
               <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                <div className="text-2xl mb-2">💴</div>
+                <WalletIcon className="w-6 h-6 mb-2 mx-auto text-gray-400" />
                 <div className="text-sm font-semibold text-gray-700 mb-1">통화 · 환율</div>
                 <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.currency}</p>
               </div>
               <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                <div className="text-2xl mb-2">🛂</div>
+                <PassportIcon className="w-6 h-6 mb-2 mx-auto text-gray-400" />
                 <div className="text-sm font-semibold text-gray-700 mb-1">비자 정보</div>
                 <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.visa}</p>
               </div>
               <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-sm">
-                <div className="text-2xl mb-2">🌤️</div>
+                <SunIcon className="w-6 h-6 mb-2 mx-auto text-gray-400" />
                 <div className="text-sm font-semibold text-gray-700 mb-1">추천 시즌</div>
                 <p className="text-xs text-gray-500 leading-relaxed">{country.countryInfo.bestSeason}</p>
               </div>
             </div>
             <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">💡</span>
+                <BulbIcon className="w-5 h-5 text-gray-400" />
                 <span className="font-semibold text-gray-700">{country.name} 여행 꿀팁</span>
               </div>
               <ul className="space-y-2">

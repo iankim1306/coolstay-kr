@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getPost, POSTS } from "@/lib/blog";
 import { getCityData } from "@/lib/destinations";
 import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { CalendarIcon, BookIcon } from "@/components/Icons";
 
 export async function generateStaticParams() {
   return POSTS.map(p => ({ slug: p.slug }));
@@ -76,9 +77,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <span className="inline-block text-xs bg-orange-100 text-orange-600 font-bold px-2 py-1 rounded-full mb-3">{post.category}</span>
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 leading-tight">{post.title}</h1>
           <div className="flex items-center gap-3 text-xs text-gray-500">
-            <span>📅 {post.date}</span>
+            <span className="inline-flex items-center gap-1.5"><CalendarIcon className="w-3.5 h-3.5" />{post.date}</span>
             <span>•</span>
-            <span>📖 약 {Math.ceil((post.intro.length + post.sections.reduce((s, sec) => s + sec.content.length, 0)) / 500)}분 읽기</span>
+            <span className="inline-flex items-center gap-1.5"><BookIcon className="w-3.5 h-3.5" />약 {Math.ceil((post.intro.length + post.sections.reduce((s, sec) => s + sec.content.length, 0)) / 500)}분 읽기</span>
           </div>
         </div>
       </section>

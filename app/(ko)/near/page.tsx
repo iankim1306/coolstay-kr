@@ -6,7 +6,10 @@ import {
   getNearbyHotels,
   formatDistance,
 } from "@/lib/landmarks";
+import { landmarkPhoto } from "@/lib/landmarks";
+import { getCityData } from "@/lib/destinations";
 import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { WalkIcon, CarIcon } from "@/components/Icons";
 
 export const metadata = {
   title: "명소 근처 호텔 — 좌표로 찾는 숙소 | 쿨스테이",
@@ -28,7 +31,7 @@ export default function NearIndexPage() {
       <script {...ldJson(breadcrumb)} />
 
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 text-white">
-        <div className="max-w-5xl mx-auto px-4 py-14 sm:py-20">
+        <div className="max-w-6xl mx-auto px-4 py-14 sm:py-20">
           <nav className="text-sm text-gray-400 mb-4">
             <Link href="/" className="hover:text-white">홈</Link>
             <span className="mx-2">&gt;</span>
@@ -49,58 +52,106 @@ export default function NearIndexPage() {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        {groups.map((g) => (
-          <section key={`${g.countryKey}/${g.cityKey}`} className="mb-12">
-            <div className="flex items-baseline justify-between mb-4 pb-2 border-b border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900">{g.cityName}</h2>
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        {groups.map((g) => {
+          const city = getCityData(g.countryKey, g.cityKey);
+          return (
+            <section key={`${g.countryKey}/${g.cityKey}`} className="mb-12">
+              {/* 도시 배너 */}
               <Link
                 href={`/${g.countryKey}/${g.cityKey}`}
-                className="text-sm text-teal-600 hover:text-teal-700 font-semibold"
+                className="group relative block h-24 sm:h-28 rounded-2xl overflow-hidden mb-4"
               >
-                {g.cityName} 전체 숙소 →
+                {city && (
+                  <img
+                    src={city.img}
+                    alt={`${g.cityName} 여행`}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-900/45 to-slate-900/10" />
+                <div className="relative h-full flex items-center justify-between px-5 sm:px-7">
+                  <div>
+                    <h2 className="text-white text-xl sm:text-2xl font-bold">{g.cityName}</h2>
+                    <p className="text-white/70 text-xs mt-0.5">랜드마크 {g.landmarks.length}곳</p>
+                  </div>
+                  <span className="text-white/90 text-sm font-semibold group-hover:translate-x-0.5 transition-transform">
+                    {g.cityName} 전체 숙소 →
+                  </span>
+                </div>
               </Link>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {g.landmarks.map((l) => {
-                const nearby = getNearbyHotels(l, { limit: 10 });
-                const closest = nearby[0];
-                const walkable = nearby.filter((n) => n.walkable).length;
-                return (
-                  <Link
-                    key={l.slug}
-                    href={`/near/${l.slug}`}
-                    className="group border border-gray-100 rounded-2xl p-4 hover:border-teal-200 hover:shadow-md transition-all"
-                  >
-                    <div className="text-[11px] text-gray-400 mb-1">{CATEGORY_LABEL[l.category]}</div>
-                    <div className="font-semibold text-gray-900 mb-2 group-hover:text-teal-700 transition-colors">
-                      {l.name} 근처 호텔
-                    </div>
-                    {closest && (
-                      <div className="text-xs text-gray-500 leading-relaxed">
-                        가장 가까운 숙소 {formatDistance(closest.km)}
-                        {closest.walkable ? ` · 도보 ${closest.walkMin}분` : ` · 차로 ${closest.driveMin}분`}
-                        {walkable > 0 && (
-                          <>
-                            <br />
-                            도보권 {walkable}곳
-                          </>
-                        )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {g.landmarks.map((l) => {
+                  const nearby = getNearbyHotels(l, { limit: 10 });
+                  const closest = nearby[0];
+                  const walkable = nearby.filter((n) => n.walkable).length;
+                  const cover = landmarkPhoto(l.slug);
+
+                  return (
+                    <Link
+                      key={l.slug}
+                      href={`/near/${l.slug}`}
+                      className="group relative block rounded-2xl overflow-hidden h-44 shadow-sm hover:shadow-lg transition-all"
+                    >
+                      {cover && (
+                        <img
+                          src={cover}
+                          alt={l.name}
+                          loading="lazy"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/92 via-slate-950/45 to-slate-950/10" />
+
+                      <div className="relative h-full flex flex-col justify-between p-4">
+                        <span className="self-start bg-white/15 backdrop-blur-sm text-white/90 text-[11px] px-2 py-0.5 rounded-full">
+                          {CATEGORY_LABEL[l.category]}
+                        </span>
+
+                        <div>
+                          <div className="text-white font-bold text-[15px] leading-snug mb-1.5 drop-shadow">
+                            {l.name} 근처 호텔
+                          </div>
+                          {closest && (
+                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-white/85">
+                              <span className="inline-flex items-center gap-1 bg-black/35 backdrop-blur-sm px-1.5 py-0.5 rounded">
+                                {closest.walkable ? (
+                                  <>
+                                    <WalkIcon className="w-3 h-3" />
+                                    도보 {closest.walkMin}분
+                                  </>
+                                ) : (
+                                  <>
+                                    <CarIcon className="w-3 h-3" />
+                                    차로 {closest.driveMin}분
+                                  </>
+                                )}
+                              </span>
+                              <span>가장 가까운 숙소 {formatDistance(closest.km)}</span>
+                              {walkable > 0 && <span>· 도보권 {walkable}곳</span>}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        ))}
+                    </Link>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })}
 
         <section className="mt-8 bg-slate-50 border border-slate-100 rounded-2xl p-6">
           <h2 className="text-sm font-bold text-gray-800 mb-2">이 목록을 만든 방법</h2>
           <p className="text-sm text-gray-600 leading-relaxed">
             각 랜드마크의 좌표와 호텔 3,900곳의 GPS 좌표를 대조해 직선거리를 계산했습니다. 평점 7.5점 이상,
             리뷰 50건 이상인 숙소만 남기고 가까운 순으로 정렬합니다. 광고비를 받고 순서를 바꾸지 않습니다.
+          </p>
+          <p className="text-xs text-gray-400 mt-3">
+            명소 사진은 위키미디어 커먼즈의 자유 라이선스(퍼블릭 도메인·CC0·CC BY·CC BY-SA) 이미지를 사용했습니다.
+            저작자와 라이선스는 각 명소 페이지 하단에 표기합니다.
           </p>
         </section>
       </div>

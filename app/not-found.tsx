@@ -27,7 +27,7 @@ export default function NotFound() {
             href="/"
             className="bg-orange-500 text-white text-base px-8 py-3 rounded-xl font-bold hover:bg-orange-600 transition-colors"
           >
-            🏠 홈으로 가기
+            홈으로 가기
           </Link>
           <a
             href="https://www.agoda.com/?cid=1962399"
@@ -40,7 +40,7 @@ export default function NotFound() {
         </div>
 
         <div className="text-left">
-          <h2 className="text-lg font-bold text-gray-800 mb-4">🔥 인기 도시</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-4">인기 도시</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {popularCities.map(c => (
               <Link
@@ -64,7 +64,7 @@ export default function NotFound() {
         </div>
 
         <div className="mt-10 bg-gray-50 rounded-xl p-6 text-left">
-          <h3 className="font-bold text-gray-800 mb-3">🔎 빠른 링크</h3>
+          <h3 className="font-bold text-gray-800 mb-3">빠른 링크</h3>
           <div className="flex flex-wrap gap-2 text-sm">
             <Link href="/japan" className="bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:border-orange-300 hover:text-orange-600 transition-colors">일본</Link>
             <Link href="/thailand" className="bg-white border border-gray-200 px-3 py-1.5 rounded-full hover:border-orange-300 hover:text-orange-600 transition-colors">태국</Link>

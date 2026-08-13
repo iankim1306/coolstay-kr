@@ -79,7 +79,7 @@ export const COUNTRIES: Country[] = [
     cities: [
       {
         name: '오사카', nameEn: 'osaka', country: '일본', countryEn: 'japan',
-        img: 'https://images.unsplash.com/photo-1589182373726-e4f658ab50f0?w=800&h=600&fit=crop',
+        img: '/cities/osaka.jpg',
         desc: '도톤보리, 유니버설, 가성비 호텔',
         tags: ['커플', '가족', '맛집여행', '가성비'],
         agodaLink: agodaLink(9590),
@@ -208,7 +208,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '나고야', nameEn: 'nagoya', country: '일본', countryEn: 'japan',
-        img: 'https://images.unsplash.com/photo-1528164344705-47542687000d?w=800&h=600&fit=crop',
+        img: '/cities/nagoya.jpg',
         desc: '사카에, 나고야성, 오아시스21',
         tags: ['가족', '단기여행', '맛집', '쇼핑'],
         agodaLink: agodaLink(13740),
@@ -237,7 +237,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '삿포로', nameEn: 'sapporo', country: '일본', countryEn: 'japan',
-        img: 'https://images.unsplash.com/photo-1578946956088-940c3b502864?w=800&h=600&fit=crop',
+        img: '/cities/sapporo.jpg',
         desc: '스스키노, 오도리공원, 눈축제',
         tags: ['겨울', '가족', '온천', '맛집'],
         agodaLink: agodaLink(3435),
@@ -268,7 +268,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '오키나와', nameEn: 'okinawa', country: '일본', countryEn: 'japan',
-        img: 'https://images.unsplash.com/photo-1493815793585-d94ccbc86df8?w=800&h=600&fit=crop',
+        img: '/cities/okinawa.jpg',
         desc: '나하, 국제거리, 코발트 블루 비치',
         tags: ['커플', '신혼', '비치', '리조트'],
         agodaLink: agodaLink(717899),
@@ -352,7 +352,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '푸켓', nameEn: 'phuket', country: '태국', countryEn: 'thailand',
-        img: 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=800&h=600&fit=crop',
+        img: '/cities/phuket.jpg',
         desc: '파통비치, 카타비치, 풀빌라 리조트',
         tags: ['커플', '신혼', '풀빌라', '비치'],
         agodaLink: agodaLink(16056),
@@ -382,7 +382,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '치앙마이', nameEn: 'chiangmai', country: '태국', countryEn: 'thailand',
-        img: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&h=600&fit=crop',
+        img: '/cities/chiangmai.jpg',
         desc: '올드시티, 님만해민, 부티크 호텔',
         tags: ['혼자', '감성', '부티크', '힐링'],
         agodaLink: agodaLink(7401),
@@ -412,7 +412,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '파타야', nameEn: 'pattaya', country: '태국', countryEn: 'thailand',
-        img: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800&h=600&fit=crop',
+        img: '/cities/pattaya.jpg',
         desc: '워킹스트리트, 조미티엔, 해변 리조트',
         tags: ['커플', '가족', '비치', '리조트'],
         agodaLink: agodaLink(8584),
@@ -442,7 +442,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '후아힌', nameEn: 'huahin', country: '태국', countryEn: 'thailand',
-        img: 'https://images.unsplash.com/photo-1544550285-f813152fb2fd?w=800&h=600&fit=crop',
+        img: '/cities/huahin.jpg',
         desc: '한적한 해변, 왕실 휴양지, 비치 리조트',
         tags: ['커플', '신혼', '힐링', '리조트'],
         agodaLink: agodaLink(17019),
@@ -583,7 +583,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '호이안', nameEn: 'hoian', country: '베트남', countryEn: 'vietnam',
-        img: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=800&h=600&fit=crop',
+        img: '/cities/hoian.jpg',
         desc: '올드타운, 등불 거리, 감성 부티크',
         tags: ['커플', '감성', '부티크', '문화'],
         agodaLink: agodaLink(16552),
@@ -613,7 +613,7 @@ export const COUNTRIES: Country[] = [
       },
       {
         name: '나트랑', nameEn: 'nhatrang', country: '베트남', countryEn: 'vietnam',
-        img: 'https://images.unsplash.com/photo-1528127269322-539801943592?w=800&h=600&fit=crop',
+        img: '/cities/nhatrang.jpg',
         desc: '해변 산책로, 빈펄 랜드, 오션뷰 리조트',
         tags: ['커플', '가족', '비치', '리조트'],
         agodaLink: agodaLink(2679),
@@ -664,7 +664,7 @@ export const COUNTRIES: Country[] = [
     cities: [
       {
         name: '세부', nameEn: 'cebu', country: '필리핀', countryEn: 'philippines',
-        img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=800&h=600&fit=crop',
+        img: '/cities/cebu.jpg',
         desc: '막탄섬, 스노클링, 리조트',
         tags: ['커플', '가족', '다이빙', '리조트'],
         agodaLink: agodaLink(4001),

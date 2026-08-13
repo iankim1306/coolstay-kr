@@ -7,10 +7,12 @@ import {
   getLandmarksByCity,
   getNearbyHotels,
   formatDistance,
+  landmarkPhoto,
+  photoCredit,
 } from "@/lib/landmarks";
-import { getCityData } from "@/lib/destinations";
 import { hotelSlug, hotelPhotoUrl } from "@/lib/hotels";
 import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, ldJson } from "@/lib/jsonld";
+import { WalkIcon, CarIcon, PinIcon, TrainIcon, BulbIcon, ChevronIcon, StarIcon } from "@/components/Icons";
 
 /** 빌드시점 정적 생성 — 런타임 ISR Write 0 (Vercel Hobby 한도 보호) */
 export const dynamicParams = false;
@@ -59,7 +61,8 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
   const nearby = getNearbyHotels(landmark);
   if (nearby.length === 0) notFound();
 
-  const city = getCityData(landmark.countryKey, landmark.cityKey);
+  const photo = landmarkPhoto(landmark.slug);
+  const credit = photoCredit(landmark.slug);
   const siblings = getLandmarksByCity(landmark.countryKey, landmark.cityKey, landmark.slug);
   const pageUrl = `https://coolstay.kr/near/${slug}`;
 
@@ -122,11 +125,15 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
 
       {/* 헤더 */}
       <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 text-white overflow-hidden">
-        {city && (
-          <div
-            className="absolute inset-0 opacity-20"
-            style={{ backgroundImage: `url(${city.img})`, backgroundSize: "cover", backgroundPosition: "center" }}
-          />
+        {photo && (
+          <>
+            <img
+              src={photo}
+              alt={landmark.name}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/80 to-slate-950/55" />
+          </>
         )}
         <div className="relative max-w-4xl mx-auto px-4 py-14 sm:py-20">
           <nav className="text-sm text-gray-400 mb-4">
@@ -154,12 +161,16 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
           <p className="text-gray-300 text-base leading-relaxed">{landmark.intro}</p>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-gray-400">
-            <span>📍 가장 가까운 숙소 {formatDistance(closest.km)} · 도보 {closest.walkMin}분</span>
-            <span>•</span>
-            <span>🚶 도보권(1.5km) {walkableCount}곳</span>
-            <span>•</span>
+            <span className="inline-flex items-center gap-1.5">
+              <PinIcon className="w-3.5 h-3.5" />
+              가장 가까운 숙소 {formatDistance(closest.km)} · 도보 {closest.walkMin}분
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <WalkIcon className="w-3.5 h-3.5" />
+              도보권(1.5km) {walkableCount}곳
+            </span>
             <span>
-              📅 {new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long" }).format(new Date())} 기준
+              {new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "long" }).format(new Date())} 기준
             </span>
           </div>
         </div>
@@ -224,17 +235,27 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
                     {/* 거리 = 이 페이지의 핵심 정보 */}
                     <div className="flex flex-wrap items-center gap-1.5 mb-2">
                       <span
-                        className={`text-xs font-bold px-2 py-1 rounded-lg ${
+                        className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${
                           n.walkable ? "bg-teal-50 text-teal-700" : "bg-gray-100 text-gray-600"
                         }`}
                       >
-                        {n.walkable ? `🚶 도보 ${n.walkMin}분` : `🚗 차로 ${n.driveMin}분`}
+                        {n.walkable ? (
+                          <>
+                            <WalkIcon className="w-3.5 h-3.5" />
+                            도보 {n.walkMin}분
+                          </>
+                        ) : (
+                          <>
+                            <CarIcon className="w-3.5 h-3.5" />
+                            차로 {n.driveMin}분
+                          </>
+                        )}
                       </span>
                       <span className="text-xs text-gray-500">{formatDistance(n.km)}</span>
                       {stars > 0 && (
-                        <span className="text-xs text-amber-500">
-                          {"★".repeat(Math.floor(stars))}
-                          <span className="text-gray-300">{"★".repeat(Math.max(0, 5 - Math.floor(stars)))}</span>
+                        <span className="inline-flex items-center gap-0.5 text-xs text-amber-500">
+                          <StarIcon className="w-3 h-3" />
+                          {stars % 1 === 0 ? stars.toFixed(0) : stars.toFixed(1)}성급
                         </span>
                       )}
                     </div>
@@ -263,13 +284,13 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
         <section className="mt-12 grid sm:grid-cols-2 gap-4">
           <div className="bg-white border border-gray-100 rounded-2xl p-5">
             <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-              <span className="text-lg">🚇</span> 가는 방법
+              <TrainIcon className="w-4 h-4 text-gray-400" /> 가는 방법
             </h3>
             <p className="text-sm text-gray-600 leading-relaxed">{landmark.access}</p>
           </div>
           <div className="bg-teal-50 border border-teal-100 rounded-2xl p-5">
             <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2">
-              <span className="text-lg">💡</span> 이 근처에 묵는다면
+              <BulbIcon className="w-4 h-4 text-teal-600" /> 이 근처에 묵는다면
             </h3>
             <p className="text-sm text-gray-700 leading-relaxed">{landmark.stayTip}</p>
           </div>
@@ -283,7 +304,7 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
               <details key={i} className="bg-gray-50 rounded-xl p-5 group">
                 <summary className="font-semibold text-gray-800 cursor-pointer list-none flex justify-between items-center gap-4">
                   <span>Q. {item.q}</span>
-                  <span className="text-teal-600 group-open:rotate-180 transition-transform">▾</span>
+                  <ChevronIcon className="w-4 h-4 flex-shrink-0 text-teal-600 group-open:rotate-180 transition-transform" />
                 </summary>
                 <p className="text-sm text-gray-600 mt-3 leading-relaxed">{item.a}</p>
               </details>
@@ -325,6 +346,28 @@ export default async function NearLandmarkPage({ params }: { params: Promise<{ s
             {landmark.cityName} 숙소 보러가기
           </Link>
         </section>
+
+        {/* 사진 출처 — CC BY 계열은 저작자 표시가 의무다 */}
+        {credit && (
+          <p className="mt-8 text-xs text-gray-400 leading-relaxed">
+            상단 사진: {credit.author} ·{" "}
+            {credit.licenseUrl ? (
+              <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">
+                {credit.license}
+              </a>
+            ) : (
+              credit.license
+            )}
+            {credit.sourceUrl && (
+              <>
+                {" · "}
+                <a href={credit.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">
+                  위키미디어 커먼즈
+                </a>
+              </>
+            )}
+          </p>
+        )}
       </div>
     </article>
   );

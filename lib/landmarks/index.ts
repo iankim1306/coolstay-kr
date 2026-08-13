@@ -5,6 +5,8 @@ import { ASIA_LANDMARKS } from './data-asia'
 
 export type { Landmark, LandmarkCategory } from './types'
 export { CATEGORY_LABEL } from './types'
+export { LANDMARK_PHOTOS, landmarkPhoto, photoCredit } from './photos'
+export type { PhotoCredit } from './photos'
 
 export const LANDMARKS: Landmark[] = [...JAPAN_LANDMARKS, ...ASIA_LANDMARKS]
 

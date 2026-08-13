@@ -7,6 +7,8 @@ import { getAvailableFilters } from "@/lib/filter-pages";
 import { breadcrumbJsonLd, touristDestinationJsonLd, ldJson } from "@/lib/jsonld";
 import { NEARBY_CITIES } from "@/lib/nearby-cities";
 import { getLandmarksByCity, CATEGORY_LABEL } from "@/lib/landmarks";
+import { cityPhotoCredit } from "@/lib/city-photos";
+import { PlaneIcon, SunIcon, BedIcon, WalletIcon, BulbIcon, CalendarIcon, CardIcon, SearchIcon, PhoneIcon } from "@/components/Icons";
 import CityHotelList from "@/components/CityHotelList"
 import CityDateSearch from "@/components/CityDateSearch";
 
@@ -46,12 +48,12 @@ export async function generateMetadata({ params }: { params: Promise<{ country: 
 }
 
 const THEMES = [
-  { label: '커플 추천', tag: '커플', emoji: '💑' },
-  { label: '신혼여행', tag: '신혼', emoji: '💍' },
-  { label: '가족 여행', tag: '가족', emoji: '👨‍👩‍👧' },
-  { label: '혼자 여행', tag: '혼자', emoji: '🎒' },
-  { label: '풀빌라', tag: '풀빌라', emoji: '🏊' },
-  { label: '가성비 숙소', tag: '가성비', emoji: '💰' },
+  { label: '커플 추천', tag: '커플' },
+  { label: '신혼여행', tag: '신혼' },
+  { label: '가족 여행', tag: '가족' },
+  { label: '혼자 여행', tag: '혼자' },
+  { label: '풀빌라', tag: '풀빌라' },
+  { label: '가성비 숙소', tag: '가성비' },
 ];
 
 export default async function CityPage({ params }: { params: Promise<{ country: string; city: string }> }) {
@@ -66,6 +68,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
   const availableThemes = getAvailableThemes(countrySlug, citySlug);
   const availableFilters = getAvailableFilters(countrySlug, citySlug);
   const cityLandmarks = getLandmarksByCity(countrySlug, citySlug);
+  const cityCredit = cityPhotoCredit(citySlug);
 
   const cityUrl = `https://coolstay.kr/${countrySlug}/${citySlug}`;
   const breadcrumb = breadcrumbJsonLd([
@@ -154,9 +157,32 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
           {/* 메인 콘텐츠 */}
           <div className="flex-1">
             {/* 대표 이미지 */}
-            <img src={city.img} alt={`${city.name} 호텔`}
-              className="w-full rounded-2xl mb-8 h-72 object-cover"
+            <img src={city.img} alt={`${city.name} 여행`}
+              className="w-full rounded-2xl mb-2 h-72 object-cover"
             />
+            {/* 사진 출처 — CC BY 계열은 저작자 표시가 의무다 */}
+            {cityCredit ? (
+              <p className="text-[11px] text-gray-400 mb-8">
+                사진: {cityCredit.author} ·{" "}
+                {cityCredit.licenseUrl ? (
+                  <a href={cityCredit.licenseUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">
+                    {cityCredit.license}
+                  </a>
+                ) : (
+                  cityCredit.license
+                )}
+                {cityCredit.sourceUrl && (
+                  <>
+                    {" · "}
+                    <a href={cityCredit.sourceUrl} target="_blank" rel="noopener noreferrer nofollow" className="underline hover:text-gray-600">
+                      위키미디어 커먼즈
+                    </a>
+                  </>
+                )}
+              </p>
+            ) : (
+              <div className="mb-8" />
+            )}
 
             {/* 테마별 호텔 리스트 (SEO 랜딩) */}
             {availableThemes.length > 0 && (
@@ -169,7 +195,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                       href={`/${countrySlug}/${citySlug}/${t.slug}`}
                       className="group flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-4 hover:border-orange-200 hover:shadow transition-all"
                     >
-                      <span className="text-2xl">{t.emoji}</span>
+                      <span className="w-1 h-9 rounded-full bg-orange-400 flex-shrink-0" aria-hidden="true" />
                       <div className="min-w-0">
                         <div className="font-semibold text-sm text-gray-800 line-clamp-1">
                           {city.name} {t.label}
@@ -214,7 +240,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-xl p-4 hover:bg-orange-50 hover:border-orange-200 transition-colors"
                     >
-                      <span className="text-2xl">{theme.emoji}</span>
+                      <span className="w-1 h-8 rounded-full bg-orange-400 flex-shrink-0" aria-hidden="true" />
                       <div>
                         <div className="font-semibold text-sm text-gray-800">{theme.label}</div>
                         <div className="text-xs text-orange-500">호텔 보기 →</div>
@@ -233,7 +259,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                   {/* 공항 접근성 */}
                   <div className="bg-gray-50 rounded-2xl p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">✈️</span>
+                      <PlaneIcon className="w-5 h-5 text-gray-400" />
                       <h3 className="font-bold text-gray-800">공항 → 시내 이동</h3>
                     </div>
                     <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.airport}</p>
@@ -242,7 +268,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                   {/* 추천 시즌 */}
                   <div className="bg-gray-50 rounded-2xl p-5">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">🌤️</span>
+                      <SunIcon className="w-5 h-5 text-gray-400" />
                       <h3 className="font-bold text-gray-800">추천 여행 시즌</h3>
                     </div>
                     <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.bestSeason}</p>
@@ -251,7 +277,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                   {/* 호텔 추천 지역 */}
                   <div className="bg-gray-50 rounded-2xl p-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xl">🏨</span>
+                      <BedIcon className="w-5 h-5 text-gray-400" />
                       <h3 className="font-bold text-gray-800">지역별 호텔 특징</h3>
                     </div>
                     <div className="space-y-3">
@@ -267,7 +293,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                   {/* 평균 가격 */}
                   <div className="bg-orange-50 rounded-2xl p-5 border border-orange-100">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl">💰</span>
+                      <WalletIcon className="w-5 h-5 text-orange-500" />
                       <h3 className="font-bold text-gray-800">평균 호텔 가격</h3>
                     </div>
                     <p className="text-sm text-gray-600 leading-relaxed">{city.travelInfo.avgPrice}</p>
@@ -276,7 +302,7 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
                   {/* 한국인 여행 팁 */}
                   <div className="bg-gray-50 rounded-2xl p-5">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-xl">💡</span>
+                      <BulbIcon className="w-5 h-5 text-gray-400" />
                       <h3 className="font-bold text-gray-800">한국인 여행자 꿀팁</h3>
                     </div>
                     <ul className="space-y-2">
@@ -386,13 +412,13 @@ export default async function CityPage({ params }: { params: Promise<{ country: 
               <h2 className="text-xl font-bold mb-4">아고다 예약 꿀팁</h2>
               <div className="space-y-3">
                 {[
-                  { icon: '🗓️', tip: '2~3개월 전 예약 시 얼리버드 할인 최대 적용' },
-                  { icon: '💳', tip: '아고다캐시 적립으로 다음 여행에도 할인 가능' },
-                  { icon: '🔍', tip: '무료 취소 필터로 취소 걱정 없이 예약' },
-                  { icon: '📱', tip: '아고다 앱 전용 특가로 추가 할인 가능' },
+                  { Icon: CalendarIcon, tip: '2~3개월 전 예약 시 얼리버드 할인 최대 적용' },
+                  { Icon: CardIcon, tip: '아고다캐시 적립으로 다음 여행에도 할인 가능' },
+                  { Icon: SearchIcon, tip: '무료 취소 필터로 취소 걱정 없이 예약' },
+                  { Icon: PhoneIcon, tip: '아고다 앱 전용 특가로 추가 할인 가능' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3 bg-gray-50 rounded-xl p-4">
-                    <span className="text-xl">{item.icon}</span>
+                    <item.Icon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-gray-600">{item.tip}</p>
                   </div>
                 ))}

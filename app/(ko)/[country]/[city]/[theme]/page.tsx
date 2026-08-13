@@ -10,6 +10,7 @@ import {
   THEMES,
 } from "@/lib/themes";
 import { breadcrumbJsonLd, itemListJsonLd, ldJson } from "@/lib/jsonld";
+import { StarIcon, PinIcon } from "@/components/Icons";
 
 export async function generateStaticParams() {
   return getAllThemeCombos().map(({ countrySlug, citySlug, theme }) => ({
@@ -164,8 +165,7 @@ export default async function ThemePage({
                     <div className="flex items-center gap-2 mb-1">
                       {stars > 0 && (
                         <span className="text-orange-400 text-xs">
-                          {"★".repeat(stars)}
-                          <span className="text-gray-200">{"★".repeat(5 - stars)}</span>
+                          <StarIcon className="w-3 h-3 inline-block align-[-1px]" /> {stars}성급
                         </span>
                       )}
                       <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
@@ -181,7 +181,7 @@ export default async function ThemePage({
                       </h2>
                     </Link>
                     <p className="text-xs text-gray-500 mt-1 mb-2 line-clamp-1">
-                      📍 {h.address}
+                      <PinIcon className="w-3 h-3 inline-block mr-1 align-[-1px]" />{h.address}
                     </p>
                     <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
                       {h.description_ko}
@@ -217,10 +217,10 @@ export default async function ThemePage({
             {cityData.name} {theme.keyword} 고르는 팁
           </h2>
           <ul className="text-sm text-gray-600 space-y-2">
-            <li>✔ <b>평점 8.0 이상</b>이면 실패할 확률이 낮습니다.</li>
-            <li>✔ 리뷰 수가 많을수록 평점의 신뢰도가 높습니다.</li>
-            <li>✔ 아고다 <b>무료 취소 가능</b> 요금 필터를 켜고 비교하세요.</li>
-            <li>✔ 2~3개월 전 예약 시 얼리버드 할인 적용되는 경우가 많습니다.</li>
+            <li>· <b>평점 8.0 이상</b>이면 실패할 확률이 낮습니다.</li>
+            <li>· 리뷰 수가 많을수록 평점의 신뢰도가 높습니다.</li>
+            <li>· 아고다 <b>무료 취소 가능</b> 요금 필터를 켜고 비교하세요.</li>
+            <li>· 2~3개월 전 예약 시 얼리버드 할인 적용되는 경우가 많습니다.</li>
           </ul>
         </div>
 

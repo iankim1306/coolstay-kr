@@ -20,6 +20,7 @@ import {
   faqJsonLd,
   ldJson,
 } from "@/lib/jsonld";
+import { CalendarIcon, SearchIcon, CardIcon, PhoneIcon, PinIcon, WalkIcon, StarIcon } from "@/components/Icons";
 
 // ISR 전략: 빌드 시 각 도시 평점 TOP 4개만 정적 생성, 나머지는 첫 요청 시 동적 생성 후 1일 캐시
 // → deployment 크기 95% 감소 (3,897개 → ~104개), Vercel Hobby 한도 안 건드림
@@ -225,8 +226,7 @@ export default async function HotelPage({
               <div className="flex items-center gap-2 mb-2">
                 {stars > 0 && (
                   <span className="text-orange-400 text-sm">
-                    {"★".repeat(stars)}
-                    <span className="text-gray-200">{"★".repeat(5 - stars)}</span>
+                    <StarIcon className="w-3.5 h-3.5 inline-block align-[-2px]" /> {stars}성급
                   </span>
                 )}
                 <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
@@ -242,7 +242,7 @@ export default async function HotelPage({
                 {hotel.name}
               </h1>
               <p className="text-gray-500 text-sm mb-4">
-                📍 {hotel.address}, {hotel.city}{hotel.zipcode ? `, ${hotel.zipcode}` : ""}
+                <PinIcon className="w-3.5 h-3.5 inline-block mr-1 align-[-2px]" />{hotel.address}, {hotel.city}{hotel.zipcode ? `, ${hotel.zipcode}` : ""}
               </p>
 
               {rating > 0 && (
@@ -266,25 +266,25 @@ export default async function HotelPage({
             {(() => {
               const text = ((hotel as any).overview_en || hotel.description_ko || '').toLowerCase()
               const amenities = [
-                { keywords: ['pool', 'swimming'], icon: '🏊', label: '수영장' },
-                { keywords: ['breakfast', 'buffet'], icon: '🍳', label: '조식 포함' },
-                { keywords: ['gym', 'fitness'], icon: '💪', label: '피트니스' },
-                { keywords: ['spa', 'massage'], icon: '💆', label: '스파' },
-                { keywords: ['wifi', 'wi-fi'], icon: '📶', label: '무료 와이파이' },
-                { keywords: ['parking'], icon: '🚗', label: '주차 가능' },
-                { keywords: ['airport', 'shuttle'], icon: '✈️', label: '공항 셔틀' },
-                { keywords: ['restaurant', 'dining'], icon: '🍽️', label: '레스토랑' },
-                { keywords: ['bar', 'lounge'], icon: '🍸', label: '바·라운지' },
-                { keywords: ['rooftop'], icon: '🌇', label: '루프탑' },
-                { keywords: ['villa', 'private pool'], icon: '🏡', label: '풀빌라' },
-                { keywords: ['ocean view', 'sea view', 'beach'], icon: '🌊', label: '오션뷰' },
+                { keywords: ['pool', 'swimming'], label: '수영장' },
+                { keywords: ['breakfast', 'buffet'], label: '조식 포함' },
+                { keywords: ['gym', 'fitness'], label: '피트니스' },
+                { keywords: ['spa', 'massage'], label: '스파' },
+                { keywords: ['wifi', 'wi-fi'], label: '무료 와이파이' },
+                { keywords: ['parking'], label: '주차 가능' },
+                { keywords: ['airport', 'shuttle'], label: '공항 셔틀' },
+                { keywords: ['restaurant', 'dining'], label: '레스토랑' },
+                { keywords: ['bar', 'lounge'], label: '바·라운지' },
+                { keywords: ['rooftop'], label: '루프탑' },
+                { keywords: ['villa', 'private pool'], label: '풀빌라' },
+                { keywords: ['ocean view', 'sea view', 'beach'], label: '오션뷰' },
               ].filter(a => a.keywords.some(kw => text.includes(kw)))
               return amenities.length > 0 ? (
                 <div className="mb-6">
                   <div className="flex flex-wrap gap-2">
                     {amenities.map(a => (
                       <span key={a.label} className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full border border-blue-100">
-                        <span>{a.icon}</span>{a.label}
+                        {a.label}
                       </span>
                     ))}
                   </div>
@@ -358,13 +358,13 @@ export default async function HotelPage({
               <h2 className="text-xl font-bold mb-3">{hotel.name} 예약 꿀팁</h2>
               <div className="space-y-3">
                 {[
-                  { icon: "🗓️", tip: "2~3개월 전 예약 시 얼리버드 할인 적용" },
-                  { icon: "🔍", tip: "아고다에서 무료 취소 가능 요금 필터 사용" },
-                  { icon: "💳", tip: "아고다캐시 적립으로 다음 여행에도 할인" },
-                  { icon: "📱", tip: "아고다 앱 전용 시크릿 딜 확인" },
+                  { Icon: CalendarIcon, tip: "2~3개월 전 예약 시 얼리버드 할인 적용" },
+                  { Icon: SearchIcon, tip: "아고다에서 무료 취소 가능 요금 필터 사용" },
+                  { Icon: CardIcon, tip: "아고다캐시 적립으로 다음 여행에도 할인" },
+                  { Icon: PhoneIcon, tip: "아고다 앱 전용 시크릿 딜 확인" },
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-3 bg-gray-50 rounded-xl p-4">
-                    <span className="text-xl">{item.icon}</span>
+                    <item.Icon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                     <p className="text-sm text-gray-600">{item.tip}</p>
                   </div>
                 ))}
@@ -407,14 +407,14 @@ export default async function HotelPage({
             {/* 이 지역 주요 관광지 */}
             {cityData.travelInfo.attractions && cityData.travelInfo.attractions.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xl font-bold mb-3">📍 {cityData.name} 주요 관광지</h2>
+                <h2 className="text-xl font-bold mb-3 flex items-center gap-2"><PinIcon className="w-5 h-5 text-gray-400" />{cityData.name} 주요 관광지</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {cityData.travelInfo.attractions.map((attr, i) => (
                     <div key={i} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
                       <div className="font-semibold text-gray-800 text-sm mb-1">{attr.name}</div>
                       <p className="text-xs text-gray-500 mb-2">{attr.desc}</p>
                       <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">
-                        🚶 {attr.distance}
+                        <WalkIcon className="w-3.5 h-3.5 inline-block mr-1 align-[-2px]" />{attr.distance}
                       </span>
                     </div>
                   ))}
@@ -463,9 +463,9 @@ export default async function HotelPage({
 
             {/* 비슷한 가격대 / 같은 별점 / 같은 체인 (Internal linking) */}
             {[
-              { title: `비슷한 가격대의 ${cityData.name} 호텔`, list: sameBudget, icon: '💰' },
+              { title: `비슷한 가격대의 ${cityData.name} 호텔`, list: sameBudget },
               { title: `${stars}성급 ${cityData.name} 호텔`, list: sameStars, icon: '⭐' },
-              hotel.chain ? { title: `${hotel.chain} 다른 지점`, list: sameChain, icon: '🏨' } : null,
+              hotel.chain ? { title: `${hotel.chain} 다른 지점`, list: sameChain } : null,
             ].filter((x): x is { title: string; list: typeof sameBudget; icon: string } => x !== null && x.list.length > 0).map((section) => (
               <div key={section.title} className="mb-8">
                 <h3 className="text-base font-bold mb-3 flex items-center gap-2">

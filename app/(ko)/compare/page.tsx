@@ -124,7 +124,7 @@ export default async function ComparePage({ searchParams }: { searchParams: Prom
         </table>
 
         <div className="mt-8 bg-gray-50 rounded-xl p-5 text-sm text-gray-600">
-          <p>💡 호텔 비교는 최대 4개까지 가능합니다. 호텔 상세 페이지에서 "비교 추가" 버튼으로 호텔을 추가하세요.</p>
+          <p>호텔 비교는 최대 4개까지 가능합니다. 호텔 상세 페이지에서 "비교 추가" 버튼으로 호텔을 추가하세요.</p>
         </div>
       </div>
     </div>

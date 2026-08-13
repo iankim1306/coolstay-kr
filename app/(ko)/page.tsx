@@ -3,6 +3,7 @@ import { COUNTRIES } from "@/lib/destinations";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import SearchBar from "@/components/SearchBar";
 import HotDealTabs from "@/components/HotDealTabs";
+import { BookIcon, PinIcon } from "@/components/Icons";
 
 export const revalidate = 86400 // 1일마다 갱신
 
@@ -85,7 +86,7 @@ export default async function HomePage() {
             <a href="#hotdeals"
               className="bg-white/10 text-white text-lg px-8 py-4 rounded-xl font-bold hover:bg-white/20 transition-colors border border-white/20"
             >
-              오늘의 인기 호텔 🔥
+              오늘의 인기 호텔
             </a>
           </div>
           <div className="flex justify-center gap-8 mt-10 text-sm text-gray-400">
@@ -113,12 +114,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 🔥 오늘의 인기 호텔 */}
+      {/* 오늘의 인기 호텔 */}
       {hotDealCities.length > 0 && (
         <section id="hotdeals" className="max-w-6xl mx-auto px-4 py-14">
           <div className="mb-2 flex items-end justify-between flex-wrap gap-2">
             <div>
-              <h2 className="text-2xl font-bold">🔥 오늘의 인기 호텔</h2>
+              <h2 className="text-2xl font-bold">오늘의 인기 호텔</h2>
               <p className="text-gray-400 mt-1">실시간 아고다 최저가 · 1일마다 자동 갱신 · {hotDealCities.length}개 도시 동시 비교</p>
             </div>
             <span className="text-xs bg-orange-50 text-orange-600 px-3 py-1.5 rounded-full font-semibold">
@@ -207,13 +208,13 @@ export default async function HomePage() {
       <section className="max-w-6xl mx-auto px-4 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <Link href="/guide" className="group bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-100 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="text-3xl mb-3">📖</div>
+            <BookIcon className="w-7 h-7 mb-3 text-blue-500" />
             <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-blue-600">완벽 가이드</h3>
             <p className="text-sm text-gray-600">도시별 호텔 추천, 지역·예산·시즌별 깊이있는 정보</p>
             <div className="mt-3 text-sm font-semibold text-blue-600">가이드 보기 →</div>
           </Link>
           <Link href="/blog" className="group bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-100 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="text-3xl mb-3">✍️</div>
+            <PinIcon className="w-7 h-7 mb-3 text-orange-500" />
             <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-orange-600">블로그</h3>
             <p className="text-sm text-gray-600">아고다 할인법, 시즌 가이드, 여행지 비교</p>
             <div className="mt-3 text-sm font-semibold text-orange-600">블로그 보기 →</div>
