@@ -148,3 +148,47 @@ export function formatDistance(km: number): string {
   if (km < 1) return `${Math.round((km * 1000) / 10) * 10}m`
   return `${km.toFixed(1)}km`
 }
+
+/* ------------------------------------------------------------------ */
+/* 좌표 → 가까운 명소 (호텔 상세페이지에서 /near 로 내부링크할 때 쓴다)   */
+/* ------------------------------------------------------------------ */
+
+export type NearbyLandmark = {
+  landmark: Landmark
+  km: number
+  walkMin: number
+  driveMin: number
+  walkable: boolean
+}
+
+/**
+ * 임의 좌표(=호텔 위치) 기준으로 같은 도시의 가까운 랜드마크 목록.
+ * getNearbyHotels의 역방향. 호텔 7,800페이지 → /near 68페이지로 링크를 흘려보내
+ * 새 롱테일 페이지의 색인을 앞당기는 용도.
+ */
+export function getLandmarksNearPoint(
+  countryKey: string,
+  cityKey: string,
+  lat: number,
+  lng: number,
+  options: { limit?: number; maxKm?: number } = {}
+): NearbyLandmark[] {
+  const limit = options.limit ?? 4
+  const maxKm = options.maxKm ?? 8
+  if (!isFinite(lat) || !isFinite(lng) || (lat === 0 && lng === 0)) return []
+
+  return LANDMARKS.filter((l) => l.countryKey === countryKey && l.cityKey === cityKey)
+    .map((landmark) => {
+      const km = distanceKm(lat, lng, landmark.lat, landmark.lng)
+      return {
+        landmark,
+        km,
+        walkMin: walkMinutes(km),
+        driveMin: driveMinutes(km),
+        walkable: km <= 1.5,
+      }
+    })
+    .filter((x) => x.km <= maxKm)
+    .sort((a, b) => a.km - b.km)
+    .slice(0, limit)
+}

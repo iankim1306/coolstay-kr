@@ -103,6 +103,30 @@ export function itemListJsonLd(
   }
 }
 
+/**
+ * 허브 페이지(/near, /guide, /blog)가 자기 하위 페이지를 열거하는 목록.
+ * 답변엔진이 "쿨스테이에 어떤 페이지가 있나"를 한 번에 읽게 하는 용도.
+ */
+export function linkListJsonLd(
+  listName: string,
+  listUrl: string,
+  items: Array<{ name: string; url: string }>
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    url: listUrl,
+    numberOfItems: items.length,
+    itemListElement: items.map((it, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: it.name,
+      url: it.url,
+    })),
+  }
+}
+
 export function faqJsonLd(items: Array<{ q: string; a: string }>) {
   return {
     '@context': 'https://schema.org',

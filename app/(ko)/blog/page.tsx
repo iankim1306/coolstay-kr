@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { POSTS } from "@/lib/blog";
+import { breadcrumbJsonLd, linkListJsonLd, ldJson } from "@/lib/jsonld";
 
 export const metadata = {
   title: "블로그 — 호텔 예약 팁·시즌 가이드 | 쿨스테이",
@@ -9,8 +10,20 @@ export const metadata = {
 export default function BlogIndexPage() {
   const sorted = [...POSTS].sort((a, b) => b.date.localeCompare(a.date));
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: "블로그", url: "https://coolstay.kr/blog" },
+  ]);
+  const list = linkListJsonLd(
+    "호텔 예약 정보 & 여행 팁",
+    "https://coolstay.kr/blog",
+    sorted.map((p) => ({ name: p.title, url: `https://coolstay.kr/blog/${p.slug}` }))
+  );
+
   return (
     <div className="bg-white">
+      <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(list)} />
       <section className="bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-16 sm:py-20">
           <p className="text-orange-400 text-sm font-semibold tracking-widest mb-3 uppercase">블로그</p>

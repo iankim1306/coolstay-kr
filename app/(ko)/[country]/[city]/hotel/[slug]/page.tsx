@@ -21,6 +21,7 @@ import {
   ldJson,
 } from "@/lib/jsonld";
 import { CalendarIcon, SearchIcon, CardIcon, PhoneIcon, PinIcon, WalkIcon, StarIcon } from "@/components/Icons";
+import { getLandmarksNearPoint, CATEGORY_LABEL, formatDistance } from "@/lib/landmarks";
 
 // ISR 전략: 빌드 시 각 도시 평점 TOP 4개만 정적 생성, 나머지는 첫 요청 시 동적 생성 후 1일 캐시
 // → deployment 크기 95% 감소 (3,897개 → ~104개), Vercel Hobby 한도 안 건드림
@@ -318,6 +319,43 @@ export default async function HotelPage({
                 <div className="mb-8">
                   <h2 className="text-xl font-bold mb-3">위치</h2>
                   <HotelMap lat={lat} lng={lng} hotelName={hotel.name} />
+                </div>
+              );
+            })()}
+
+            {/* 이 호텔에서 가까운 명소 — /near 롱테일 페이지로 내부링크 */}
+            {hotel.latitude && hotel.longitude && (() => {
+              const lat = parseFloat(hotel.latitude);
+              const lng = parseFloat(hotel.longitude);
+              const nearby = getLandmarksNearPoint(country, city, lat, lng, { limit: 4 });
+              if (nearby.length === 0) return null;
+              return (
+                <div className="mb-8">
+                  <h2 className="text-xl font-bold mb-3">이 호텔에서 가까운 명소</h2>
+                  <p className="text-sm text-gray-500 mb-3">
+                    호텔 좌표와 명소 좌표의 직선거리입니다. 명소를 누르면 그 주변 숙소를 가까운 순으로 볼 수 있습니다.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {nearby.map(({ landmark, km, walkMin, driveMin, walkable }) => (
+                      <Link
+                        key={landmark.slug}
+                        href={`/near/${landmark.slug}`}
+                        className="flex items-center justify-between gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 hover:border-orange-200 hover:shadow transition-all"
+                      >
+                        <span className="min-w-0">
+                          <span className="block font-semibold text-gray-800 text-sm truncate">
+                            {landmark.name}
+                          </span>
+                          <span className="block text-xs text-gray-500 mt-0.5">
+                            {CATEGORY_LABEL[landmark.category]} · {formatDistance(km)}
+                          </span>
+                        </span>
+                        <span className="text-xs font-bold text-orange-500 whitespace-nowrap">
+                          {walkable ? `도보 ${walkMin}분` : `차로 ${driveMin}분`}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               );
             })()}

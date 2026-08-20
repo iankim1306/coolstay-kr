@@ -8,7 +8,7 @@ import {
 } from "@/lib/landmarks";
 import { landmarkPhoto } from "@/lib/landmarks";
 import { getCityData } from "@/lib/destinations";
-import { breadcrumbJsonLd, ldJson } from "@/lib/jsonld";
+import { breadcrumbJsonLd, linkListJsonLd, ldJson } from "@/lib/jsonld";
 import { WalkIcon, CarIcon } from "@/components/Icons";
 
 export const metadata = {
@@ -26,9 +26,21 @@ export default function NearIndexPage() {
     { name: "명소 근처 숙소", url: "https://coolstay.kr/near" },
   ]);
 
+  const list = linkListJsonLd(
+    "명소 근처 숙소 페이지 목록",
+    "https://coolstay.kr/near",
+    groups.flatMap((g) =>
+      g.landmarks.map((l) => ({
+        name: `${l.name} 근처 숙소`,
+        url: `https://coolstay.kr/near/${l.slug}`,
+      }))
+    )
+  );
+
   return (
     <div className="bg-white">
       <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(list)} />
 
       <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-14 sm:py-20">

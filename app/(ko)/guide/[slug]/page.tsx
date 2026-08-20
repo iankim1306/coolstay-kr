@@ -7,6 +7,8 @@ import { breadcrumbJsonLd, faqJsonLd, ldJson } from "@/lib/jsonld";
 import { getLandmarksByCity } from "@/lib/landmarks";
 import { CalendarIcon, BookIcon, PinIcon, SunIcon } from "@/components/Icons";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   return GUIDES.map(g => ({ slug: g.slug }));
 }

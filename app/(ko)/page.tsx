@@ -3,7 +3,7 @@ import { COUNTRIES } from "@/lib/destinations";
 import { fetchCityHotDeals } from "@/lib/agoda-api";
 import SearchBar from "@/components/SearchBar";
 import HotDealTabs from "@/components/HotDealTabs";
-import { BookIcon, PinIcon } from "@/components/Icons";
+import { BookIcon, PinIcon, WalkIcon } from "@/components/Icons";
 
 export const revalidate = 86400 // 1일마다 갱신
 
@@ -204,9 +204,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 가이드 + 블로그 */}
+      {/* 명소 근처 숙소 + 가이드 + 블로그 */}
       <section className="max-w-6xl mx-auto px-4 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <Link href="/near" className="group bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-100 rounded-2xl p-6 hover:shadow-lg transition-all">
+            <WalkIcon className="w-7 h-7 mb-3 text-emerald-600" />
+            <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-emerald-700">명소 근처 숙소</h3>
+            <p className="text-sm text-gray-600">가려는 곳의 좌표에서 가까운 순으로. 도보 몇 분인지까지 계산합니다</p>
+            <div className="mt-3 text-sm font-semibold text-emerald-700">여행지 고르기 →</div>
+          </Link>
           <Link href="/guide" className="group bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-100 rounded-2xl p-6 hover:shadow-lg transition-all">
             <BookIcon className="w-7 h-7 mb-3 text-blue-500" />
             <h3 className="font-bold text-lg text-gray-900 mb-1 group-hover:text-blue-600">완벽 가이드</h3>

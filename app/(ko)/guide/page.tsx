@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { GUIDES } from "@/lib/guides";
 import { getCityData } from "@/lib/destinations";
+import { breadcrumbJsonLd, linkListJsonLd, ldJson } from "@/lib/jsonld";
 
 export const metadata = {
   title: "여행 가이드 — 도시별 호텔·일정 완벽 가이드 | 쿨스테이",
@@ -8,8 +9,20 @@ export const metadata = {
 };
 
 export default function GuideIndexPage() {
+  const breadcrumb = breadcrumbJsonLd([
+    { name: "홈", url: "https://coolstay.kr/" },
+    { name: "여행 가이드", url: "https://coolstay.kr/guide" },
+  ]);
+  const list = linkListJsonLd(
+    "도시별 호텔 추천 가이드",
+    "https://coolstay.kr/guide",
+    GUIDES.map((g) => ({ name: g.title, url: `https://coolstay.kr/guide/${g.slug}` }))
+  );
+
   return (
     <div className="bg-white">
+      <script {...ldJson(breadcrumb)} />
+      <script {...ldJson(list)} />
       <section className="bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 py-16 sm:py-20">
           <p className="text-orange-400 text-sm font-semibold tracking-widest mb-3 uppercase">여행 가이드</p>
