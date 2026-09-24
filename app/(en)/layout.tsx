@@ -41,6 +41,12 @@ export default function EnRootLayout({ children }: { children: React.ReactNode }
   return (
     <html lang="en" className={geist.variable}>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-5445161370907020" />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5445161370907020"
+          crossOrigin="anonymous"
+        ></script>
         <meta name="google-site-verification" content="1UVK4e-DptUMt3rLxv8LUvndSIwJouKhNK4fvsGeNCQ" />
         <meta name="msvalidate.01" content="" />
         <meta name="yandex-verification" content="" />

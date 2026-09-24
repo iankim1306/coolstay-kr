@@ -14,6 +14,9 @@ export const metadata: Metadata = {
 export default function RoasGroupLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={geist.variable}>
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-5445161370907020" />
+      </head>
       <body className="min-h-screen bg-gray-50 text-gray-900 antialiased">
         <Shell>{children}</Shell>
       </body>
