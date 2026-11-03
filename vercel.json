@@ -3,10 +3,24 @@
     {
       "path": "/api/cron/price-check",
       "schedule": "0 2 * * *"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:country(japan|thailand|vietnam|philippines|indonesia|taiwan|korea)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
     },
     {
-      "path": "/api/cron/indexing",
-      "schedule": "0 4 * * *"
+      "source": "/:country(japan|thailand|vietnam|philippines|indonesia|taiwan|korea)/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/:section(near|guide|blog|compare|en)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/:section(near|guide|blog|compare|en)/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
     }
   ]
 }

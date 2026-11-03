@@ -147,7 +147,7 @@ export function organizationJsonLd() {
     alternateName: 'COOLSTAY',
     url: SITE,
     logo: `${SITE}/icon.svg`,
-    description: '일본·동남아 해외 호텔을 아고다 최저가로 비교하는 한국어 예약 사이트',
+    description: '국내 숙박·여행 지원 제도와 숙소 예약·안전 정보를 공식 자료 기준으로 정리하는 정보 사이트',
   }
 }
 

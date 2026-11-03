@@ -1,0 +1,30 @@
+name: Daily scheduled post publish
+
+# Vercel 은 main 에 푸시될 때마다 다시 빌드한다. lib/stay-posts.json 에서
+# publishAt 이 오늘인 글이 있으면 빈 스탬프 커밋을 올려 그 글을 공개시킨다.
+on:
+  schedule:
+    - cron: '5 0 * * *'   # 09:05 KST
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stamp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push a rebuild stamp if a post goes live today
+        run: |
+          TODAY=$(date -u +%F)
+          if grep -q "\"publishAt\": *\"$TODAY\"" lib/stay-posts.json; then
+            echo "$TODAY" > .publish-stamp
+            git config user.name "hadam"
+            git config user.email "holy3320@gmail.com"
+            git add .publish-stamp
+            git commit -m "chore: publish scheduled post ($TODAY)"
+            git push
+          else
+            echo "No post scheduled for $TODAY"
+          fi
