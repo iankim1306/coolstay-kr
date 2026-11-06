@@ -56,16 +56,7 @@ export function hotelJsonLd(
     data.starRating = { '@type': 'Rating', ratingValue: stars, bestRating: 5 }
   }
 
-  if (rating > 0 && reviews > 0) {
-    data.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: rating.toFixed(1),
-      bestRating: 10,
-      worstRating: 1,
-      ratingCount: reviews,
-      reviewCount: reviews,
-    }
-  }
+  // 별점(aggregateRating)은 넣지 않는다 — 서치콘솔 리뷰 스니펫 오류(2026-11-06)
 
   if (hotel.latitude && hotel.longitude) {
     const lat = parseFloat(hotel.latitude)
@@ -198,16 +189,8 @@ export function touristDestinationJsonLd({
     includesAttraction: undefined,
   }
 
-  if (totalReviews > 0 && avgRating > 0) {
-    data.aggregateRating = {
-      '@type': 'AggregateRating',
-      ratingValue: avgRating.toFixed(1),
-      bestRating: 10,
-      worstRating: 1,
-      ratingCount: totalReviews,
-      reviewCount: totalReviews,
-    }
-  }
+  // TouristDestination 에는 별점을 붙일 수 없다(서치콘솔 '<parent_node>' 오류)
+  void avgRating
 
   return data
 }
@@ -225,30 +208,9 @@ export function attractionJsonLd(name: string, description: string, cityName: st
 }
 
 /** Hotel review (single) — synthesized from aggregate data */
-export function hotelReviewJsonLd(hotel: Hotel, cityName: string, url: string) {
-  const rating = parseFloat(hotel.rating_average) || 0
-  if (rating < 7) return null
-  const ratingLabel =
-    rating >= 9 ? '최고' : rating >= 8 ? '매우 좋음' : '좋음'
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Review',
-    itemReviewed: {
-      '@type': 'Hotel',
-      name: hotel.name,
-      address: { '@type': 'PostalAddress', addressLocality: cityName },
-    },
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: rating.toFixed(1),
-      bestRating: 10,
-      worstRating: 1,
-    },
-    name: `${hotel.name} ${ratingLabel}`,
-    author: { '@type': 'Organization', name: 'COOLSTAY' },
-    reviewBody: `${hotel.name}은 실제 투숙객 ${parseInt(hotel.number_of_reviews).toLocaleString()}명 리뷰 평균 ${rating.toFixed(1)}점을 받은 ${cityName} 호텔입니다.`,
-    publisher: { '@type': 'Organization', name: 'COOLSTAY', url: SITE },
-  }
+// 자체 작성 리뷰는 구글 리뷰 스니펫 대상이 아니라 끈다(2026-11-06 서치콘솔 오류)
+export function hotelReviewJsonLd(_hotel: Hotel, _cityName: string, _url: string): Record<string, unknown> | null {
+  return null
 }
 
 /** SearchAction for site-wide search */
